@@ -1,0 +1,11 @@
+{
+  "audience": { "grade": 3, "independentReadingMinutes": 14 },
+  "summary": "사라진 호랑이의 흔적을 비교하고, 창작 이야기와 실제 소장품 정보의 경계를 배우는 10장면 검수 후보입니다.",
+  "learningGoals": [
+    "글과 그림에서 서로 맞는 두 근거를 찾는다.",
+    "근거를 이어 사건의 길과 까닭을 설명한다.",
+    "창작 이야기와 실제 소장품 정보를 구분한다."
+  ],
+  "readingModes": ["direct"],
+  "privacy": { "childAccountRequired": false, "remoteTelemetryDefault": false }
+}

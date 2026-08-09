@@ -1,0 +1,146 @@
+name: pages-rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: main 이력에 있는 마지막 정상 40자리 commit SHA
+        required: true
+        type: string
+
+concurrency:
+  group: github-pages
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      release_sha: ${{ steps.release-identity.outputs.commit }}
+      artifact_digest: ${{ steps.release-identity.outputs.artifact_digest }}
+      book_pack_digest: ${{ steps.release-identity.outputs.book_pack_digest }}
+      pack_content_digest: ${{ steps.release-identity.outputs.pack_content_digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: rollback SHA 검증과 전환
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          if [[ ! "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "target_sha는 소문자 40자리 commit SHA여야 합니다."
+            exit 1
+          fi
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$TARGET_SHA" origin/main; then
+            echo "target_sha가 origin/main 이력에 없습니다."
+            exit 1
+          fi
+          git checkout --detach "$TARGET_SHA"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22.19.0
+          cache: npm
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.13.7'
+      - run: npm ci
+      - name: device matrix 도입 이전 SHA 차단
+        run: >-
+          node -e "const p=require('./package.json');const expected={'qa:device-matrix':'node scripts/runDeviceMatrix.mjs','check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix','check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('device matrix rollback floor 미달: '+name)}"
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run qa:performance
+      - run: npm run check:full
+      - run: npm run build:pages
+        env:
+          SOOMBOOK_RELEASE_SHA: ${{ inputs.target_sha }}
+      - run: npm run test:pages:built
+      - name: 검증한 rollback artifact 신원 고정
+        id: release-identity
+        run: node scripts/emitReleaseIdentity.mjs
+      - name: BookPack rollback 최저 기준선 확인
+        env:
+          BOOK_PACK_DIGEST: ${{ steps.release-identity.outputs.book_pack_digest }}
+          PACK_CONTENT_DIGEST: ${{ steps.release-identity.outputs.pack_content_digest }}
+        run: |
+          if [[ ! "$BOOK_PACK_DIGEST" =~ ^sha256-[0-9a-f]{64}$ ]]; then
+            echo "BookPack manifest 계약 도입 전 SHA로는 rollback할 수 없습니다."
+            exit 1
+          fi
+          if [[ ! "$PACK_CONTENT_DIGEST" =~ ^sha256-[0-9a-f]{64}$ ]]; then
+            echo "BookPack file-set 계약 도입 전 SHA로는 rollback할 수 없습니다."
+            exit 1
+          fi
+      - name: rollback 배포 전 영수증 보존
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: soombook-rollback-evidence-${{ inputs.target_sha }}
+          path: |
+            ../soombook.out/audit
+            ../soombook.out/ui-audit
+            ../soombook.out/playwright
+            ../soombook.out/playwright-pages
+            ../soombook.out/playwright-review
+            ../soombook.out/review-candidate
+            ../soombook.out/performance
+            ../soombook.out/playwright-performance
+            ../soombook.out/device-matrix
+            ../soombook.out/playwright-device-matrix
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: ../soombook.out/build/reader-web
+          retention-days: 30
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 운영자 승인 rollback artifact 배포
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
+
+  remote-smoke:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22.19.0
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:pages:remote
+        env:
+          PLAYWRIGHT_PAGES_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+          SOOMBOOK_EXPECTED_RELEASE_SHA: ${{ needs.build.outputs.release_sha }}
+          SOOMBOOK_EXPECTED_ARTIFACT_DIGEST: ${{ needs.build.outputs.artifact_digest }}
+          SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST: ${{ needs.build.outputs.book_pack_digest }}
+          SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST: ${{ needs.build.outputs.pack_content_digest }}
+      - name: rollback 후 원격 검수 영수증 보존
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: soombook-rollback-remote-${{ inputs.target_sha }}
+          path: ../soombook.out/playwright-remote
+          if-no-files-found: error
+          retention-days: 30

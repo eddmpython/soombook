@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-05",
+  "kind": "cover",
+  "title": "소나무 향기의 쪽지",
+  "shortLabel": "까닭",
+  "instruction": "호랑이가 길을 나선 까닭을 쪽지에서 읽으세요.",
+  "narration": "소나무 아래 쪽지에는 그림 밖에서 불어온 솔향기가 궁금해 잠깐 걸어 보았다고 적혀 있었어요.",
+  "visual": {
+    "motif": "paper",
+    "palette": "amber",
+    "alt": "소나무 아래 솔향기 이야기가 적힌 창작 쪽지",
+    "truthStatus": "fiction",
+    "decorations": ["moon", "mountains", "pine"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-05",
+      "heading": "길과 까닭",
+      "body": "발자국과 풀잎은 어느 길인지 알려 주고, 쪽지는 왜 떠났는지 알려 주었어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

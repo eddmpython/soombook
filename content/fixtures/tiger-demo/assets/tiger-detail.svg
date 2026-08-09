@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">렌즈로 확인한 소나무 길의 단서</title>
+  <desc id="desc">큰 발자국과 눕혀진 풀잎, 바위 뒤 줄무늬 꼬리가 선명하게 보이는 소나무 길</desc>
+  <rect width="800" height="600" fill="#21463f" />
+  <path d="M120 600C210 455 360 360 690 240" fill="none" stroke="#e7d08e" stroke-width="86" />
+  <g fill="#392d24">
+    <ellipse cx="310" cy="470" rx="28" ry="40" transform="rotate(28 310 470)" />
+    <ellipse cx="400" cy="402" rx="28" ry="40" transform="rotate(23 400 402)" />
+    <ellipse cx="495" cy="335" rx="28" ry="40" transform="rotate(20 495 335)" />
+  </g>
+  <g stroke="#93b177" stroke-width="12" stroke-linecap="round">
+    <path d="M350 525l-54 30M370 505l-65 5M450 440l-62 30M475 420l-68 4" />
+  </g>
+  <ellipse cx="620" cy="300" rx="82" ry="62" fill="#586f67" />
+  <path d="M635 316c75 30 95 68 128 35" fill="none" stroke="#d77b40" stroke-width="35" stroke-linecap="round" />
+  <path d="M660 327l10 29M700 345l9 28M739 351l4 22" stroke="#432d25" stroke-width="11" />
+  <circle cx="510" cy="335" r="86" fill="none" stroke="#fff2b8" stroke-width="8" stroke-dasharray="15 12" />
+</svg>

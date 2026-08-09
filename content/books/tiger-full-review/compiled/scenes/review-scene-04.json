@@ -1,0 +1,30 @@
+{
+  "id": "review-scene-04",
+  "kind": "investigation",
+  "title": "발자국과 풀잎",
+  "shortLabel": "찾기",
+  "instruction": "세 길에서 발자국의 크기와 풀잎의 방향을 함께 비교하세요.",
+  "narration": "세 길에는 크기가 다른 발자국과 서로 다른 방향의 풀잎이 남아 있었어요.",
+  "visual": {
+    "motif": "painting",
+    "palette": "indigo",
+    "alt": "서로 다른 발자국과 풀잎이 놓인 세 갈래 창작 길",
+    "truthStatus": "fiction",
+    "decorations": ["moon", "mountains", "pine", "tiger"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-04a",
+      "heading": "두 가지를 함께",
+      "body": "한 가지 모양만 보고 고르지 말고 편지에 나온 두 특징을 모두 확인해야 했어요."
+    },
+    {
+      "id": "review-text-04b",
+      "heading": "찾은 길",
+      "body": "소나무 길에는 큰 발자국과 한쪽으로 눕혀진 풀잎이 함께 있었어요."
+    }
+  ],
+  "interactionIds": ["review-find-path"],
+  "reasoningIds": [],
+  "connectionIds": []
+}

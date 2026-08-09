@@ -1,0 +1,78 @@
+[
+  {
+    "id": "audio-lantern-cover",
+    "sceneId": "lantern-cover",
+    "assetId": "asset-lantern-timing",
+    "durationMs": 4000,
+    "segments": [
+      {
+        "id": "audio-lantern-cover-text",
+        "textId": "lantern-text-cover",
+        "startMs": 0,
+        "endMs": 4000
+      }
+    ]
+  },
+  {
+    "id": "audio-lantern-map",
+    "sceneId": "lantern-map",
+    "assetId": "asset-lantern-timing",
+    "durationMs": 4000,
+    "segments": [
+      {
+        "id": "audio-lantern-map-text",
+        "textId": "lantern-text-map",
+        "startMs": 0,
+        "endMs": 4000
+      }
+    ]
+  },
+  {
+    "id": "audio-lantern-search",
+    "sceneId": "lantern-search",
+    "assetId": "asset-lantern-timing",
+    "durationMs": 4000,
+    "segments": [
+      {
+        "id": "audio-lantern-search-visible",
+        "textId": "lantern-text-search",
+        "startMs": 0,
+        "endMs": 2000
+      },
+      {
+        "id": "audio-lantern-search-unlocked",
+        "textId": "lantern-text-unlocked",
+        "startMs": 2000,
+        "endMs": 4000
+      }
+    ]
+  },
+  {
+    "id": "audio-lantern-reason",
+    "sceneId": "lantern-reason",
+    "assetId": "asset-lantern-timing",
+    "durationMs": 4000,
+    "segments": [
+      {
+        "id": "audio-lantern-reason-text",
+        "textId": "lantern-text-reason",
+        "startMs": 0,
+        "endMs": 4000
+      }
+    ]
+  },
+  {
+    "id": "audio-lantern-connect",
+    "sceneId": "lantern-connect",
+    "assetId": "asset-lantern-timing",
+    "durationMs": 4000,
+    "segments": [
+      {
+        "id": "audio-lantern-connect-text",
+        "textId": "lantern-text-connect",
+        "startMs": 0,
+        "endMs": 4000
+      }
+    ]
+  }
+]

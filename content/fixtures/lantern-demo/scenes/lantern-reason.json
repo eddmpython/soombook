@@ -1,0 +1,32 @@
+{
+  "id": "lantern-reason",
+  "kind": "reasoning",
+  "title": "등불은 왜 돌담에 있었을까",
+  "shortLabel": "생각",
+  "instruction": "찾은 리본과 지도 쪽지를 이어 가장 알맞은 설명을 고르세요.",
+  "narration": "돌담 길 끝에는 바람을 피해 단단히 묶인 등불 꾸러미가 있었어요.",
+  "visual": {
+    "motif": "moon",
+    "palette": "ink",
+    "alt": "돌담 곁에서 등불 꾸러미를 살피는 다온",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "stoneWall",
+      "lantern",
+      "child"
+    ]
+  },
+  "textBlocks": [
+    {
+      "id": "lantern-text-reason",
+      "heading": "단서를 이어 보기",
+      "body": "흰 리본 두 개는 길을, 별 모양 매듭은 같은 등불 꾸러미임을 알려 주었어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [
+    "lantern-reasoning"
+  ],
+  "connectionIds": []
+}

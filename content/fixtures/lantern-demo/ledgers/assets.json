@@ -1,0 +1,37 @@
+[
+  {
+    "id": "asset-lantern-base",
+    "kind": "image",
+    "path": "assets/lantern-base.svg",
+    "rightsRecordId": "lantern-rights-art",
+    "integrity": "sha256-47622f8dda1d928167656f8b49f54c94b1d3efcc26ca8d86be4d4a7d4174ed40",
+    "alt": "리본이 놓인 바람 마을의 세 갈래 길",
+    "role": "storyIllustration",
+    "truthStatus": "fixture",
+    "derivedFromAssetIds": []
+  },
+  {
+    "id": "asset-lantern-detail",
+    "kind": "image",
+    "path": "assets/lantern-detail.svg",
+    "rightsRecordId": "lantern-rights-art",
+    "integrity": "sha256-7d619177f3e85d21f7a3e591ca6bddde75e5b6c2a5cde6b2bd94c59fc071d85d",
+    "alt": "돌담 아래 흰 리본 두 개와 별 모양 매듭의 상세 장면",
+    "role": "storyIllustration",
+    "truthStatus": "fixture",
+    "derivedFromAssetIds": [
+      "asset-lantern-base"
+    ]
+  },
+  {
+    "id": "asset-lantern-timing",
+    "kind": "audio",
+    "path": "assets/lantern-timing.wav",
+    "rightsRecordId": "lantern-rights-audio",
+    "integrity": "sha256-d8aa2370280a494e74b8e7b47c1fb08979dc0f374bbc92aa13c7f4f1fed1601d",
+    "alt": "오디오 동기화 검증용 4초 음계",
+    "role": "fixtureTiming",
+    "truthStatus": "fixture",
+    "derivedFromAssetIds": []
+  }
+]

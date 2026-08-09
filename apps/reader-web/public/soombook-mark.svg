@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">숨책 책갈피</title>
+  <rect width="512" height="512" rx="112" fill="#143b35"/>
+  <path d="M105 132c69-24 119-11 151 23v242c-35-32-85-44-151-21V132Z" fill="#f4e7c5"/>
+  <path d="M407 132c-69-24-119-11-151 23v242c35-32 85-44 151-21V132Z" fill="#f8f1df"/>
+  <circle cx="256" cy="249" r="55" fill="#d97845"/>
+  <path d="M225 210l-24-32 42 12m44 20 24-32-42 12M222 252h68M232 276c18 18 30 18 48 0" fill="none" stroke="#143b35" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

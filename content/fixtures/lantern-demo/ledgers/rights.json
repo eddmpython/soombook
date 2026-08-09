@@ -1,0 +1,63 @@
+[
+  {
+    "id": "lantern-rights-story",
+    "subjectType": "text",
+    "subjectId": "book-lantern-demo",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트의 비공개 제작 검증용 창작 fixture",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "실제 문화유산, 기관, 인물을 나타내지 않습니다.",
+    "coveredSubjectIds": [
+      "book-lantern-demo"
+    ]
+  },
+  {
+    "id": "lantern-rights-art",
+    "subjectType": "visual",
+    "subjectId": "asset-lantern-scene-files",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트가 직접 만든 비공개 fixture SVG",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "외부 원본을 사용하지 않은 base와 detail 자산입니다.",
+    "coveredSubjectIds": [
+      "asset-lantern-base",
+      "asset-lantern-detail"
+    ]
+  },
+  {
+    "id": "lantern-rights-audio",
+    "subjectType": "audio",
+    "subjectId": "asset-lantern-timing",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트가 코드로 생성한 비공개 타이밍 fixture 음원",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "재생, seek, 속도, segment 동기화 검증용 저음량 음계이며 검수 낭독이나 한국어 발화가 아닙니다.",
+    "coveredSubjectIds": [
+      "asset-lantern-timing"
+    ]
+  },
+  {
+    "id": "lantern-rights-claim",
+    "subjectType": "claim",
+    "subjectId": "lantern-claim-fixture",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트의 기능 검증 문장",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "문화 사실이 아닌 fixture 범위 주장입니다.",
+    "coveredSubjectIds": [
+      "lantern-claim-fixture"
+    ]
+  }
+]

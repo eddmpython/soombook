@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "authority": "representative-candidate-agent-review-plan-not-publication-or-child-study-approval",
+  "bookId": "book-tiger-full-review",
+  "packVersion": "0.1.0",
+  "authoringSourceSha256": "sha256-b690e31474146ea2dfc78561243e8d6f85ec6ec2211ba1c11b6085c212e7661c",
+  "bookPackDigest": "sha256-99f3308f03eca24b002dc4445d5db46a722f3c1d59b3dcedf490b1f7a46b1c55",
+  "packContentDigest": "sha256-d00d8f743441c1e4ff354355e36b999df128e08f14656c24ee061c4a9bde2aa1",
+  "childFacingSurfaceDigest": "sha256-9be86f9d08044e09bdeb48becb18667f31f3f6dbbb7c3aea4a81cfc79b564841",
+  "reviewerProfiles": ["content-provenance", "education-structure", "accessibility-delivery"],
+  "sceneMatrix": [
+    {
+      "sceneId": "review-scene-01",
+      "purpose": "창작 이야기의 시작과 허구 경계",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": null,
+      "requiredTextIds": ["review-text-01"],
+      "requiredConcepts": ["숨책이 만든 이야기", "역사적 사건을 설명하는 글이 아니에요"]
+    },
+    {
+      "sceneId": "review-scene-02",
+      "purpose": "빈자리 관찰",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": null,
+      "requiredTextIds": ["review-text-02"],
+      "requiredConcepts": ["빈자리", "먹물 자국"]
+    },
+    {
+      "sceneId": "review-scene-03",
+      "purpose": "탐색 전에 두 비교 기준 제시",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": null,
+      "requiredTextIds": ["review-text-03"],
+      "requiredConcepts": ["큰 발자국", "눕혀진 풀잎"]
+    },
+    {
+      "sceneId": "review-scene-04",
+      "purpose": "두 시각 근거를 함께 찾기",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": { "kind": "interaction", "id": "review-find-path" },
+      "requiredTextIds": ["review-text-04a", "review-text-04b"],
+      "requiredConcepts": ["큰 발자국", "눕혀진 풀잎"]
+    },
+    {
+      "sceneId": "review-scene-05",
+      "purpose": "길의 근거와 떠난 까닭 구분",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": null,
+      "requiredTextIds": ["review-text-05"],
+      "requiredConcepts": ["어느 길", "왜 떠났는지", "솔향기"]
+    },
+    {
+      "sceneId": "review-scene-06",
+      "purpose": "앞 단서를 이용한 재독",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": null,
+      "requiredTextIds": ["review-text-06"],
+      "requiredConcepts": ["앞 장면의 단서", "호랑이 꼬리"]
+    },
+    {
+      "sceneId": "review-scene-07",
+      "purpose": "구조 책임 없는 창작 사건 마감",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": null,
+      "requiredTextIds": ["review-text-07"],
+      "requiredConcepts": ["억지로 데려오지 않았어요", "스스로 돌아가기로"]
+    },
+    {
+      "sceneId": "review-scene-08",
+      "purpose": "길의 두 근거와 떠난 까닭 연결",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": { "kind": "reasoning", "id": "review-reason-path" },
+      "requiredTextIds": ["review-text-08"],
+      "requiredConcepts": ["길을 보여 주는 단서", "떠난 까닭"]
+    },
+    {
+      "sceneId": "review-scene-09",
+      "purpose": "창작 서사 마감",
+      "expectedTruthStatus": "fiction",
+      "primaryAction": null,
+      "requiredTextIds": ["review-text-09"],
+      "requiredConcepts": ["이야기의 마침표", "서로 이어지는 근거"]
+    },
+    {
+      "sceneId": "review-scene-10",
+      "purpose": "실제 source 후보와 창작 이야기 경계",
+      "expectedTruthStatus": "unverifiedClaim",
+      "primaryAction": { "kind": "connection", "id": "review-connection-source" },
+      "requiredTextIds": ["review-text-10"],
+      "requiredConcepts": ["source 후보", "원본 이미지", "검수가 끝나기 전"]
+    }
+  ],
+  "evidenceContract": {
+    "findInteractionId": "review-find-path",
+    "findEvidenceSceneIds": ["review-scene-03", "review-scene-04"],
+    "findConcepts": ["큰 발자국", "눕혀진 풀잎"],
+    "reasoningId": "review-reason-path",
+    "reasoningEvidenceInteractionIds": ["review-find-path"],
+    "reasoningConcepts": ["소나무 길", "솔향기"],
+    "sourceConnectionId": "review-connection-source",
+    "sourceConnectionDigest": "sha256-bef11a820d8fbbf54f6bca66203223a49f97f445553a08d1e5309370e5ad051d",
+    "sourceClaimIds": ["claim-review-metadata"],
+    "reflectionCardIds": [
+      "review-recall-evidence",
+      "review-recall-fiction",
+      "review-recall-source"
+    ],
+    "reflectionDigests": [
+      {
+        "id": "review-recall-evidence",
+        "digest": "sha256-d02a899706994005576563402fe2946a628761530821e71e777b6f0c798e2c43"
+      },
+      {
+        "id": "review-recall-fiction",
+        "digest": "sha256-6cc81b4d9af7f6d7a0342d402ce2d6a2382893c9f8a352244a5302a6ce848909"
+      },
+      {
+        "id": "review-recall-source",
+        "digest": "sha256-f8f010d1731ed2c6cabfd99ff253af9569bee56b4b0f15e75280409ce5cd0f89"
+      }
+    ],
+    "treasureDigest": "sha256-a5797819603e0d6d399faf8c2aa403e929e6de61cc8c949dc39e8d1e5111a94e"
+  },
+  "questionContracts": [
+    {
+      "kind": "interaction",
+      "id": "review-find-path",
+      "sceneId": "review-scene-04",
+      "evidence": [
+        {
+          "kind": "textBlock",
+          "id": "review-text-03",
+          "facet": "route-size",
+          "requiredConcepts": ["큰 발자국", "눕혀진 풀잎"]
+        },
+        {
+          "kind": "sceneField",
+          "id": "review-scene-04",
+          "field": "instruction",
+          "facet": "route-direction",
+          "requiredConcepts": ["발자국의 크기", "풀잎의 방향"]
+        }
+      ],
+      "correctChoiceId": "review-path-pine",
+      "retryEvidenceRefs": ["review-text-03", "review-scene-04:instruction"]
+    },
+    {
+      "kind": "reasoning",
+      "id": "review-reason-path",
+      "sceneId": "review-scene-08",
+      "evidence": [
+        {
+          "kind": "interaction",
+          "id": "review-find-path",
+          "facet": "route",
+          "requiredConcepts": ["큰 발자국", "눕혀진 풀잎", "소나무 길"]
+        },
+        {
+          "kind": "sceneField",
+          "id": "review-scene-05",
+          "field": "narration",
+          "facet": "motive",
+          "requiredConcepts": ["솔향기", "궁금해"]
+        }
+      ],
+      "correctChoiceId": "review-reason-pine",
+      "retryEvidenceRefs": ["review-find-path", "review-scene-05:narration"]
+    }
+  ],
+  "languageContract": {
+    "policyId": "ko-grade3-review-v1",
+    "requiredVocabularyTerms": ["근거", "소장품"],
+    "maxEojeolPerSentence": 16,
+    "maxGraphemesPerSentence": 60,
+    "severity": "warning",
+    "denylist": ["틀렸어", "실패", "바보", "벌점"],
+    "vocabulary": [
+      {
+        "term": "근거",
+        "sceneId": "review-scene-08",
+        "exampleTextId": "review-text-08",
+        "definition": "근거는 생각한 까닭을 알려 주는 단서예요."
+      },
+      {
+        "term": "소장품",
+        "sceneId": "review-scene-10",
+        "exampleTextId": "review-text-10",
+        "definition": "소장품은 기관이 보관하며 살펴보는 자료예요."
+      }
+    ]
+  },
+  "promotionPolicy": {
+    "technicalScope": "first-party-review-candidate",
+    "externalRightsMustRemainPending": true,
+    "publishedStatusForbidden": true,
+    "firstPartyRightIds": ["rights-review-story", "rights-review-art"],
+    "firstPartyAssetIds": ["asset-review-css-art"],
+    "externalSourceRightIds": ["rights-review-source-art"],
+    "forbiddenExternalAssetIds": ["asset-review-source-base", "asset-review-source-detail"],
+    "rightsRecordDigests": [
+      {
+        "id": "rights-review-story",
+        "digest": "sha256-5b6f7e12407042ed702e324553c7e255357e2d0f93d93cad34570379f9ce832a"
+      },
+      {
+        "id": "rights-review-art",
+        "digest": "sha256-8f0bc6bb42607b65f5a4acdf0d8c1672a2f4a15c1ac92e1d34b56c2debb8510b"
+      },
+      {
+        "id": "rights-review-source-art",
+        "digest": "sha256-d466e8fd9b9047f7c75f47f889e13baaeb2c71fb7384c42914f03f11f5a930cc"
+      }
+    ],
+    "assetRecordDigests": [
+      {
+        "id": "asset-review-css-art",
+        "digest": "sha256-0ec1018f8f16f5b5c54f21fea3999731c0aba3eca22546a36c8de91da78f16ff"
+      }
+    ],
+    "requiredPendingReviewRecordIds": [
+      "review-education-book-tiger-full-review",
+      "review-accessibility-book-tiger-full-review",
+      "review-rights-rights-review-story",
+      "review-rights-rights-review-art",
+      "review-rights-rights-review-source-art",
+      "review-culture-claim-review-fiction-event",
+      "review-culture-claim-review-metadata"
+    ],
+    "reviewRecordDigests": [
+      {
+        "id": "review-education-book-tiger-full-review",
+        "digest": "sha256-e25a72e94548abff7cc3ba76065ce84d4705421fda50b92cc2326e8203a65d18"
+      },
+      {
+        "id": "review-accessibility-book-tiger-full-review",
+        "digest": "sha256-44afc2532141cc60225846cb09da36fd9f1baa2ac30717f8406478c5c3abd36a"
+      },
+      {
+        "id": "review-rights-rights-review-story",
+        "digest": "sha256-406719abe76b0d6e1d4d5766de1434573ca36a48aec8d4aa0e35b6c127ff5b5f"
+      },
+      {
+        "id": "review-rights-rights-review-art",
+        "digest": "sha256-41d34c7d71bfd8a54bbb69d6c5c127147993c0392907964447863ed0d89428b1"
+      },
+      {
+        "id": "review-rights-rights-review-source-art",
+        "digest": "sha256-d866a2823791cdc0eda52f899f28a1ec8cf4c16d90c6338c1e987bcfb416f171"
+      },
+      {
+        "id": "review-culture-claim-review-fiction-event",
+        "digest": "sha256-ec2701ec60b67b4ce93b43b8ca344aaab12dbebb8f234f9a8204e767ab4652a2"
+      },
+      {
+        "id": "review-culture-claim-review-metadata",
+        "digest": "sha256-6c57a032c7d8397a9c5ad798b978c66dd6cac14e31520015bdd8237642841bc6"
+      }
+    ],
+    "claimContracts": [
+      {
+        "id": "claim-review-fiction-event",
+        "kind": "fictionEvent",
+        "scope": "storyOnly",
+        "reviewStatus": "pending",
+        "digest": "sha256-1f3cfb2c101442a7e6362efbc8bee5375159f1961e9273bd36b84ed2cedc936b"
+      },
+      {
+        "id": "claim-review-metadata",
+        "kind": "museumMetadata",
+        "scope": "objectOnly",
+        "reviewStatus": "pending",
+        "digest": "sha256-253bd0fcd792e1f308477953dfd5248d1fb61d1b35c4d661ba79c6db3602cc2f"
+      }
+    ],
+    "requiredBrowserProfiles": ["review-desktop", "review-mobile"],
+    "requiredBrowserScenarios": [
+      "all-scene-axe",
+      "all-scene-overflow",
+      "pointer-route",
+      "keyboard-route",
+      "reflow-320",
+      "css-root-text-scale-200",
+      "retry-recovery",
+      "truth-and-alt",
+      "offline-fresh-finish"
+    ],
+    "browserProfileContracts": [
+      {
+        "project": "review-desktop",
+        "route": "keyboard",
+        "scenarios": [
+          "all-scene-axe",
+          "all-scene-overflow",
+          "keyboard-route",
+          "retry-recovery",
+          "truth-and-alt",
+          "offline-fresh-finish"
+        ]
+      },
+      {
+        "project": "review-mobile",
+        "route": "pointer",
+        "scenarios": [
+          "all-scene-axe",
+          "all-scene-overflow",
+          "pointer-route",
+          "reflow-320",
+          "css-root-text-scale-200",
+          "retry-recovery",
+          "truth-and-alt",
+          "offline-fresh-finish"
+        ]
+      }
+    ],
+    "requiredBrowserStateChecks": [
+      "review-scene-01:reading",
+      "review-scene-02:reading",
+      "review-scene-03:reading",
+      "review-scene-04:reading",
+      "review-scene-04:retry",
+      "review-scene-05:reading",
+      "review-scene-06:reading",
+      "review-scene-07:reading",
+      "review-scene-08:reading",
+      "review-scene-08:retry",
+      "review-scene-09:reading",
+      "review-scene-10:reading",
+      "review-scene-10:connection-open"
+    ],
+    "expectedFinalStateDigest": "sha256-b4d1789e57c3788a8b3d7cecbfeb384e57424fa440587080c32a828105e1161b"
+  }
+}

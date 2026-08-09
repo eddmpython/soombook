@@ -1,0 +1,63 @@
+[
+  {
+    "id": "interaction-find-tail",
+    "sceneId": "scene-search",
+    "kind": "findClue",
+    "prompt": "세 길의 발자국과 풀잎을 비교해 편지와 맞는 길을 찾아보세요.",
+    "accessibleName": "먹빛 숲의 세 길 살펴보기",
+    "inputAdapters": [
+      "lens",
+      "regionTap",
+      "keyboard",
+      "linearExplore"
+    ],
+    "pointerTarget": {
+      "shape": "ellipse",
+      "centerXPercent": 75,
+      "centerYPercent": 66,
+      "radiusXPercent": 18,
+      "radiusYPercent": 20
+    },
+    "choices": [
+      {
+        "id": "path-pond",
+        "label": "연못 길: 작은 새 발자국과 꼿꼿한 풀"
+      },
+      {
+        "id": "path-pine",
+        "label": "소나무 길: 큰 발자국과 한쪽으로 눕혀진 풀"
+      },
+      {
+        "id": "path-village",
+        "label": "마을 길: 둥근 고양이 발자국과 꼿꼿한 풀"
+      }
+    ],
+    "correctChoiceId": "path-pine",
+    "successFeedback": "소나무 길의 두 단서가 편지와 맞았어요. 바위 뒤에서는 줄무늬 꼬리도 보였어요.",
+    "retryFeedback": "괜찮아요. 편지에 나온 발자국 크기와 풀잎 방향을 함께 살펴보세요.",
+    "unlockTextIds": [
+      "text-search-unlocked"
+    ],
+    "hintSteps": [
+      {
+        "kind": "word",
+        "text": "발자국의 크기와 풀잎의 모양을 함께 살펴보세요."
+      },
+      {
+        "kind": "direction",
+        "text": "그림의 오른쪽으로 눈길을 옮겨 보세요."
+      },
+      {
+        "kind": "area",
+        "text": "소나무 옆 길과 둥근 바위 주변을 살펴보세요."
+      },
+      {
+        "kind": "direct",
+        "text": "큰 발자국과 한쪽으로 눕혀진 풀잎이 있는 소나무 길을 골라 보세요."
+      }
+    ],
+    "completion": {
+      "minimumDiscoveries": 1
+    }
+  }
+]

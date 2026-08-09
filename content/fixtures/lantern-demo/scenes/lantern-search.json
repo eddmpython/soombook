@@ -1,0 +1,40 @@
+{
+  "id": "lantern-search",
+  "kind": "investigation",
+  "title": "리본이 가리킨 길",
+  "shortLabel": "찾기",
+  "instruction": "세 길의 리본 수와 매듭 모양을 비교해 쪽지와 맞는 길을 찾으세요.",
+  "narration": "강 길, 언덕 길, 돌담 길에는 서로 다른 리본이 바람에 흔들리고 있었어요.",
+  "visual": {
+    "motif": "painting",
+    "palette": "amber",
+    "alt": "색과 수가 다른 리본이 놓인 세 갈래 길",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "mountains",
+      "stoneWall",
+      "lantern",
+      "ribbons"
+    ],
+    "baseAssetId": "asset-lantern-base",
+    "detailAssetId": "asset-lantern-detail"
+  },
+  "textBlocks": [
+    {
+      "id": "lantern-text-search",
+      "heading": "지도 가장자리",
+      "body": "다온은 리본을 하나씩 세고 매듭의 뾰족한 모양을 살폈어요."
+    },
+    {
+      "id": "lantern-text-unlocked",
+      "heading": "렌즈가 밝힌 것",
+      "body": "돌담 아래 흰 리본 두 개 사이에서 별 모양 매듭이 반짝였어요."
+    }
+  ],
+  "interactionIds": [
+    "lantern-find-ribbon"
+  ],
+  "reasoningIds": [],
+  "connectionIds": []
+}

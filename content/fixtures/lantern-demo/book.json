@@ -1,0 +1,21 @@
+{
+  "audience": {
+    "grade": 3,
+    "independentReadingMinutes": 7
+  },
+  "summary": "바람에 흩어진 지도 조각을 읽고, 리본과 매듭을 비교해 등불이 있는 길을 찾는 비공개 제작 검증 이야기입니다.",
+  "learningGoals": [
+    "그림에서 반복되는 특징을 찾는다.",
+    "두 단서를 묶어 선택의 근거를 설명한다.",
+    "관찰 질문을 다음 그림에 적용한다."
+  ],
+  "readingModes": [
+    "direct",
+    "guided",
+    "listen"
+  ],
+  "privacy": {
+    "childAccountRequired": false,
+    "remoteTelemetryDefault": false
+  }
+}

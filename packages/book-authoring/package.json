@@ -1,0 +1,11 @@
+{
+  "name": "@soombook/book-authoring",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@soombook/book-schema": "*",
+    "sharp": "0.35.3"
+  }
+}

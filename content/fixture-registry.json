@@ -1,0 +1,20 @@
+{
+  "formatVersion": 1,
+  "fixtures": [
+    {
+      "slug": "tiger-demo",
+      "exposure": "public-demo",
+      "expectedPayloadFileCount": 16
+    },
+    {
+      "slug": "lantern-demo",
+      "exposure": "internal-validation",
+      "expectedPayloadFileCount": 18
+    },
+    {
+      "slug": "tiger-full-review",
+      "exposure": "review-candidate",
+      "expectedPayloadFileCount": 20
+    }
+  ]
+}

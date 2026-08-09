@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-07",
+  "kind": "cover",
+  "title": "그림 가장자리의 호랑이",
+  "shortLabel": "만남",
+  "instruction": "호랑이의 말에서 이야기 속 사건을 확인하세요.",
+  "narration": "호랑이는 그림 가장자리에 앉아 솔향기를 따라 잠깐 산책했을 뿐이라고 말했어요.",
+  "visual": {
+    "motif": "moon",
+    "palette": "amber",
+    "alt": "그림 가장자리에 편안히 앉아 있는 창작 호랑이",
+    "truthStatus": "fiction",
+    "decorations": ["moon", "mountains", "pine", "tiger", "child"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-07",
+      "heading": "구해 준 이야기가 아니에요",
+      "body": "숨이는 호랑이를 억지로 데려오지 않았어요. 호랑이는 궁금한 것을 보고 스스로 돌아가기로 했어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

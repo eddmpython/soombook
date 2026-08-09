@@ -1,0 +1,28 @@
+{
+  "id": "lantern-map",
+  "kind": "cover",
+  "title": "세 바람의 약속",
+  "shortLabel": "읽기",
+  "instruction": "지도 쪽지에서 리본의 수와 매듭 모양을 읽어 보세요.",
+  "narration": "지도 쪽지에는 같은 색 리본 두 개와 별 모양 매듭이 있는 길을 찾으라고 쓰여 있었어요.",
+  "visual": {
+    "motif": "moon",
+    "palette": "jade",
+    "alt": "세 색 리본과 별 모양 매듭이 그려진 쪽지",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "ribbons"
+    ]
+  },
+  "textBlocks": [
+    {
+      "id": "lantern-text-map",
+      "heading": "두 가지 조건",
+      "body": "색 하나만 보지 말고 리본의 수와 매듭 모양을 함께 비교해야 했어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

@@ -1,0 +1,47 @@
+{
+  "formatVersion": "1.0.0",
+  "packVersion": "0.1.0",
+  "id": "book-lantern-demo",
+  "slug": "lantern-demo",
+  "title": "바람이 숨긴 등불 지도",
+  "status": "internal",
+  "locale": "ko-KR",
+  "minReaderVersion": "0.1.0",
+  "entrySceneId": "lantern-cover",
+  "sceneOrder": [
+    "lantern-cover",
+    "lantern-map",
+    "lantern-search",
+    "lantern-reason",
+    "lantern-connect"
+  ],
+  "completion": {
+    "requiredConnectionIds": [
+      "lantern-connection"
+    ],
+    "requiredInteractionIds": [
+      "lantern-find-ribbon"
+    ],
+    "requiredReasoningIds": [
+      "lantern-reasoning"
+    ],
+    "review": {
+      "recallPrompt": "등불은 어느 길에 있었나요? 어떤 두 단서가 그 길을 알려 주었나요?",
+      "recallCards": [
+        {
+          "id": "lantern-recall-ribbons",
+          "text": "흰 리본 두 개가 돌담 길을 가리켰어요."
+        },
+        {
+          "id": "lantern-recall-knot",
+          "text": "별 모양 매듭이 등불 꾸러미와 같은 표시였어요."
+        }
+      ],
+      "treasure": {
+        "interactionId": "lantern-find-ribbon",
+        "title": "바람 지도에서 찾은 보물",
+        "body": "돌담 아래 흰 리본 두 개와 별 모양 매듭이 같은 길을 알려 주었어요."
+      }
+    }
+  }
+}

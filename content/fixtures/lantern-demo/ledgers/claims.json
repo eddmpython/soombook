@@ -1,0 +1,22 @@
+[
+  {
+    "id": "lantern-claim-fixture",
+    "statement": "등불 지도 이야기는 반복 제작 검증용 창작 fixture이며 실제 문화 사실을 주장하지 않는다.",
+    "sourceTitle": "Soombook 내부 비공개 fixture 장부",
+    "sourceUrl": null,
+    "checkedAt": "2026-08-09",
+    "reviewStatus": "fixture",
+    "kind": "fixture",
+    "scope": "fixture",
+    "caveats": [
+      "실제 문화유산 사실이나 해석으로 사용할 수 없습니다."
+    ],
+    "sourceEvidenceRefs": [],
+    "audienceTextRefs": [
+      "lantern-text-connect"
+    ],
+    "recheckTriggers": [
+      "연결 카드 문구 변경"
+    ]
+  }
+]

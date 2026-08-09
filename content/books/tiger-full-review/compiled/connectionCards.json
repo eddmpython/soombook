@@ -1,0 +1,10 @@
+[
+  {
+    "id": "review-connection-source",
+    "sceneId": "review-scene-10",
+    "title": "실제 소장품 source 후보",
+    "body": "국립중앙박물관 소장품 호랑이와 까치, 동원2613을 연결 후보로 검토 중입니다. 이 카드는 원본 이미지나 승인된 문화 설명이 아니며 사람 검수 전에는 공개 자료로 승격할 수 없습니다.",
+    "sourceClaimIds": ["claim-review-metadata"],
+    "truthStatus": "unverifiedClaim"
+  }
+]

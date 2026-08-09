@@ -1,0 +1,19 @@
+[
+  {
+    "id": "review-reason-path",
+    "sceneId": "review-scene-08",
+    "prompt": "호랑이가 간 길의 근거와 떠난 까닭을 바르게 이은 것은 무엇인가요?",
+    "choices": [
+      { "id": "review-reason-pond", "label": "작은 새 발자국이 있는 연못 길, 물을 마시려고" },
+      {
+        "id": "review-reason-pine",
+        "label": "큰 발자국과 눕혀진 풀이 있는 소나무 길, 솔향기가 궁금해서"
+      },
+      { "id": "review-reason-village", "label": "고양이 발자국이 있는 마을 길, 먹이를 찾으려고" }
+    ],
+    "correctChoiceId": "review-reason-pine",
+    "evidenceInteractionIds": ["review-find-path"],
+    "successFeedback": "그림의 두 단서와 쪽지의 까닭을 정확히 이어 보았어요.",
+    "retryFeedback": "찾기 장면의 두 특징과 솔향기 쪽지를 따로 떠올린 뒤 이어 보세요."
+  }
+]

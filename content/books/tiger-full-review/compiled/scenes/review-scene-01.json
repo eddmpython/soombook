@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-01",
+  "kind": "cover",
+  "title": "봉인된 그림책",
+  "shortLabel": "표지",
+  "instruction": "표지의 끈을 마음속으로 풀고 이야기를 시작하세요.",
+  "narration": "달빛이 창가에 닿자 오래된 그림책의 먹빛 끈이 살며시 풀렸어요.",
+  "visual": {
+    "motif": "paper",
+    "palette": "ink",
+    "alt": "달빛 아래 먹빛 끈으로 닫힌 창작 그림책",
+    "truthStatus": "fiction",
+    "decorations": ["moon", "mountains"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-01",
+      "heading": "숨책이 만든 이야기",
+      "body": "여기부터는 숨책이 만든 이야기예요. 실제 소장품의 역사적 사건을 설명하는 글이 아니에요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

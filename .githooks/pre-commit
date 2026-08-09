@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+python scripts/check_project_docs.py
+node scripts/checkTextPolicy.mjs --staged
+npm run check

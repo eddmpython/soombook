@@ -1,0 +1,63 @@
+[
+  {
+    "id": "lantern-find-ribbon",
+    "sceneId": "lantern-search",
+    "kind": "findClue",
+    "prompt": "리본의 색과 수, 매듭 모양을 함께 비교하세요.",
+    "accessibleName": "바람 지도의 세 길 살펴보기",
+    "inputAdapters": [
+      "lens",
+      "regionTap",
+      "keyboard",
+      "linearExplore"
+    ],
+    "pointerTarget": {
+      "shape": "ellipse",
+      "centerXPercent": 63,
+      "centerYPercent": 67,
+      "radiusXPercent": 16,
+      "radiusYPercent": 20
+    },
+    "choices": [
+      {
+        "id": "lantern-river",
+        "label": "강 길: 파랑 리본 한 개와 둥근 매듭"
+      },
+      {
+        "id": "lantern-hill",
+        "label": "언덕 길: 빨강 리본 두 개와 네모 매듭"
+      },
+      {
+        "id": "lantern-wall",
+        "label": "돌담 길: 흰 리본 두 개와 별 모양 매듭"
+      }
+    ],
+    "correctChoiceId": "lantern-wall",
+    "successFeedback": "흰 리본 두 개와 별 모양 매듭이 쪽지의 두 조건과 모두 맞아요.",
+    "retryFeedback": "괜찮아요. 리본의 색만 보지 말고 수와 매듭 모양도 함께 살펴보세요.",
+    "unlockTextIds": [
+      "lantern-text-unlocked"
+    ],
+    "hintSteps": [
+      {
+        "kind": "word",
+        "text": "리본의 수와 매듭 모양을 함께 보세요."
+      },
+      {
+        "kind": "direction",
+        "text": "그림 오른쪽의 돌담 쪽으로 눈길을 옮겨 보세요."
+      },
+      {
+        "kind": "area",
+        "text": "돌담 아래 길의 리본 사이를 살펴보세요."
+      },
+      {
+        "kind": "direct",
+        "text": "흰 리본 두 개와 별 모양 매듭이 있는 돌담 길을 고르세요."
+      }
+    ],
+    "completion": {
+      "minimumDiscoveries": 1
+    }
+  }
+]

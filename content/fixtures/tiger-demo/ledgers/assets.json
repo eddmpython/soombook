@@ -1,0 +1,37 @@
+[
+  {
+    "id": "asset-css-tiger-scene",
+    "kind": "cssArtwork",
+    "path": null,
+    "rightsRecordId": "rights-fixture-art",
+    "integrity": null,
+    "alt": "CSS 도형으로 만든 기능 검증용 호랑이 탐험 장면",
+    "role": "storyIllustration",
+    "truthStatus": "fixture",
+    "derivedFromAssetIds": []
+  },
+  {
+    "id": "asset-tiger-base",
+    "kind": "image",
+    "path": "assets/tiger-base.svg",
+    "rightsRecordId": "rights-fixture-art-files",
+    "integrity": "sha256-2d38a0d2ea4274b8e5a620b8ddaeb6f44949c42d2bd654766faea7d43aafcb63",
+    "alt": "달빛 아래 세 갈래 길과 큰 발자국이 있는 먹빛 숲",
+    "role": "storyIllustration",
+    "truthStatus": "fixture",
+    "derivedFromAssetIds": []
+  },
+  {
+    "id": "asset-tiger-detail",
+    "kind": "image",
+    "path": "assets/tiger-detail.svg",
+    "rightsRecordId": "rights-fixture-art-files",
+    "integrity": "sha256-a193987a9708853514c59a36d1153061962294bbda05e6c154c65d4cae4a3b70",
+    "alt": "큰 발자국과 눕혀진 풀잎, 바위 뒤 줄무늬 꼬리의 상세 장면",
+    "role": "storyIllustration",
+    "truthStatus": "fixture",
+    "derivedFromAssetIds": [
+      "asset-tiger-base"
+    ]
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-03",
+  "kind": "cover",
+  "title": "세 갈래 먹빛 길",
+  "shortLabel": "편지",
+  "instruction": "호랑이가 남긴 편지에서 비교할 두 가지를 읽으세요.",
+  "narration": "먹물 자국 끝에는 연못, 소나무, 마을로 갈라지는 세 길과 짧은 편지가 있었어요.",
+  "visual": {
+    "motif": "paper",
+    "palette": "jade",
+    "alt": "연못과 소나무와 마을로 나뉜 세 갈래 창작 지도",
+    "truthStatus": "fiction",
+    "decorations": ["mountains", "pine"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-03",
+      "heading": "편지의 기준",
+      "body": "큰 발자국과 한쪽으로 눕혀진 풀잎이 함께 있는 길을 살펴보라고 쓰여 있었어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 2,
+  "authority": "book-pack-whole-file-integrity",
+  "bookId": "book-lantern-demo",
+  "packVersion": "0.1.0",
+  "exposure": "internal-validation",
+  "bookPackDigest": "sha256-3b825a49c0f790667542d25320d37f996bda11191299031c29f3eb037a692d24",
+  "files": [
+    {
+      "path": "assets/lantern-base.svg",
+      "byteLength": 1135,
+      "mediaType": "image/svg+xml",
+      "sha256": "sha256-47622f8dda1d928167656f8b49f54c94b1d3efcc26ca8d86be4d4a7d4174ed40"
+    },
+    {
+      "path": "assets/lantern-detail.svg",
+      "byteLength": 947,
+      "mediaType": "image/svg+xml",
+      "sha256": "sha256-7d619177f3e85d21f7a3e591ca6bddde75e5b6c2a5cde6b2bd94c59fc071d85d"
+    },
+    {
+      "path": "assets/lantern-timing.wav",
+      "byteLength": 64044,
+      "mediaType": "audio/wav",
+      "sha256": "sha256-d8aa2370280a494e74b8e7b47c1fb08979dc0f374bbc92aa13c7f4f1fed1601d"
+    },
+    {
+      "path": "audioTracks.json",
+      "byteLength": 1683,
+      "mediaType": "application/json",
+      "sha256": "sha256-72b84342e510b09cb488f2e5d24afc6d7a2106836d53ed8ce40e3482ba2fb60b"
+    },
+    {
+      "path": "book.json",
+      "byteLength": 594,
+      "mediaType": "application/json",
+      "sha256": "sha256-399f3223a3d0ad1146ae4bdb92803e85b9225b20438f7ddcd49f31846f4126d4"
+    },
+    {
+      "path": "connectionCards.json",
+      "byteLength": 387,
+      "mediaType": "application/json",
+      "sha256": "sha256-5d00eaab56f705fe663814b26ac5dde0aac9628b1def55d2a7c2c227966d9bcf"
+    },
+    {
+      "path": "interactions.json",
+      "byteLength": 1789,
+      "mediaType": "application/json",
+      "sha256": "sha256-82df1f6edb99c4667c2349dbbc44bcca9e90d237ec8a65a20dc29bc2e0c199d7"
+    },
+    {
+      "path": "ledgers/assets.json",
+      "byteLength": 1235,
+      "mediaType": "application/json",
+      "sha256": "sha256-09af66b11cd798c9758b163d6e1fa9a20dddd2b4005e9f2c52c16caffa252c45"
+    },
+    {
+      "path": "ledgers/claims.json",
+      "byteLength": 647,
+      "mediaType": "application/json",
+      "sha256": "sha256-f8e21f4351d7339fe8fa952e242c9d99fbe4d1b0a4075a529b27618be2223fe0"
+    },
+    {
+      "path": "ledgers/reviews.json",
+      "byteLength": 3,
+      "mediaType": "application/json",
+      "sha256": "sha256-37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "ledgers/rights.json",
+      "byteLength": 2030,
+      "mediaType": "application/json",
+      "sha256": "sha256-621079ccddb5b6b57e65ea4243d98bedd49d23d7b10ba97670c0299a8178191f"
+    },
+    {
+      "path": "manifest.json",
+      "byteLength": 1305,
+      "mediaType": "application/json",
+      "sha256": "sha256-434cda214f41645bcc3295e54803fa08623fba07197e752a5433d46506297018"
+    },
+    {
+      "path": "reasoningPrompts.json",
+      "byteLength": 855,
+      "mediaType": "application/json",
+      "sha256": "sha256-96877832d7f2bd9ce4603f90ba5cdc2cee3cbc488bdba9d044b5b75f9f0bf856"
+    },
+    {
+      "path": "scenes/lantern-connect.json",
+      "byteLength": 907,
+      "mediaType": "application/json",
+      "sha256": "sha256-572ea400b89cea0581dbbd79f7fa3e0fdfa115c598790f138e8c84a9187268a0"
+    },
+    {
+      "path": "scenes/lantern-cover.json",
+      "byteLength": 834,
+      "mediaType": "application/json",
+      "sha256": "sha256-8ec7c8c093e72df741f2c38ea53892ed1993f85ffc420faaa4ea593a4b433161"
+    },
+    {
+      "path": "scenes/lantern-map.json",
+      "byteLength": 837,
+      "mediaType": "application/json",
+      "sha256": "sha256-3eabb3842b3c0a5155faf8795567dace292570a776a6c084f271bcdc6876786a"
+    },
+    {
+      "path": "scenes/lantern-reason.json",
+      "byteLength": 917,
+      "mediaType": "application/json",
+      "sha256": "sha256-077ee9a729f202c84f7e4c7534b09a514f5c82a409ae1fe2aedaacc6147e5823"
+    },
+    {
+      "path": "scenes/lantern-search.json",
+      "byteLength": 1206,
+      "mediaType": "application/json",
+      "sha256": "sha256-9a3cd15930b538edec999193f1b96b664f3d5204a9cd37d3a582814ffe2c7531"
+    }
+  ],
+  "packContentDigest": "sha256-46143eaed35f68b3e1ef24461ee5d58dcf6816c2979223f8d5f5557416887106"
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "reasoning-tiger-path",
+    "sceneId": "scene-reason",
+    "prompt": "호랑이가 떠난 길과 까닭을 단서에 맞게 이은 것은 무엇일까요?",
+    "choices": [
+      {
+        "id": "choice-pond",
+        "label": "작은 새 발자국이 있는 연못 길, 목이 말라서"
+      },
+      {
+        "id": "choice-pine",
+        "label": "큰 발자국과 눕혀진 풀이 있는 소나무 길, 그림 밖 향기가 궁금해서"
+      },
+      {
+        "id": "choice-village",
+        "label": "고양이 발자국이 있는 마을 길, 먹이를 찾아서"
+      }
+    ],
+    "correctChoiceId": "choice-pine",
+    "evidenceInteractionIds": [
+      "interaction-find-tail"
+    ],
+    "successFeedback": "큰 발자국과 눕혀진 풀잎은 소나무 길을, 편지는 호랑이가 떠난 까닭을 알려 주었어요.",
+    "retryFeedback": "괜찮아요. 찾기 장면의 두 특징과 호랑이의 편지를 함께 떠올려 보세요."
+  }
+]

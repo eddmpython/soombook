@@ -1,0 +1,36 @@
+# Dependencies and package caches
+node_modules/
+.npm/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Tool caches
+.vite/
+.wrangler/
+.eslintcache
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Build and test artifacts
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local scratch files
+*.tmp
+*.log

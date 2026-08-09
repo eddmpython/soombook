@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-10",
+  "kind": "connection",
+  "title": "실제 소장품을 만나기 전에",
+  "shortLabel": "출처",
+  "instruction": "검수 중인 source 카드를 열고 이야기와 실제 자료의 경계를 확인하세요.",
+  "narration": "마지막 장에는 실제 소장품 정보를 연결하기 위한 검수 카드가 놓여 있었어요.",
+  "visual": {
+    "motif": "museum",
+    "palette": "jade",
+    "alt": "실제 소장품 원본 대신 검수 중 표시가 있는 창작 placeholder 카드",
+    "truthStatus": "unverifiedClaim",
+    "decorations": ["mountains", "tiger"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-10",
+      "heading": "아직 실제 자료를 싣지 않았어요",
+      "body": "국립중앙박물관의 호랑이와 까치 소장품을 source 후보로 확인 중이에요. 권리, 문화, 교육 검수가 끝나기 전에는 원본 이미지나 확정 설명을 공개하지 않아요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": ["review-connection-source"]
+}

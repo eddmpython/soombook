@@ -1,0 +1,543 @@
+{
+  "manifest": {
+    "formatVersion": "1.0.0",
+    "packVersion": "0.1.0",
+    "id": "book-tiger-full-review",
+    "slug": "tiger-full-review",
+    "title": "호랑이가 그림에서 사라졌다",
+    "status": "review",
+    "locale": "ko-KR",
+    "minReaderVersion": "0.1.0",
+    "entrySceneId": "review-scene-01",
+    "sceneOrder": [
+      "review-scene-01",
+      "review-scene-02",
+      "review-scene-03",
+      "review-scene-04",
+      "review-scene-05",
+      "review-scene-06",
+      "review-scene-07",
+      "review-scene-08",
+      "review-scene-09",
+      "review-scene-10"
+    ],
+    "completion": {
+      "requiredConnectionIds": ["review-connection-source"],
+      "requiredInteractionIds": ["review-find-path"],
+      "requiredReasoningIds": ["review-reason-path"],
+      "review": {
+        "recallPrompt": "오늘 찾은 것 중 기억하고 싶은 한 줄은 무엇인가요?",
+        "recallCards": [
+          {
+            "id": "review-recall-evidence",
+            "text": "큰 발자국과 눕혀진 풀잎이 소나무 길을 알려 주었어요."
+          },
+          {
+            "id": "review-recall-fiction",
+            "text": "호랑이가 그림 밖을 걸은 일은 숨책이 만든 이야기예요."
+          },
+          {
+            "id": "review-recall-source",
+            "text": "실제 소장품 정보는 기관 원문과 검수를 거쳐 따로 확인해야 해요."
+          }
+        ],
+        "treasure": {
+          "interactionId": "review-find-path",
+          "title": "먹빛 길에서 찾은 두 단서",
+          "body": "큰 발자국과 한쪽으로 눕혀진 풀잎이 같은 소나무 길에 있었어요."
+        }
+      }
+    }
+  },
+  "book": {
+    "audience": {
+      "grade": 3,
+      "independentReadingMinutes": 14
+    },
+    "summary": "사라진 호랑이의 흔적을 비교하고, 창작 이야기와 실제 소장품 정보의 경계를 배우는 10장면 검수 후보입니다.",
+    "learningGoals": [
+      "글과 그림에서 서로 맞는 두 근거를 찾는다.",
+      "근거를 이어 사건의 길과 까닭을 설명한다.",
+      "창작 이야기와 실제 소장품 정보를 구분한다."
+    ],
+    "readingModes": ["direct"],
+    "privacy": {
+      "childAccountRequired": false,
+      "remoteTelemetryDefault": false
+    }
+  },
+  "scenes": [
+    {
+      "id": "review-scene-01",
+      "kind": "cover",
+      "title": "봉인된 그림책",
+      "shortLabel": "표지",
+      "instruction": "표지의 끈을 마음속으로 풀고 이야기를 시작하세요.",
+      "narration": "달빛이 창가에 닿자 오래된 그림책의 먹빛 끈이 살며시 풀렸어요.",
+      "visual": {
+        "motif": "paper",
+        "palette": "ink",
+        "alt": "달빛 아래 먹빛 끈으로 닫힌 창작 그림책",
+        "truthStatus": "fiction",
+        "decorations": ["moon", "mountains"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-01",
+          "heading": "숨책이 만든 이야기",
+          "body": "여기부터는 숨책이 만든 이야기예요. 실제 소장품의 역사적 사건을 설명하는 글이 아니에요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-02",
+      "kind": "cover",
+      "title": "호랑이 모양의 빈자리",
+      "shortLabel": "빈자리",
+      "instruction": "그림 전체를 천천히 살펴보고 달라진 곳을 찾아보세요.",
+      "narration": "책을 펼치자 산과 소나무는 그대로인데 호랑이가 있던 자리만 하얗게 비어 있었어요.",
+      "visual": {
+        "motif": "painting",
+        "palette": "indigo",
+        "alt": "산과 소나무 사이에 호랑이 모양의 빈자리가 있는 창작 그림",
+        "truthStatus": "fiction",
+        "decorations": ["moon", "mountains", "pine"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-02",
+          "heading": "남아 있는 것",
+          "body": "숨이는 빈자리 가장자리에서 밖으로 이어지는 작은 먹물 자국을 보았어요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-03",
+      "kind": "cover",
+      "title": "세 갈래 먹빛 길",
+      "shortLabel": "편지",
+      "instruction": "호랑이가 남긴 편지에서 비교할 두 가지를 읽으세요.",
+      "narration": "먹물 자국 끝에는 연못, 소나무, 마을로 갈라지는 세 길과 짧은 편지가 있었어요.",
+      "visual": {
+        "motif": "paper",
+        "palette": "jade",
+        "alt": "연못과 소나무와 마을로 나뉜 세 갈래 창작 지도",
+        "truthStatus": "fiction",
+        "decorations": ["mountains", "pine"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-03",
+          "heading": "편지의 기준",
+          "body": "큰 발자국과 한쪽으로 눕혀진 풀잎이 함께 있는 길을 살펴보라고 쓰여 있었어요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-04",
+      "kind": "investigation",
+      "title": "발자국과 풀잎",
+      "shortLabel": "찾기",
+      "instruction": "세 길에서 발자국의 크기와 풀잎의 방향을 함께 비교하세요.",
+      "narration": "세 길에는 크기가 다른 발자국과 서로 다른 방향의 풀잎이 남아 있었어요.",
+      "visual": {
+        "motif": "painting",
+        "palette": "indigo",
+        "alt": "서로 다른 발자국과 풀잎이 놓인 세 갈래 창작 길",
+        "truthStatus": "fiction",
+        "decorations": ["moon", "mountains", "pine", "tiger"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-04a",
+          "heading": "두 가지를 함께",
+          "body": "한 가지 모양만 보고 고르지 말고 편지에 나온 두 특징을 모두 확인해야 했어요."
+        },
+        {
+          "id": "review-text-04b",
+          "heading": "찾은 길",
+          "body": "소나무 길에는 큰 발자국과 한쪽으로 눕혀진 풀잎이 함께 있었어요."
+        }
+      ],
+      "interactionIds": ["review-find-path"],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-05",
+      "kind": "cover",
+      "title": "소나무 향기의 쪽지",
+      "shortLabel": "까닭",
+      "instruction": "호랑이가 길을 나선 까닭을 쪽지에서 읽으세요.",
+      "narration": "소나무 아래 쪽지에는 그림 밖에서 불어온 솔향기가 궁금해 잠깐 걸어 보았다고 적혀 있었어요.",
+      "visual": {
+        "motif": "paper",
+        "palette": "amber",
+        "alt": "소나무 아래 솔향기 이야기가 적힌 창작 쪽지",
+        "truthStatus": "fiction",
+        "decorations": ["moon", "mountains", "pine"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-05",
+          "heading": "길과 까닭",
+          "body": "발자국과 풀잎은 어느 길인지 알려 주고, 쪽지는 왜 떠났는지 알려 주었어요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-06",
+      "kind": "cover",
+      "title": "바위 뒤 줄무늬",
+      "shortLabel": "재독",
+      "instruction": "앞에서 찾은 길을 떠올리며 바위 주변을 다시 살펴보세요.",
+      "narration": "소나무 길의 둥근 바위 뒤에서 검고 누런 줄무늬가 잠깐 흔들렸어요.",
+      "visual": {
+        "motif": "painting",
+        "palette": "jade",
+        "alt": "소나무 길의 바위 뒤로 줄무늬가 보이는 창작 장면",
+        "truthStatus": "fiction",
+        "decorations": ["mountains", "pine", "tiger"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-06",
+          "heading": "다시 보니",
+          "body": "처음에는 붓 자국처럼 보였지만 앞 장면의 단서와 이어 보니 호랑이 꼬리였어요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-07",
+      "kind": "cover",
+      "title": "그림 가장자리의 호랑이",
+      "shortLabel": "만남",
+      "instruction": "호랑이의 말에서 이야기 속 사건을 확인하세요.",
+      "narration": "호랑이는 그림 가장자리에 앉아 솔향기를 따라 잠깐 산책했을 뿐이라고 말했어요.",
+      "visual": {
+        "motif": "moon",
+        "palette": "amber",
+        "alt": "그림 가장자리에 편안히 앉아 있는 창작 호랑이",
+        "truthStatus": "fiction",
+        "decorations": ["moon", "mountains", "pine", "tiger", "child"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-07",
+          "heading": "구해 준 이야기가 아니에요",
+          "body": "숨이는 호랑이를 억지로 데려오지 않았어요. 호랑이는 궁금한 것을 보고 스스로 돌아가기로 했어요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-08",
+      "kind": "reasoning",
+      "title": "단서와 까닭 잇기",
+      "shortLabel": "생각",
+      "instruction": "찾은 길의 근거와 호랑이가 떠난 까닭을 바르게 이으세요.",
+      "narration": "숨이는 지금까지 읽은 그림과 쪽지를 한 줄로 이어 보았어요.",
+      "visual": {
+        "motif": "paper",
+        "palette": "ink",
+        "alt": "발자국과 풀잎과 쪽지를 나란히 놓은 창작 추론 장면",
+        "truthStatus": "fiction",
+        "decorations": ["mountains", "pine", "child"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-08",
+          "heading": "근거를 이어 보기",
+          "body": "길을 보여 주는 단서와 떠난 까닭을 보여 주는 글은 서로 하는 일이 달랐어요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": ["review-reason-path"],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-09",
+      "kind": "cover",
+      "title": "제자리로 돌아온 호랑이",
+      "shortLabel": "돌아옴",
+      "instruction": "이야기의 마지막 그림을 천천히 읽으세요.",
+      "narration": "호랑이가 빈자리에 들어서자 산과 소나무와 달빛이 다시 한 폭의 그림으로 이어졌어요.",
+      "visual": {
+        "motif": "painting",
+        "palette": "jade",
+        "alt": "산과 소나무 사이 제자리로 돌아온 창작 호랑이",
+        "truthStatus": "fiction",
+        "decorations": ["moon", "mountains", "pine", "tiger", "child"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-09",
+          "heading": "이야기의 마침표",
+          "body": "숨이는 그림을 오래 볼수록 서로 이어지는 근거를 더 많이 찾을 수 있다는 것을 알았어요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": []
+    },
+    {
+      "id": "review-scene-10",
+      "kind": "connection",
+      "title": "실제 소장품을 만나기 전에",
+      "shortLabel": "출처",
+      "instruction": "검수 중인 source 카드를 열고 이야기와 실제 자료의 경계를 확인하세요.",
+      "narration": "마지막 장에는 실제 소장품 정보를 연결하기 위한 검수 카드가 놓여 있었어요.",
+      "visual": {
+        "motif": "museum",
+        "palette": "jade",
+        "alt": "실제 소장품 원본 대신 검수 중 표시가 있는 창작 placeholder 카드",
+        "truthStatus": "unverifiedClaim",
+        "decorations": ["mountains", "tiger"]
+      },
+      "textBlocks": [
+        {
+          "id": "review-text-10",
+          "heading": "아직 실제 자료를 싣지 않았어요",
+          "body": "국립중앙박물관의 호랑이와 까치 소장품을 source 후보로 확인 중이에요. 권리, 문화, 교육 검수가 끝나기 전에는 원본 이미지나 확정 설명을 공개하지 않아요."
+        }
+      ],
+      "interactionIds": [],
+      "reasoningIds": [],
+      "connectionIds": ["review-connection-source"]
+    }
+  ],
+  "interactions": [
+    {
+      "id": "review-find-path",
+      "sceneId": "review-scene-04",
+      "kind": "findClue",
+      "prompt": "편지에 나온 발자국 크기와 풀잎 방향이 모두 맞는 길을 찾으세요.",
+      "accessibleName": "세 갈래 먹빛 길의 발자국과 풀잎 비교하기",
+      "inputAdapters": ["lens", "regionTap", "keyboard", "linearExplore"],
+      "pointerTarget": {
+        "shape": "ellipse",
+        "centerXPercent": 74,
+        "centerYPercent": 65,
+        "radiusXPercent": 18,
+        "radiusYPercent": 20
+      },
+      "choices": [
+        {
+          "id": "review-path-pond",
+          "label": "연못 길: 작은 새 발자국과 꼿꼿한 풀잎"
+        },
+        {
+          "id": "review-path-pine",
+          "label": "소나무 길: 큰 발자국과 한쪽으로 눕혀진 풀잎"
+        },
+        {
+          "id": "review-path-village",
+          "label": "마을 길: 둥근 고양이 발자국과 꼿꼿한 풀잎"
+        }
+      ],
+      "correctChoiceId": "review-path-pine",
+      "successFeedback": "큰 발자국과 눕혀진 풀잎이 모두 있는 소나무 길을 찾았어요.",
+      "retryFeedback": "괜찮아요. 발자국 크기와 풀잎 방향을 한 길에서 함께 확인하세요.",
+      "unlockTextIds": ["review-text-04b"],
+      "hintSteps": [
+        {
+          "kind": "word",
+          "text": "발자국의 크기와 풀잎의 방향을 함께 보세요."
+        },
+        {
+          "kind": "direction",
+          "text": "그림 오른쪽 길로 눈길을 옮겨 보세요."
+        },
+        {
+          "kind": "area",
+          "text": "소나무 아래 길과 둥근 바위 주변을 살펴보세요."
+        },
+        {
+          "kind": "direct",
+          "text": "큰 발자국과 눕혀진 풀잎이 있는 소나무 길을 고르세요."
+        }
+      ],
+      "completion": {
+        "minimumDiscoveries": 1
+      }
+    }
+  ],
+  "reasoningPrompts": [
+    {
+      "id": "review-reason-path",
+      "sceneId": "review-scene-08",
+      "prompt": "호랑이가 간 길의 근거와 떠난 까닭을 바르게 이은 것은 무엇인가요?",
+      "choices": [
+        {
+          "id": "review-reason-pond",
+          "label": "작은 새 발자국이 있는 연못 길, 물을 마시려고"
+        },
+        {
+          "id": "review-reason-pine",
+          "label": "큰 발자국과 눕혀진 풀이 있는 소나무 길, 솔향기가 궁금해서"
+        },
+        {
+          "id": "review-reason-village",
+          "label": "고양이 발자국이 있는 마을 길, 먹이를 찾으려고"
+        }
+      ],
+      "correctChoiceId": "review-reason-pine",
+      "evidenceInteractionIds": ["review-find-path"],
+      "successFeedback": "그림의 두 단서와 쪽지의 까닭을 정확히 이어 보았어요.",
+      "retryFeedback": "찾기 장면의 두 특징과 솔향기 쪽지를 따로 떠올린 뒤 이어 보세요."
+    }
+  ],
+  "connectionCards": [
+    {
+      "id": "review-connection-source",
+      "sceneId": "review-scene-10",
+      "title": "실제 소장품 source 후보",
+      "body": "국립중앙박물관 소장품 호랑이와 까치, 동원2613을 연결 후보로 검토 중입니다. 이 카드는 원본 이미지나 승인된 문화 설명이 아니며 사람 검수 전에는 공개 자료로 승격할 수 없습니다.",
+      "sourceClaimIds": ["claim-review-metadata"],
+      "truthStatus": "unverifiedClaim"
+    }
+  ],
+  "rights": [
+    {
+      "id": "rights-review-story",
+      "subjectType": "text",
+      "subjectId": "book-tiger-full-review",
+      "license": "Apache-2.0",
+      "sourceUrl": null,
+      "attribution": "Soombook 프로젝트가 작성한 검수 후보 원고",
+      "commercialUse": true,
+      "modificationAllowed": true,
+      "approvalStatus": "pending",
+      "notes": "교육과 문화 검수 전의 창작 원고입니다.",
+      "coveredSubjectIds": ["book-tiger-full-review"],
+      "provenanceDraft": {
+        "sourceInstitution": "Soombook",
+        "sourceIdentifier": "tiger-full-review-source-0.1.0",
+        "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+        "transformations": [],
+        "derivedFromAssetIds": [],
+        "recheckTriggers": ["원고 또는 라이선스 변경"],
+        "sourceSnapshotDraft": {
+          "kind": "authoringSource",
+          "evidenceRef": "repo:tiger-full-review-source",
+          "capturedAt": "2026-08-09T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "rights-review-art",
+      "subjectType": "visual",
+      "subjectId": "asset-review-css-art",
+      "license": "Apache-2.0",
+      "sourceUrl": null,
+      "attribution": "Soombook 프로젝트가 직접 만든 CSS placeholder 시각물",
+      "commercialUse": true,
+      "modificationAllowed": true,
+      "approvalStatus": "pending",
+      "notes": "실제 박물관 원본을 포함하지 않습니다.",
+      "coveredSubjectIds": ["asset-review-css-art"],
+      "provenanceDraft": {
+        "sourceInstitution": "Soombook",
+        "sourceIdentifier": "review-css-art-0.1.0",
+        "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+        "transformations": [],
+        "derivedFromAssetIds": [],
+        "recheckTriggers": ["CSS 시각물 또는 라이선스 변경"],
+        "sourceSnapshotDraft": {
+          "kind": "authoringSource",
+          "evidenceRef": "repo:tiger-full-review-source",
+          "capturedAt": "2026-08-09T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "rights-review-source-art",
+      "subjectType": "visual",
+      "subjectId": "asset-review-source-base",
+      "license": "pending-source-review",
+      "sourceUrl": "https://www.museum.go.kr/MUSEUM/contents/M0502000000.do?relicId=8450&schM=view",
+      "attribution": "국립중앙박물관 소장품 원본 후보를 검수하기 위한 내부 메모",
+      "commercialUse": false,
+      "modificationAllowed": false,
+      "approvalStatus": "pending",
+      "notes": "원문 이미지와 확정 설명은 저장하거나 공개하지 않았습니다.",
+      "coveredSubjectIds": ["asset-review-source-base", "asset-review-source-detail"],
+      "provenanceDraft": {
+        "sourceInstitution": "국립중앙박물관",
+        "sourceIdentifier": "동원2613-candidate",
+        "licenseUrl": "https://www.museum.go.kr/MUSEUM/contents/M3304000000.do",
+        "transformations": [],
+        "derivedFromAssetIds": [],
+        "recheckTriggers": ["소장품 원문, 권리정책, 식별정보 변경"],
+        "sourceSnapshotDraft": {
+          "kind": "pendingExternal",
+          "evidenceRef": "review-source-candidates"
+        }
+      }
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim-review-fiction-event",
+      "statement": "호랑이가 솔향기가 궁금해 그림 밖을 걸었다는 사건은 Soombook 창작 이야기이다.",
+      "sourceTitle": "Soombook 검수 후보 원고",
+      "sourceUrl": null,
+      "checkedAt": "2026-08-09",
+      "reviewStatus": "pending",
+      "kind": "fictionEvent",
+      "scope": "storyOnly",
+      "caveats": ["실제 소장품의 역사적 사건이나 작가 의도를 설명하지 않는다."],
+      "sourceEvidenceRefs": [],
+      "audienceTextRefs": ["review-text-01", "review-text-07"],
+      "recheckTriggers": ["허구 표시 또는 이야기 사건 변경"]
+    },
+    {
+      "id": "claim-review-metadata",
+      "statement": "국립중앙박물관 호랑이와 까치, 동원2613은 실제 연결 source 후보이다.",
+      "sourceTitle": "국립중앙박물관 소장품 원문 후보",
+      "sourceUrl": "https://www.museum.go.kr/MUSEUM/contents/M0502000000.do?relicId=8450&schM=view",
+      "checkedAt": "2026-08-09",
+      "reviewStatus": "pending",
+      "kind": "museumMetadata",
+      "scope": "objectOnly",
+      "caveats": [
+        "사람 검수 전에는 작품 정보, 이미지 권리, 장르 해석을 확정하지 않는다.",
+        "별도 전시 설명을 이 소장품의 제작 의도와 합치지 않는다."
+      ],
+      "sourceEvidenceRefs": ["review-source-candidates"],
+      "audienceTextRefs": ["review-text-10"],
+      "recheckTriggers": ["소장품 원문 또는 화면 source 문구 변경"]
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-review-css-art",
+      "kind": "cssArtwork",
+      "path": null,
+      "rightsRecordId": "rights-review-art",
+      "integrity": null,
+      "alt": "검수 후보의 창작 CSS placeholder 시각물",
+      "role": "storyIllustration",
+      "truthStatus": "fiction",
+      "derivedFromAssetIds": []
+    }
+  ],
+  "audioTracks": []
+}

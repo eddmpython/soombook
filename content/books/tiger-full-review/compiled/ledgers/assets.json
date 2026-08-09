@@ -1,0 +1,13 @@
+[
+  {
+    "id": "asset-review-css-art",
+    "kind": "cssArtwork",
+    "path": null,
+    "rightsRecordId": "rights-review-art",
+    "integrity": null,
+    "alt": "검수 후보의 창작 CSS placeholder 시각물",
+    "role": "storyIllustration",
+    "truthStatus": "fiction",
+    "derivedFromAssetIds": []
+  }
+]

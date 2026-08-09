@@ -1,0 +1,30 @@
+{
+  "id": "scene-cover",
+  "kind": "cover",
+  "title": "빈 그림의 초대",
+  "shortLabel": "시작",
+  "instruction": "표지를 열고 사라진 호랑이의 이야기를 시작하세요.",
+  "narration": "달빛이 비치는 밤, 오래된 그림 한가운데에 호랑이 모양의 빈자리가 생겼어요.",
+  "visual": {
+    "motif": "paper",
+    "palette": "ink",
+    "alt": "달빛 아래 펼쳐진 종이와 호랑이 모양의 빈자리",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "mountains",
+      "tiger",
+      "child"
+    ]
+  },
+  "textBlocks": [
+    {
+      "id": "text-cover-1",
+      "heading": "수상한 밤",
+      "body": "그림을 지키던 아이 숨이는 빈자리 곁에서 반짝이는 붓 자국을 발견했어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

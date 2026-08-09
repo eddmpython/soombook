@@ -1,0 +1,32 @@
+{
+  "id": "scene-reason",
+  "kind": "reasoning",
+  "title": "호랑이는 어디로 갔을까",
+  "shortLabel": "생각",
+  "instruction": "찾은 단서와 호랑이의 편지를 함께 보고 가장 알맞은 설명을 고르세요.",
+  "narration": "소나무 길 끝에는 호랑이가 남긴 편지가 있었어요. 그림 밖 소나무 향기가 궁금해 잠깐 숲을 걸었다고 쓰여 있었지요.",
+  "visual": {
+    "motif": "moon",
+    "palette": "amber",
+    "alt": "세 갈래 길 위에서 단서를 비교하는 숨이",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "mountains",
+      "pine",
+      "child"
+    ]
+  },
+  "textBlocks": [
+    {
+      "id": "text-reason-1",
+      "heading": "단서를 모아 보기",
+      "body": "큰 발자국과 눕혀진 풀잎은 호랑이가 간 길을 알려 주고, 편지는 그림을 떠난 까닭을 알려 주었어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [
+    "reasoning-tiger-path"
+  ],
+  "connectionIds": []
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "claim-fixture-observation",
+    "statement": "기능 검증용 질문 카드는 실제 문화유산 사실을 주장하지 않는다.",
+    "sourceTitle": "Soombook 내부 기능 검증 픽스처",
+    "sourceUrl": null,
+    "checkedAt": "2026-08-09",
+    "reviewStatus": "fixture",
+    "kind": "fixture",
+    "scope": "fixture",
+    "caveats": [
+      "실제 문화유산 사실이나 해석으로 사용할 수 없습니다."
+    ],
+    "sourceEvidenceRefs": [],
+    "audienceTextRefs": [
+      "text-connect-1"
+    ],
+    "recheckTriggers": [
+      "질문 카드 문구 변경"
+    ]
+  }
+]

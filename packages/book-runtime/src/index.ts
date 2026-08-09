@@ -1,0 +1,17 @@
+export {
+  applyBookCommand,
+  canAdvanceScene,
+  canEnterReflection,
+  canGoToPreviousScene,
+  createBookRuntime,
+  type BookCommand,
+  type BookRuntimeState,
+  type CompletionReviewChoice,
+  type JourneyStage,
+  type MotionPreference,
+  type RuntimeError,
+  type RuntimeReceipt,
+  type RuntimeStatus,
+  type RuntimeTransition,
+  type TextScale,
+} from './runtime';

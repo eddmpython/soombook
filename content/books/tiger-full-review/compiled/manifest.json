@@ -1,0 +1,50 @@
+{
+  "formatVersion": "1.0.0",
+  "packVersion": "0.1.0",
+  "id": "book-tiger-full-review",
+  "slug": "tiger-full-review",
+  "title": "호랑이가 그림에서 사라졌다",
+  "status": "review",
+  "locale": "ko-KR",
+  "minReaderVersion": "0.1.0",
+  "entrySceneId": "review-scene-01",
+  "sceneOrder": [
+    "review-scene-01",
+    "review-scene-02",
+    "review-scene-03",
+    "review-scene-04",
+    "review-scene-05",
+    "review-scene-06",
+    "review-scene-07",
+    "review-scene-08",
+    "review-scene-09",
+    "review-scene-10"
+  ],
+  "completion": {
+    "requiredConnectionIds": ["review-connection-source"],
+    "requiredInteractionIds": ["review-find-path"],
+    "requiredReasoningIds": ["review-reason-path"],
+    "review": {
+      "recallPrompt": "오늘 찾은 것 중 기억하고 싶은 한 줄은 무엇인가요?",
+      "recallCards": [
+        {
+          "id": "review-recall-evidence",
+          "text": "큰 발자국과 눕혀진 풀잎이 소나무 길을 알려 주었어요."
+        },
+        {
+          "id": "review-recall-fiction",
+          "text": "호랑이가 그림 밖을 걸은 일은 숨책이 만든 이야기예요."
+        },
+        {
+          "id": "review-recall-source",
+          "text": "실제 소장품 정보는 기관 원문과 검수를 거쳐 따로 확인해야 해요."
+        }
+      ],
+      "treasure": {
+        "interactionId": "review-find-path",
+        "title": "먹빛 길에서 찾은 두 단서",
+        "body": "큰 발자국과 한쪽으로 눕혀진 풀잎이 같은 소나무 길에 있었어요."
+      }
+    }
+  }
+}

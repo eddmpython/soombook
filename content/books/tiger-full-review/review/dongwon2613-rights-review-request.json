@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "authority": "operator-review-request-not-rights-approval",
+  "requestId": "rights-request-nmk-dongwon2613-20260809",
+  "createdAt": "2026-08-09T13:31:19.916Z",
+  "bookId": "book-tiger-full-review",
+  "packVersion": "0.1.0",
+  "targetRightsRecordId": "rights-review-source-art",
+  "authoringSourceSha256": "sha256-b690e31474146ea2dfc78561243e8d6f85ec6ec2211ba1c11b6085c212e7661c",
+  "targetRightsSubjectDigest": "sha256-a90ef20f598fda49be098f3c0338301b5e7101a90cbb64bfb46709f9e14be2ad",
+  "sourceObject": {
+    "institution": "국립중앙박물관",
+    "title": "호랑이와 까치",
+    "alternativeTitle": "鵲虎圖, 호작도",
+    "objectIdentifier": "동원2613",
+    "objectPageUrl": "https://www.museum.go.kr/MUSEUM/contents/M0502000000.do?relicId=8450&schM=view",
+    "copyrightPolicyUrl": "https://www.museum.go.kr/MUSEUM/contents/M3304000000.do",
+    "licenseCode": "KOGL-1",
+    "licenseUrl": "https://www.kogl.or.kr/info/licenseType1.do"
+  },
+  "intendedUse": {
+    "product": "Soombook 대표작의 실제 소장품 연결 카드",
+    "commercialUse": true,
+    "childFacing": true,
+    "distribution": "public-web",
+    "modificationRequired": true,
+    "noInstitutionPartnershipClaim": true
+  },
+  "displayFileObservations": [
+    {
+      "candidateId": "dongwon2613-display-01",
+      "pageImageOrdinal": 1,
+      "displayUrl": "https://www.museum.go.kr/relic_image/PS01001001/don002/2017/0510144810123/don002613-00-00.jpg",
+      "observedAt": "2026-08-09T13:31:19.916Z",
+      "mediaType": "image/jpeg",
+      "byteLength": 7053979,
+      "pixelWidth": 2375,
+      "pixelHeight": 3000,
+      "sha256": "sha256-862a9f9c1b2cd953ede0669d16574c0d306a97edd4332e5199ed4da8ebc03f7d",
+      "lastModified": "Thu, 07 Mar 2024 21:31:14 GMT",
+      "duplicateOfCandidateId": null,
+      "downloadFileId": null,
+      "downloadArtifactRef": null,
+      "repositoryPath": null,
+      "ingestAllowed": false
+    },
+    {
+      "candidateId": "dongwon2613-display-02",
+      "pageImageOrdinal": 2,
+      "displayUrl": "https://www.museum.go.kr/relic_image/PS01001001/don000/2019/0925153847014/don002613-000-90000.jpg",
+      "observedAt": "2026-08-09T13:31:19.916Z",
+      "mediaType": "image/jpeg",
+      "byteLength": 4617124,
+      "pixelWidth": 1474,
+      "pixelHeight": 3000,
+      "sha256": "sha256-ad1c0d1418f4b21990f53ed68a9d8c1f4470ce7981911c871649b4ca167c663e",
+      "lastModified": "Thu, 07 Mar 2024 21:31:15 GMT",
+      "duplicateOfCandidateId": null,
+      "downloadFileId": null,
+      "downloadArtifactRef": null,
+      "repositoryPath": null,
+      "ingestAllowed": false
+    },
+    {
+      "candidateId": "dongwon2613-display-03",
+      "pageImageOrdinal": 3,
+      "displayUrl": "https://www.museum.go.kr/relic_image/PS01001001/don000/2019/0925153850720/don002613-000-90001.jpg",
+      "observedAt": "2026-08-09T13:31:19.916Z",
+      "mediaType": "image/jpeg",
+      "byteLength": 6429295,
+      "pixelWidth": 1859,
+      "pixelHeight": 3000,
+      "sha256": "sha256-852ae18f8fb497789b7c70aded81f173736cdb349c0219f242b93868f875d8f8",
+      "lastModified": "Thu, 07 Mar 2024 21:31:16 GMT",
+      "duplicateOfCandidateId": null,
+      "downloadFileId": null,
+      "downloadArtifactRef": null,
+      "repositoryPath": null,
+      "ingestAllowed": false
+    },
+    {
+      "candidateId": "dongwon2613-display-04",
+      "pageImageOrdinal": 4,
+      "displayUrl": "https://www.museum.go.kr/relic_image/PS01001001/don000/2019/0925160910904/don002613-000-90000.jpg",
+      "observedAt": "2026-08-09T13:31:19.916Z",
+      "mediaType": "image/jpeg",
+      "byteLength": 4617124,
+      "pixelWidth": 1474,
+      "pixelHeight": 3000,
+      "sha256": "sha256-ad1c0d1418f4b21990f53ed68a9d8c1f4470ce7981911c871649b4ca167c663e",
+      "lastModified": "Thu, 07 Mar 2024 21:31:18 GMT",
+      "duplicateOfCandidateId": "dongwon2613-display-02",
+      "downloadFileId": null,
+      "downloadArtifactRef": null,
+      "repositoryPath": null,
+      "ingestAllowed": false
+    },
+    {
+      "candidateId": "dongwon2613-display-05",
+      "pageImageOrdinal": 5,
+      "displayUrl": "https://www.museum.go.kr/relic_image/PS01001001/don000/2019/0925160913894/don002613-000-90001.jpg",
+      "observedAt": "2026-08-09T13:31:19.916Z",
+      "mediaType": "image/jpeg",
+      "byteLength": 6429295,
+      "pixelWidth": 1859,
+      "pixelHeight": 3000,
+      "sha256": "sha256-852ae18f8fb497789b7c70aded81f173736cdb349c0219f242b93868f875d8f8",
+      "lastModified": "Thu, 07 Mar 2024 21:31:19 GMT",
+      "duplicateOfCandidateId": "dongwon2613-display-03",
+      "downloadFileId": null,
+      "downloadArtifactRef": null,
+      "repositoryPath": null,
+      "ingestAllowed": false
+    }
+  ],
+  "derivativePlans": [
+    {
+      "id": "dongwon2613-base-webp",
+      "outputAssetId": "asset-review-source-base",
+      "outputPath": "assets/source/dongwon2613-base.webp",
+      "role": "sourceOriginal",
+      "operations": [
+        { "kind": "autoOrient" },
+        {
+          "kind": "resize",
+          "width": 900,
+          "height": 1200,
+          "fit": "inside",
+          "withoutEnlargement": true
+        },
+        { "kind": "encode", "format": "webp", "quality": 82 }
+      ]
+    },
+    {
+      "id": "dongwon2613-detail-webp",
+      "outputAssetId": "asset-review-source-detail",
+      "outputPath": "assets/source/dongwon2613-detail.webp",
+      "role": "sourceDetail",
+      "operations": [
+        { "kind": "autoOrient" },
+        {
+          "kind": "resize",
+          "width": 1600,
+          "height": 2200,
+          "fit": "inside",
+          "withoutEnlargement": true
+        },
+        { "kind": "encode", "format": "webp", "quality": 88 }
+      ]
+    }
+  ],
+  "transformationDecisions": [
+    {
+      "kind": "crop",
+      "decision": "not-applied",
+      "reason": "소장품 전체 구도를 보존하고 별도 crop을 만들지 않습니다."
+    },
+    {
+      "kind": "toneAdjust",
+      "decision": "not-applied",
+      "reason": "원본 색과 명암을 임의로 바꾸지 않습니다."
+    },
+    {
+      "kind": "overlay",
+      "decision": "not-applied",
+      "reason": "기관 원본 위에 장식이나 설명 layer를 합성하지 않습니다."
+    },
+    {
+      "kind": "detailTile",
+      "decision": "not-applied",
+      "reason": "별도 tile 없이 승인 원본에서 두 해상도만 파생합니다."
+    }
+  ],
+  "attribution": {
+    "text": "국립중앙박물관, 「호랑이와 까치」(동원2613), 공공누리 제1유형",
+    "sourceUrl": "https://www.museum.go.kr/MUSEUM/contents/M0502000000.do?relicId=8450&schM=view",
+    "licenseLabel": "공공누리 제1유형",
+    "licenseUrl": "https://www.kogl.or.kr/info/licenseType1.do",
+    "placements": [
+      "실제 소장품 연결 카드",
+      "이미지 바로 아래 출처",
+      "보호자용 출처와 라이선스 안내"
+    ],
+    "partnershipDisclaimer": "Soombook은 국립중앙박물관의 공식 서비스나 제휴 서비스가 아닙니다."
+  },
+  "recheckTriggers": [
+    "소장품 페이지의 제목, 식별자, 이미지 목록 또는 공공누리 표시 변경",
+    "저작권정책 또는 공공누리 제1유형 조건 변경",
+    "실제 다운로드 artifact의 file ID 또는 SHA-256 변경",
+    "변환 순서, 파라미터, attribution 또는 공개 범위 변경",
+    "승인 재검토일 도달, 권리 민원, 원문 삭제 또는 evidence vault 접근 실패"
+  ],
+  "withdrawal": {
+    "ownerRoleRef": "rights-owner:soombook",
+    "immediateAction": "대표작 공개를 중단하고 안전한 placeholder release로 교체한 뒤 새 service worker에서 이전 cache를 제거합니다.",
+    "offlineCacheCaveat": "CDN purge나 unpublish만으로 이미 설치된 PWA cache가 즉시 회수되지는 않습니다."
+  },
+  "operatorQuestions": [
+    "다섯 표시 후보 중 실제 다운로드할 file ID와 artifact를 각각 지정했습니까?",
+    "선택한 각 파일에 소장품 페이지의 공공누리 제1유형 표시가 적용됨을 파일 단위로 확인했습니까?",
+    "공개 web, 상업 이용, WebP 변환과 두 해상도 파생을 모두 승인합니까?",
+    "attribution 세 위치와 비제휴 문구를 승인합니까?",
+    "재검토일, 철회 책임 역할과 비상 교체 절차를 승인합니까?"
+  ]
+}

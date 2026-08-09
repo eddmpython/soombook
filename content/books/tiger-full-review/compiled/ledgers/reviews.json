@@ -1,0 +1,86 @@
+[
+  {
+    "id": "review-education-book-tiger-full-review",
+    "domain": "education",
+    "subjectType": "pack",
+    "subjectId": "book-tiger-full-review",
+    "status": "pending",
+    "reviewerRef": null,
+    "reviewedAt": null,
+    "subjectDigest": null,
+    "packVersion": "0.1.0",
+    "notes": "사람 검수 전에는 approved 또는 published로 승격할 수 없습니다."
+  },
+  {
+    "id": "review-accessibility-book-tiger-full-review",
+    "domain": "accessibility",
+    "subjectType": "pack",
+    "subjectId": "book-tiger-full-review",
+    "status": "pending",
+    "reviewerRef": null,
+    "reviewedAt": null,
+    "subjectDigest": null,
+    "packVersion": "0.1.0",
+    "notes": "사람 검수 전에는 approved 또는 published로 승격할 수 없습니다."
+  },
+  {
+    "id": "review-rights-rights-review-story",
+    "domain": "rights",
+    "subjectType": "rights",
+    "subjectId": "rights-review-story",
+    "status": "pending",
+    "reviewerRef": null,
+    "reviewedAt": null,
+    "subjectDigest": null,
+    "packVersion": "0.1.0",
+    "notes": "사람 검수 전에는 approved 또는 published로 승격할 수 없습니다."
+  },
+  {
+    "id": "review-rights-rights-review-art",
+    "domain": "rights",
+    "subjectType": "rights",
+    "subjectId": "rights-review-art",
+    "status": "pending",
+    "reviewerRef": null,
+    "reviewedAt": null,
+    "subjectDigest": null,
+    "packVersion": "0.1.0",
+    "notes": "사람 검수 전에는 approved 또는 published로 승격할 수 없습니다."
+  },
+  {
+    "id": "review-rights-rights-review-source-art",
+    "domain": "rights",
+    "subjectType": "rights",
+    "subjectId": "rights-review-source-art",
+    "status": "pending",
+    "reviewerRef": null,
+    "reviewedAt": null,
+    "subjectDigest": null,
+    "packVersion": "0.1.0",
+    "notes": "사람 검수 전에는 approved 또는 published로 승격할 수 없습니다."
+  },
+  {
+    "id": "review-culture-claim-review-fiction-event",
+    "domain": "culture",
+    "subjectType": "claim",
+    "subjectId": "claim-review-fiction-event",
+    "status": "pending",
+    "reviewerRef": null,
+    "reviewedAt": null,
+    "subjectDigest": null,
+    "packVersion": "0.1.0",
+    "notes": "사람 검수 전에는 approved 또는 published로 승격할 수 없습니다."
+  },
+  {
+    "id": "review-culture-claim-review-metadata",
+    "domain": "culture",
+    "subjectType": "claim",
+    "subjectId": "claim-review-metadata",
+    "status": "pending",
+    "reviewerRef": null,
+    "reviewedAt": null,
+    "subjectDigest": null,
+    "packVersion": "0.1.0",
+    "notes": "사람 검수 전에는 approved 또는 published로 승격할 수 없습니다."
+  }
+]

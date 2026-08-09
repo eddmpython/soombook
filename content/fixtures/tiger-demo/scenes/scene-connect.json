@@ -1,0 +1,32 @@
+{
+  "id": "scene-connect",
+  "kind": "connection",
+  "title": "그림 밖으로 이어진 질문",
+  "shortLabel": "연결",
+  "instruction": "연결 카드를 열고 현실의 그림을 볼 때 던질 질문을 만나세요.",
+  "narration": "호랑이는 그림 속 제자리로 돌아왔어요. 숨이는 이제 그림을 볼 때 무엇을 살펴야 할지 궁금해졌어요.",
+  "visual": {
+    "motif": "museum",
+    "palette": "jade",
+    "alt": "완성된 호랑이 그림 앞에서 질문 카드를 든 숨이",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "mountains",
+      "tiger",
+      "child"
+    ]
+  },
+  "textBlocks": [
+    {
+      "id": "text-connect-1",
+      "heading": "다음 탐험을 위한 질문",
+      "body": "그림 속 동물의 자세, 배경, 표정을 차례로 살펴보면 어떤 이야기가 떠오를까요?"
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": [
+    "connection-museum"
+  ]
+}

@@ -1,0 +1,63 @@
+[
+  {
+    "id": "rights-fixture-story",
+    "subjectType": "text",
+    "subjectId": "book-tiger-demo",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트의 기능 검증용 창작 픽스처",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "실제 문화유산 자료가 아니며 출판용 원고로 승인되지 않았습니다.",
+    "coveredSubjectIds": [
+      "book-tiger-demo"
+    ]
+  },
+  {
+    "id": "rights-fixture-art",
+    "subjectType": "visual",
+    "subjectId": "asset-css-tiger-scene",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트의 CSS 기반 기능 검증용 시각물",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "외부 이미지 파일을 사용하지 않습니다.",
+    "coveredSubjectIds": [
+      "asset-css-tiger-scene"
+    ]
+  },
+  {
+    "id": "rights-fixture-claim",
+    "subjectType": "claim",
+    "subjectId": "claim-fixture-observation",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트의 기능 검증용 문장",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "사실 정보로 출판할 수 없는 가상 설명입니다.",
+    "coveredSubjectIds": [
+      "claim-fixture-observation"
+    ]
+  },
+  {
+    "id": "rights-fixture-art-files",
+    "subjectType": "visual",
+    "subjectId": "asset-tiger-scene-files",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트가 직접 만든 기능 검증용 SVG 시각물",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "fixture",
+    "notes": "외부 원본을 사용하지 않은 창작 fixture base와 detail 자산입니다.",
+    "coveredSubjectIds": [
+      "asset-tiger-base",
+      "asset-tiger-detail"
+    ]
+  }
+]

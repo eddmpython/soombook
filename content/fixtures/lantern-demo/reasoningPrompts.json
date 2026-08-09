@@ -1,0 +1,27 @@
+[
+  {
+    "id": "lantern-reasoning",
+    "sceneId": "lantern-reason",
+    "prompt": "돌담 길을 고를 수 있는 두 단서를 바르게 이은 것은 무엇인가요?",
+    "choices": [
+      {
+        "id": "lantern-choice-river",
+        "label": "파랑 리본 한 개와 둥근 매듭"
+      },
+      {
+        "id": "lantern-choice-wall",
+        "label": "흰 리본 두 개와 별 모양 매듭"
+      },
+      {
+        "id": "lantern-choice-hill",
+        "label": "빨강 리본 두 개와 네모 매듭"
+      }
+    ],
+    "correctChoiceId": "lantern-choice-wall",
+    "evidenceInteractionIds": [
+      "lantern-find-ribbon"
+    ],
+    "successFeedback": "리본의 수와 별 모양 매듭이 지도 쪽지와 모두 맞아요.",
+    "retryFeedback": "찾기 장면에서 함께 확인한 두 특징을 다시 떠올려 보세요."
+  }
+]

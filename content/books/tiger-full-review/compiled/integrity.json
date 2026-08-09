@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 2,
+  "authority": "book-pack-whole-file-integrity",
+  "bookId": "book-tiger-full-review",
+  "packVersion": "0.1.0",
+  "exposure": "review-candidate",
+  "bookPackDigest": "sha256-99f3308f03eca24b002dc4445d5db46a722f3c1d59b3dcedf490b1f7a46b1c55",
+  "files": [
+    {
+      "path": "audioTracks.json",
+      "byteLength": 3,
+      "mediaType": "application/json",
+      "sha256": "sha256-37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "book.json",
+      "byteLength": 564,
+      "mediaType": "application/json",
+      "sha256": "sha256-71eda466474f0a0e4f57e51ed84c76946ee18bed3bd9b28780d1e61f0c300bb6"
+    },
+    {
+      "path": "connectionCards.json",
+      "byteLength": 477,
+      "mediaType": "application/json",
+      "sha256": "sha256-07c3729fdfed9da0c9f0f9f370815f4db9d8ca8251b692832d0aa7af4be61347"
+    },
+    {
+      "path": "interactions.json",
+      "byteLength": 1658,
+      "mediaType": "application/json",
+      "sha256": "sha256-2602fdd750f75ff15aa942505940d4135269a1a21d0677364ddc9fe2646fc29d"
+    },
+    {
+      "path": "ledgers/assets.json",
+      "byteLength": 313,
+      "mediaType": "application/json",
+      "sha256": "sha256-747d087ac541837b934a224c6becf0fac07f18c59fdd2b31a95491db52564951"
+    },
+    {
+      "path": "ledgers/claims.json",
+      "byteLength": 1476,
+      "mediaType": "application/json",
+      "sha256": "sha256-6a48694f4e8eb2325c6e5a707250d80f53accd3601291b989f9e3874800b3500"
+    },
+    {
+      "path": "ledgers/reviews.json",
+      "byteLength": 2675,
+      "mediaType": "application/json",
+      "sha256": "sha256-c38ac8d84198b901aeca5b52b6b44157a05a2ca642cd60667656ae4cb3420bd5"
+    },
+    {
+      "path": "ledgers/rights.json",
+      "byteLength": 3672,
+      "mediaType": "application/json",
+      "sha256": "sha256-9a313f6c20f069c770f0317744945dbfa5c1ea49e6297117a77f55157f193a8d"
+    },
+    {
+      "path": "manifest.json",
+      "byteLength": 1591,
+      "mediaType": "application/json",
+      "sha256": "sha256-44bcece43758215db7dc51508c1238f819c41ba6178942b93c0d65b85003b5b2"
+    },
+    {
+      "path": "reasoningPrompts.json",
+      "byteLength": 906,
+      "mediaType": "application/json",
+      "sha256": "sha256-a00249e3adcd700722be15c3d0fdd9a9e616dcce30c12d63199029887538da46"
+    },
+    {
+      "path": "scenes/review-scene-01.json",
+      "byteLength": 829,
+      "mediaType": "application/json",
+      "sha256": "sha256-d404b9df530d9130c5e298715c4d467365e23561097b318169fa924bc289e3ad"
+    },
+    {
+      "path": "scenes/review-scene-02.json",
+      "byteLength": 879,
+      "mediaType": "application/json",
+      "sha256": "sha256-ddfe3bc92ad84d69c23b395a755069f76c2324c7d4cf2415e86183e19faa5c3a"
+    },
+    {
+      "path": "scenes/review-scene-03.json",
+      "byteLength": 837,
+      "mediaType": "application/json",
+      "sha256": "sha256-d5224aaf2ec29390b4ac8a42efd41343fd9f8a3fde266ff9b7f9f7ac0ab8246d"
+    },
+    {
+      "path": "scenes/review-scene-04.json",
+      "byteLength": 1071,
+      "mediaType": "application/json",
+      "sha256": "sha256-4c3e6ee516a6576b9f93dc8152cb5aaf666214b1b6dd3cfa1f9a1a66a3a3dc35"
+    },
+    {
+      "path": "scenes/review-scene-05.json",
+      "byteLength": 852,
+      "mediaType": "application/json",
+      "sha256": "sha256-97f6128ceb498b774fb3a4ec6947f48e9113751bba61a5db3bfea5787610ecd6"
+    },
+    {
+      "path": "scenes/review-scene-06.json",
+      "byteLength": 839,
+      "mediaType": "application/json",
+      "sha256": "sha256-ae24563218dcccbd17d28ce5d5923b3d138aae7d42237cadbd20eaf465066a83"
+    },
+    {
+      "path": "scenes/review-scene-07.json",
+      "byteLength": 914,
+      "mediaType": "application/json",
+      "sha256": "sha256-267821ad448dd026abafa15b796b1bb549a2bdb8d1b7c75400a9a9cf83410ad5"
+    },
+    {
+      "path": "scenes/review-scene-08.json",
+      "byteLength": 861,
+      "mediaType": "application/json",
+      "sha256": "sha256-0dcfd4835d0a2360c13db39d6eb26900d8ce4e47c86a5454c5c4b4d399b3dbb0"
+    },
+    {
+      "path": "scenes/review-scene-09.json",
+      "byteLength": 892,
+      "mediaType": "application/json",
+      "sha256": "sha256-1db1fa97a63844b1323c3e5706061cf1432d5238e8a7affdecb1d23a613dd22a"
+    },
+    {
+      "path": "scenes/review-scene-10.json",
+      "byteLength": 1063,
+      "mediaType": "application/json",
+      "sha256": "sha256-3e48774f9fbda8cb7184b5fd7e7fd038806634c2c5d6a1454d52d1fc63fe2cc8"
+    }
+  ],
+  "packContentDigest": "sha256-d00d8f743441c1e4ff354355e36b999df128e08f14656c24ee061c4a9bde2aa1"
+}

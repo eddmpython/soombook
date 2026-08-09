@@ -1,0 +1,19 @@
+{
+  "audience": {
+    "grade": 3,
+    "independentReadingMinutes": 8
+  },
+  "summary": "그림에서 사라진 호랑이의 흔적을 읽고, 찾고, 근거를 말하고, 박물관 질문으로 연결하는 기능 검증용 이야기입니다.",
+  "learningGoals": [
+    "이야기의 단서를 문장에서 찾는다.",
+    "찾은 단서를 근거로 선택 이유를 말한다.",
+    "이야기 속 대상을 현실의 문화 질문과 연결한다."
+  ],
+  "readingModes": [
+    "direct"
+  ],
+  "privacy": {
+    "childAccountRequired": false,
+    "remoteTelemetryDefault": false
+  }
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "rights-review-story",
+    "subjectType": "text",
+    "subjectId": "book-tiger-full-review",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트가 작성한 검수 후보 원고",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "pending",
+    "notes": "교육과 문화 검수 전의 창작 원고입니다.",
+    "coveredSubjectIds": ["book-tiger-full-review"],
+    "provenance": {
+      "sourceInstitution": "Soombook",
+      "sourceIdentifier": "tiger-full-review-source-0.1.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+      "transformations": [],
+      "derivedFromAssetIds": [],
+      "recheckTriggers": ["원고 또는 라이선스 변경"],
+      "approvalEvidenceDigest": null,
+      "ingestReceiptDigest": null,
+      "approvalLifecycle": { "state": "pending", "nextReviewAt": null },
+      "sourceSnapshot": {
+        "status": "captured",
+        "evidenceRef": "repo:tiger-full-review-source",
+        "sha256": "sha256-b690e31474146ea2dfc78561243e8d6f85ec6ec2211ba1c11b6085c212e7661c",
+        "capturedAt": "2026-08-09T00:00:00Z"
+      }
+    }
+  },
+  {
+    "id": "rights-review-art",
+    "subjectType": "visual",
+    "subjectId": "asset-review-css-art",
+    "license": "Apache-2.0",
+    "sourceUrl": null,
+    "attribution": "Soombook 프로젝트가 직접 만든 CSS placeholder 시각물",
+    "commercialUse": true,
+    "modificationAllowed": true,
+    "approvalStatus": "pending",
+    "notes": "실제 박물관 원본을 포함하지 않습니다.",
+    "coveredSubjectIds": ["asset-review-css-art"],
+    "provenance": {
+      "sourceInstitution": "Soombook",
+      "sourceIdentifier": "review-css-art-0.1.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+      "transformations": [],
+      "derivedFromAssetIds": [],
+      "recheckTriggers": ["CSS 시각물 또는 라이선스 변경"],
+      "approvalEvidenceDigest": null,
+      "ingestReceiptDigest": null,
+      "approvalLifecycle": { "state": "pending", "nextReviewAt": null },
+      "sourceSnapshot": {
+        "status": "captured",
+        "evidenceRef": "repo:tiger-full-review-source",
+        "sha256": "sha256-b690e31474146ea2dfc78561243e8d6f85ec6ec2211ba1c11b6085c212e7661c",
+        "capturedAt": "2026-08-09T00:00:00Z"
+      }
+    }
+  },
+  {
+    "id": "rights-review-source-art",
+    "subjectType": "visual",
+    "subjectId": "asset-review-source-base",
+    "license": "pending-source-review",
+    "sourceUrl": "https://www.museum.go.kr/MUSEUM/contents/M0502000000.do?relicId=8450&schM=view",
+    "attribution": "국립중앙박물관 소장품 원본 후보를 검수하기 위한 내부 메모",
+    "commercialUse": false,
+    "modificationAllowed": false,
+    "approvalStatus": "pending",
+    "notes": "원문 이미지와 확정 설명은 저장하거나 공개하지 않았습니다.",
+    "coveredSubjectIds": ["asset-review-source-base", "asset-review-source-detail"],
+    "provenance": {
+      "sourceInstitution": "국립중앙박물관",
+      "sourceIdentifier": "동원2613-candidate",
+      "licenseUrl": "https://www.museum.go.kr/MUSEUM/contents/M3304000000.do",
+      "transformations": [],
+      "derivedFromAssetIds": [],
+      "recheckTriggers": ["소장품 원문, 권리정책, 식별정보 변경"],
+      "approvalEvidenceDigest": null,
+      "ingestReceiptDigest": null,
+      "approvalLifecycle": { "state": "pending", "nextReviewAt": null },
+      "sourceSnapshot": {
+        "status": "pending",
+        "evidenceRef": "review-source-candidates",
+        "sha256": null,
+        "capturedAt": null
+      }
+    }
+  }
+]

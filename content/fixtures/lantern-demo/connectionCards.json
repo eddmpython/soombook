@@ -1,0 +1,12 @@
+[
+  {
+    "id": "lantern-connection",
+    "sceneId": "lantern-connect",
+    "title": "특징을 둘씩 묶어 보는 질문",
+    "body": "이 카드는 비공개 기능 검증용 창작 설명입니다. 다음 그림에서 색, 수, 모양 중 이어지는 두 특징을 찾아보세요.",
+    "sourceClaimIds": [
+      "lantern-claim-fixture"
+    ],
+    "truthStatus": "fixture"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "id": "lantern-cover",
+  "kind": "cover",
+  "title": "꺼진 등불의 아침",
+  "shortLabel": "시작",
+  "instruction": "표지를 열고 바람 마을의 지도를 만나세요.",
+  "narration": "아침이 되자 바람 마을 광장의 등불 하나가 보이지 않았어요.",
+  "visual": {
+    "motif": "paper",
+    "palette": "amber",
+    "alt": "빈 등불 걸이와 날아가는 지도 조각",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "mountains",
+      "lantern",
+      "ribbons"
+    ]
+  },
+  "textBlocks": [
+    {
+      "id": "lantern-text-cover",
+      "heading": "바람이 남긴 것",
+      "body": "지도지기 다온은 걸이 아래에서 파랑, 빨강, 흰색 리본 조각을 발견했어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

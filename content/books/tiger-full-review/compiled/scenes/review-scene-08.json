@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-08",
+  "kind": "reasoning",
+  "title": "단서와 까닭 잇기",
+  "shortLabel": "생각",
+  "instruction": "찾은 길의 근거와 호랑이가 떠난 까닭을 바르게 이으세요.",
+  "narration": "숨이는 지금까지 읽은 그림과 쪽지를 한 줄로 이어 보았어요.",
+  "visual": {
+    "motif": "paper",
+    "palette": "ink",
+    "alt": "발자국과 풀잎과 쪽지를 나란히 놓은 창작 추론 장면",
+    "truthStatus": "fiction",
+    "decorations": ["mountains", "pine", "child"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-08",
+      "heading": "근거를 이어 보기",
+      "body": "길을 보여 주는 단서와 떠난 까닭을 보여 주는 글은 서로 하는 일이 달랐어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": ["review-reason-path"],
+  "connectionIds": []
+}

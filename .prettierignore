@@ -1,0 +1,13 @@
+node_modules/
+package-lock.json
+content/fixtures/**/*.json
+packages/book-schema/src/bookPackValidator.generated.mjs
+../soombook.out/
+mainPlan/
+docs/
+CLAUDE.md
+AGENTS.md
+README.md
+LICENSE
+NOTICE
+THIRD_PARTY_NOTICES.md

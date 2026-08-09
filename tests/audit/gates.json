@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "gates": [
+    {
+      "id": "documents",
+      "owner": "scripts/check_project_docs.py",
+      "command": "npm run check:docs",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "text-policy",
+      "owner": "scripts/checkTextPolicy.mjs",
+      "command": "npm run check:text",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "project-registry",
+      "owner": "scripts/checkProject.mjs",
+      "command": "npm run check:project",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "expert-review-registry",
+      "owner": "scripts/checkExpertReviews.mjs",
+      "command": "npm run check:expert-reviews",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "public-source-hygiene",
+      "owner": "scripts/checkPublicSource.mjs",
+      "command": "npm run check:source",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "typecheck",
+      "owner": "tsconfig.json",
+      "command": "npm run typecheck",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "lint",
+      "owner": "eslint.config.js",
+      "command": "npm run lint",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "demo-content",
+      "owner": "scripts/demoContent.mjs",
+      "command": "npm run check:content",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "fixture-audio",
+      "owner": "scripts/generateFixtureAudio.mjs",
+      "command": "npm run check:fixture-audio",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "review-candidate-contract",
+      "owner": "scripts/compileReviewCandidate.mjs",
+      "command": "npm run check:review-candidate",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "representative-agent-review",
+      "owner": "scripts/checkRepresentativeReview.mjs",
+      "command": "npm run check:representative-review",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "rights-review-request",
+      "owner": "scripts/prepareRightsReview.mjs",
+      "command": "npm run check:rights-review",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "bookpack-contracts",
+      "owner": "packages/book-schema",
+      "command": "npm run test:contracts",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "bookpack-file-integrity",
+      "owner": "scripts/checkPackAssets.mjs",
+      "command": "npm run check:assets",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "fixture-portability",
+      "owner": "scripts/checkFixturePortability.mjs",
+      "command": "npm run check:fixtures",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "runtime-unit",
+      "owner": "packages/book-runtime",
+      "command": "npm run test:unit",
+      "ciJob": "contracts",
+      "blocking": true
+    },
+    {
+      "id": "production-build",
+      "owner": "apps/reader-web/vite.config.ts",
+      "command": "npm run build",
+      "ciJob": "build",
+      "blocking": true
+    },
+    {
+      "id": "bundle-budget",
+      "owner": "scripts/checkBuildBudget.mjs",
+      "command": "npm run check:build-budget",
+      "ciJob": "build",
+      "blocking": true
+    },
+    {
+      "id": "browser-journey",
+      "owner": "tests/e2e",
+      "command": "npm run test:e2e",
+      "ciJob": "browser",
+      "blocking": true
+    },
+    {
+      "id": "audio-browser",
+      "owner": "tests/audio",
+      "command": "npm run test:audio-fixture",
+      "ciJob": "browser",
+      "blocking": true
+    },
+    {
+      "id": "review-candidate-browser",
+      "owner": "tests/review",
+      "command": "npm run test:review-candidate",
+      "ciJob": "browser",
+      "blocking": true
+    },
+    {
+      "id": "pwa-two-version-update",
+      "owner": "tests/pwa/pwaUpdate.spec.ts",
+      "command": "npm run test:pwa-update",
+      "ciJob": "browser",
+      "blocking": true
+    },
+    {
+      "id": "ui-audit",
+      "owner": "tests/ui/uiAudit.spec.ts",
+      "command": "npm run qa:ui",
+      "ciJob": "browser",
+      "blocking": true
+    },
+    {
+      "id": "device-matrix",
+      "owner": "tests/device/deviceMatrix.spec.ts",
+      "command": "npm run qa:device-matrix",
+      "ciJob": "compatibility",
+      "blocking": true
+    },
+    {
+      "id": "device-matrix-expert-quorum",
+      "owner": "scripts/checkExpertReviews.mjs",
+      "command": "npm run check:expert-reviews:device",
+      "ciJob": "compatibility",
+      "blocking": true
+    },
+    {
+      "id": "performance-lab",
+      "owner": "tests/performance/performanceAudit.spec.ts",
+      "command": "npm run qa:performance",
+      "ciJob": "pages",
+      "blocking": true
+    },
+    {
+      "id": "pages-artifact",
+      "owner": "scripts/checkPagesBuild.mjs",
+      "command": "npm run build:pages",
+      "ciJob": "pages",
+      "blocking": true
+    },
+    {
+      "id": "pages-browser",
+      "owner": "tests/pages/pagesDeployment.spec.ts",
+      "command": "npm run test:pages",
+      "ciJob": "pages",
+      "blocking": true
+    }
+  ]
+}

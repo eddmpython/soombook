@@ -1,0 +1,12 @@
+[
+  {
+    "id": "connection-museum",
+    "sceneId": "scene-connect",
+    "title": "그림을 오래 보는 세 가지 질문",
+    "body": "이 카드는 기능 검증용 가상 설명입니다. 실제 작품을 볼 때에는 무엇이 보이는지, 어떤 근거로 그렇게 생각했는지, 더 알아보고 싶은 것이 무엇인지 차례로 질문해 보세요.",
+    "sourceClaimIds": [
+      "claim-fixture-observation"
+    ],
+    "truthStatus": "fixture"
+  }
+]

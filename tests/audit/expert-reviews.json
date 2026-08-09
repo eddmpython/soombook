@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 2,
+  "authority": "multi-agent-technical-review-receipts-not-legal-or-child-study-approval",
+  "topics": [
+    {
+      "id": "rights-approval-automation",
+      "kind": "implementation",
+      "status": "closed",
+      "requiredReviewerRoles": [
+        "content-provenance",
+        "deployment-stability",
+        "implementation-quality"
+      ],
+      "scope": [
+        "content/books/tiger-full-review/review/dongwon2613-rights-review-request.json",
+        "packages/book-authoring/src/approvedAssetIngest.ts",
+        "packages/book-authoring/src/approvedRightsProjection.ts",
+        "packages/book-authoring/src/index.ts",
+        "packages/book-authoring/src/rightsApprovalCli.test.ts",
+        "packages/book-authoring/src/rightsReview.test.ts",
+        "packages/book-authoring/src/rightsReview.ts",
+        "packages/book-schema/src/bookPack.ts",
+        "packages/book-schema/src/bookPackSchema.ts",
+        "packages/book-schema/src/bookPackValidator.generated.mjs",
+        "packages/book-schema/src/validation.test.ts",
+        "packages/book-schema/src/validation.ts",
+        "scripts/binaryPolicy.mjs",
+        "scripts/checkPublicSource.mjs",
+        "scripts/checkReviewBuild.mjs",
+        "scripts/prepareRightsReview.mjs",
+        "scripts/verifyRightsApproval.mjs",
+        "tests/audit/binary-assets.json",
+        "tests/audit/binaryPolicy.test.mjs"
+      ]
+    },
+    {
+      "id": "pwa-update-recovery",
+      "kind": "implementation",
+      "status": "closed",
+      "requiredReviewerRoles": [
+        "deployment-stability",
+        "child-experience-data",
+        "implementation-quality"
+      ],
+      "scope": [
+        "apps/reader-web/src/main.tsx",
+        "apps/reader-web/src/serviceWorkerLifecycle.test.ts",
+        "apps/reader-web/src/serviceWorkerLifecycle.ts",
+        "apps/reader-web/src/serviceWorkerNotice.tsx",
+        "apps/reader-web/src/styles.css",
+        "apps/reader-web/vite.config.ts",
+        "playwright.pwa-update.config.ts",
+        "scripts/buildPwaUpdateFixtures.mjs",
+        "scripts/pwaUpdateServer.mjs",
+        "tests/pwa/pwaUpdate.spec.ts"
+      ]
+    },
+    {
+      "id": "bookpack-whole-file-binding",
+      "kind": "implementation",
+      "status": "closed",
+      "requiredReviewerRoles": [
+        "content-provenance",
+        "deployment-stability",
+        "implementation-quality"
+      ],
+      "scope": [
+        ".github/workflows/pages-rollback.yml",
+        ".github/workflows/pages.yml",
+        "apps/reader-web/src/app.tsx",
+        "apps/reader-web/src/bookPackWorker.ts",
+        "apps/reader-web/src/bookPackWorkerContract.test.ts",
+        "apps/reader-web/src/bookPackWorkerContract.ts",
+        "apps/reader-web/src/environment.d.ts",
+        "apps/reader-web/vite.config.ts",
+        "content/books/tiger-full-review/compiled/integrity.json",
+        "content/fixture-registry.json",
+        "content/fixtures/lantern-demo/integrity.json",
+        "content/fixtures/tiger-demo/integrity.json",
+        "packages/book-authoring/src/rightsReview.test.ts",
+        "packages/book-schema/src/bookPackFileIntegrity.ts",
+        "scripts/bookPackBuildContract.mjs",
+        "scripts/bookPackIntegrity.mjs",
+        "scripts/buildPages.mjs",
+        "scripts/buildPwaUpdateFixtures.mjs",
+        "scripts/buildReviewCandidate.mjs",
+        "scripts/checkBookPackBuild.mjs",
+        "scripts/checkPackAssets.mjs",
+        "scripts/checkPagesBuild.mjs",
+        "scripts/checkReviewBuild.mjs",
+        "scripts/compileReviewCandidate.mjs",
+        "scripts/demoContent.mjs",
+        "tests/audit/bookPackBuildContract.test.mjs",
+        "tests/audit/bookPackIntegrity.test.mjs",
+        "tests/pages/pagesDeployment.spec.ts",
+        "tests/pwa/pwaUpdate.spec.ts"
+      ]
+    },
+    {
+      "id": "representative-candidate-promotion",
+      "kind": "candidate-promotion",
+      "status": "closed",
+      "requiredReviewerRoles": [
+        "content-provenance",
+        "education-structure",
+        "accessibility-delivery"
+      ],
+      "scope": [
+        "apps/reader-web/src/bookReader.tsx",
+        "apps/reader-web/src/progressTrail.tsx",
+        "apps/reader-web/src/sceneArtwork.tsx",
+        "apps/reader-web/src/styles.css",
+        "content/books/tiger-full-review/compiled/integrity.json",
+        "content/books/tiger-full-review/review/agent-review-plan.json",
+        "content/books/tiger-full-review/source/book-source.json",
+        "package.json",
+        "packages/book-authoring/src/compileReviewBook.ts",
+        "playwright.review.config.ts",
+        "scripts/buildReviewCandidate.mjs",
+        "scripts/checkExpertReviews.mjs",
+        "scripts/checkRepresentativeReview.mjs",
+        "scripts/checkReviewBuild.mjs",
+        "scripts/compileReviewCandidate.mjs",
+        "scripts/decideRepresentativeReview.mjs",
+        "scripts/representativeReview.mjs",
+        "scripts/reviewCandidateServer.mjs",
+        "scripts/runReviewCandidateTests.mjs",
+        "tests/audit/representativeReview.test.mjs",
+        "tests/review/reviewCandidate.spec.ts"
+      ],
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "reviewPlanDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "technicalScope": "first-party-review-candidate"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rights-approval-content-provenance-2026-08-10",
+      "topicId": "rights-approval-automation",
+      "reviewerRole": "content-provenance",
+      "reviewerRef": "agent:representative-content-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-3070b5b6c06066b80f8deff719a28fc2ed7c0c3c8137dc239a1246db6d25217e",
+      "commands": [
+        "npm exec vitest run packages/book-schema packages/book-authoring tests/audit/binaryPolicy.test.mjs",
+        "npm run check:source",
+        "npm run check:rights-review"
+      ]
+    },
+    {
+      "id": "rights-approval-deployment-stability-2026-08-10",
+      "topicId": "rights-approval-automation",
+      "reviewerRole": "deployment-stability",
+      "reviewerRef": "agent:hosting-productization-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-3070b5b6c06066b80f8deff719a28fc2ed7c0c3c8137dc239a1246db6d25217e",
+      "commands": ["npm run build:review-candidate", "npm run check:project", "npm run typecheck"]
+    },
+    {
+      "id": "rights-approval-implementation-quality-2026-08-10",
+      "topicId": "rights-approval-automation",
+      "reviewerRole": "implementation-quality",
+      "reviewerRef": "agent:next-product-bundle",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-3070b5b6c06066b80f8deff719a28fc2ed7c0c3c8137dc239a1246db6d25217e",
+      "commands": [
+        "npm run lint",
+        "npm run typecheck",
+        "npm exec vitest run packages/book-schema packages/book-authoring tests/audit/binaryPolicy.test.mjs"
+      ]
+    },
+    {
+      "id": "pwa-update-deployment-stability-2026-08-10",
+      "topicId": "pwa-update-recovery",
+      "reviewerRole": "deployment-stability",
+      "reviewerRef": "agent:hosting-productization-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-26c3c537020b35c4b3820efcd7b78bf51bd9517bd3fb95f47b287a6f87de4e7a",
+      "commands": [
+        "npm exec vitest run apps/reader-web/src/serviceWorkerLifecycle.test.ts",
+        "npm run test:pwa-update",
+        "npm run typecheck",
+        "npm run lint",
+        "npm run check:source",
+        "npm run check:project"
+      ]
+    },
+    {
+      "id": "pwa-update-child-experience-data-2026-08-10",
+      "topicId": "pwa-update-recovery",
+      "reviewerRole": "child-experience-data",
+      "reviewerRef": "agent:representative-content-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-26c3c537020b35c4b3820efcd7b78bf51bd9517bd3fb95f47b287a6f87de4e7a",
+      "commands": [
+        "npm exec vitest run apps/reader-web/src/serviceWorkerLifecycle.test.ts",
+        "npm run test:pwa-update",
+        "npm run test:e2e -- --project=chromium --grep 저장"
+      ]
+    },
+    {
+      "id": "pwa-update-implementation-quality-2026-08-10",
+      "topicId": "pwa-update-recovery",
+      "reviewerRole": "implementation-quality",
+      "reviewerRef": "agent:next-product-bundle",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-26c3c537020b35c4b3820efcd7b78bf51bd9517bd3fb95f47b287a6f87de4e7a",
+      "commands": [
+        "npm exec vitest run apps/reader-web/src/serviceWorkerLifecycle.test.ts",
+        "npm run test:pwa-update",
+        "npm run typecheck",
+        "npm run lint",
+        "npm run check:project"
+      ]
+    },
+    {
+      "id": "bookpack-binding-content-provenance-2026-08-10",
+      "topicId": "bookpack-whole-file-binding",
+      "reviewerRole": "content-provenance",
+      "reviewerRef": "agent:representative-content-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-2faa1b604a95e82ad55713e12ac590843dabc7f4bfafdfbb2a9ec8c333bb940d",
+      "commands": [
+        "npm exec vitest run tests/audit/bookPackIntegrity.test.mjs tests/audit/bookPackBuildContract.test.mjs apps/reader-web/src/bookPackWorkerContract.test.ts",
+        "npm run build:review-candidate",
+        "npm run test:audio-fixture",
+        "npm run check:assets"
+      ]
+    },
+    {
+      "id": "bookpack-binding-deployment-stability-2026-08-10",
+      "topicId": "bookpack-whole-file-binding",
+      "reviewerRole": "deployment-stability",
+      "reviewerRef": "agent:hosting-productization-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-2faa1b604a95e82ad55713e12ac590843dabc7f4bfafdfbb2a9ec8c333bb940d",
+      "commands": [
+        "npm run build:pages",
+        "npm run test:pages:built",
+        "npm run test:review-candidate",
+        "npm run test:audio-fixture",
+        "npm run test:pwa-update"
+      ]
+    },
+    {
+      "id": "bookpack-binding-implementation-quality-2026-08-10",
+      "topicId": "bookpack-whole-file-binding",
+      "reviewerRole": "implementation-quality",
+      "reviewerRef": "agent:next-product-bundle",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-2faa1b604a95e82ad55713e12ac590843dabc7f4bfafdfbb2a9ec8c333bb940d",
+      "commands": [
+        "npm run test:contracts",
+        "npm run typecheck",
+        "npm run lint",
+        "npm run format:check",
+        "npm run build"
+      ]
+    },
+    {
+      "id": "representative-candidate-content-provenance-2026-08-10",
+      "topicId": "representative-candidate-promotion",
+      "reviewerRole": "content-provenance",
+      "reviewerRef": "agent:representative-content-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-5c2b75894f4bfd1287e3086c6798f4e6b87664b3ecd6bdac2d8b0f690c196985",
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "commands": [
+        "npm run check:review-candidate",
+        "npm run check:representative-review",
+        "npm exec vitest run tests/audit/representativeReview.test.mjs",
+        "npm run test:review-candidate:browser"
+      ]
+    },
+    {
+      "id": "representative-candidate-education-structure-2026-08-10",
+      "topicId": "representative-candidate-promotion",
+      "reviewerRole": "education-structure",
+      "reviewerRef": "agent:hosting-productization-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-5c2b75894f4bfd1287e3086c6798f4e6b87664b3ecd6bdac2d8b0f690c196985",
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "commands": [
+        "npm run check:representative-review",
+        "npm run test:review-candidate:browser",
+        "npm run typecheck"
+      ]
+    },
+    {
+      "id": "representative-candidate-accessibility-delivery-2026-08-10",
+      "topicId": "representative-candidate-promotion",
+      "reviewerRole": "accessibility-delivery",
+      "reviewerRef": "agent:next-product-bundle",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-5c2b75894f4bfd1287e3086c6798f4e6b87664b3ecd6bdac2d8b0f690c196985",
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "commands": [
+        "npm run test:contracts",
+        "npm run test:review-candidate:browser",
+        "npm run typecheck",
+        "npm run lint",
+        "npm run format:check"
+      ]
+    }
+  ]
+}

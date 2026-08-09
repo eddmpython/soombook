@@ -1,0 +1,39 @@
+{
+  "id": "scene-search",
+  "kind": "investigation",
+  "title": "먹빛 숲의 단서",
+  "shortLabel": "찾기",
+  "instruction": "세 길의 발자국과 풀잎을 비교해 편지와 맞는 길을 찾아보세요.",
+  "narration": "먹빛 숲에는 연못, 소나무, 마을로 이어진 세 길이 있었어요. 편지에는 큰 발자국과 눕혀진 풀이 함께 있는 길을 살펴보라고 적혀 있었지요.",
+  "visual": {
+    "motif": "painting",
+    "palette": "indigo",
+    "alt": "연못, 소나무, 마을로 갈라진 세 길과 서로 다른 발자국",
+    "truthStatus": "fixture",
+    "decorations": [
+      "moon",
+      "mountains",
+      "pine",
+      "tiger"
+    ],
+    "baseAssetId": "asset-tiger-base",
+    "detailAssetId": "asset-tiger-detail"
+  },
+  "textBlocks": [
+    {
+      "id": "text-search-1",
+      "heading": "첫 번째 흔적",
+      "body": "길에는 커다란 발자국이 있었고, 소나무 아래 풀잎은 한쪽으로 눕혀져 있었어요."
+    },
+    {
+      "id": "text-search-unlocked",
+      "heading": "렌즈가 밝힌 것",
+      "body": "바위 뒤 줄무늬는 붓 자국이 아니라 호랑이의 꼬리였어요."
+    }
+  ],
+  "interactionIds": [
+    "interaction-find-tail"
+  ],
+  "reasoningIds": [],
+  "connectionIds": []
+}

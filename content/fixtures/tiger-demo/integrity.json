@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "authority": "book-pack-whole-file-integrity",
+  "bookId": "book-tiger-demo",
+  "packVersion": "0.3.0",
+  "exposure": "public-demo",
+  "bookPackDigest": "sha256-ec438414f7167f50a3abbb80372e938fdbe431db5362b501ada1610dbd18849e",
+  "files": [
+    {
+      "path": "assets/tiger-base.svg",
+      "byteLength": 1638,
+      "mediaType": "image/svg+xml",
+      "sha256": "sha256-2d38a0d2ea4274b8e5a620b8ddaeb6f44949c42d2bd654766faea7d43aafcb63"
+    },
+    {
+      "path": "assets/tiger-detail.svg",
+      "byteLength": 1250,
+      "mediaType": "image/svg+xml",
+      "sha256": "sha256-a193987a9708853514c59a36d1153061962294bbda05e6c154c65d4cae4a3b70"
+    },
+    {
+      "path": "audioTracks.json",
+      "byteLength": 3,
+      "mediaType": "application/json",
+      "sha256": "sha256-37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "book.json",
+      "byteLength": 589,
+      "mediaType": "application/json",
+      "sha256": "sha256-ed94d92fc3da0c75121d3db90c721ca2b3ce22b7ed8269611646976f0a884250"
+    },
+    {
+      "path": "connectionCards.json",
+      "byteLength": 471,
+      "mediaType": "application/json",
+      "sha256": "sha256-91bd2049f7640e89201c921b81784a7e78b1bc5f06f17baae60576055b8a4cf8"
+    },
+    {
+      "path": "interactions.json",
+      "byteLength": 1859,
+      "mediaType": "application/json",
+      "sha256": "sha256-d557e74860f6053766c6a2b2316adfcbb21eb985511d851057c90414794a2b97"
+    },
+    {
+      "path": "ledgers/assets.json",
+      "byteLength": 1203,
+      "mediaType": "application/json",
+      "sha256": "sha256-c76e2d808a306351d8ca839744b8e78d427111c1a53ea7f94439d8cf0f3d6578"
+    },
+    {
+      "path": "ledgers/claims.json",
+      "byteLength": 612,
+      "mediaType": "application/json",
+      "sha256": "sha256-c9e15488b7181240770de1c4bcc674136e7b533a2913fcbd76e5e6434cb96bd6"
+    },
+    {
+      "path": "ledgers/reviews.json",
+      "byteLength": 3,
+      "mediaType": "application/json",
+      "sha256": "sha256-37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "ledgers/rights.json",
+      "byteLength": 1994,
+      "mediaType": "application/json",
+      "sha256": "sha256-3c4fbdb28afab641b2f41d28ce720c667b34f119e8d66cc5e534cbe769b1865e"
+    },
+    {
+      "path": "manifest.json",
+      "byteLength": 1492,
+      "mediaType": "application/json",
+      "sha256": "sha256-a57b13c6ac311be470dfc9c75b865048dbed8f653b95abe45f176ac35a6bfcb0"
+    },
+    {
+      "path": "reasoningPrompts.json",
+      "byteLength": 980,
+      "mediaType": "application/json",
+      "sha256": "sha256-9ef52fcaf71c5745a97aa50518c1b95f772361a8549a3bbb49f4fb96166164eb"
+    },
+    {
+      "path": "scenes/scene-connect.json",
+      "byteLength": 981,
+      "mediaType": "application/json",
+      "sha256": "sha256-71af2be6c7edf089c899368f80c651748da695cb544095cbbcf5307d18bfd5f7"
+    },
+    {
+      "path": "scenes/scene-cover.json",
+      "byteLength": 862,
+      "mediaType": "application/json",
+      "sha256": "sha256-97626f6dc58302d0411449195910420187c6cc78b2670d713f522f2eee233d41"
+    },
+    {
+      "path": "scenes/scene-reason.json",
+      "byteLength": 1021,
+      "mediaType": "application/json",
+      "sha256": "sha256-95adcee5aeb4d74248fc287cf041d95e01c98946c64b17ce6184677f55da2fcb"
+    },
+    {
+      "path": "scenes/scene-search.json",
+      "byteLength": 1291,
+      "mediaType": "application/json",
+      "sha256": "sha256-e1c0e91af845094af471e6380ff440da883e43f8cb1f57c745dc90e8c6c19edb"
+    }
+  ],
+  "packContentDigest": "sha256-567949e330e3097976f9dcb2e0c69f2176f79c2471f9c6b32a933218ad96d63d"
+}

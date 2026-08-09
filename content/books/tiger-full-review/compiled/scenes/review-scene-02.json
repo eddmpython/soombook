@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-02",
+  "kind": "cover",
+  "title": "호랑이 모양의 빈자리",
+  "shortLabel": "빈자리",
+  "instruction": "그림 전체를 천천히 살펴보고 달라진 곳을 찾아보세요.",
+  "narration": "책을 펼치자 산과 소나무는 그대로인데 호랑이가 있던 자리만 하얗게 비어 있었어요.",
+  "visual": {
+    "motif": "painting",
+    "palette": "indigo",
+    "alt": "산과 소나무 사이에 호랑이 모양의 빈자리가 있는 창작 그림",
+    "truthStatus": "fiction",
+    "decorations": ["moon", "mountains", "pine"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-02",
+      "heading": "남아 있는 것",
+      "body": "숨이는 빈자리 가장자리에서 밖으로 이어지는 작은 먹물 자국을 보았어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

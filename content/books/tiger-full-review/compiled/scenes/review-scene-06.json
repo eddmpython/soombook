@@ -1,0 +1,25 @@
+{
+  "id": "review-scene-06",
+  "kind": "cover",
+  "title": "바위 뒤 줄무늬",
+  "shortLabel": "재독",
+  "instruction": "앞에서 찾은 길을 떠올리며 바위 주변을 다시 살펴보세요.",
+  "narration": "소나무 길의 둥근 바위 뒤에서 검고 누런 줄무늬가 잠깐 흔들렸어요.",
+  "visual": {
+    "motif": "painting",
+    "palette": "jade",
+    "alt": "소나무 길의 바위 뒤로 줄무늬가 보이는 창작 장면",
+    "truthStatus": "fiction",
+    "decorations": ["mountains", "pine", "tiger"]
+  },
+  "textBlocks": [
+    {
+      "id": "review-text-06",
+      "heading": "다시 보니",
+      "body": "처음에는 붓 자국처럼 보였지만 앞 장면의 단서와 이어 보니 호랑이 꼬리였어요."
+    }
+  ],
+  "interactionIds": [],
+  "reasoningIds": [],
+  "connectionIds": []
+}

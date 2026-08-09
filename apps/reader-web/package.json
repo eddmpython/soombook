@@ -1,0 +1,17 @@
+{
+  "name": "@soombook/reader-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@soombook/book-runtime": "*",
+    "@soombook/book-schema": "*",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
+}

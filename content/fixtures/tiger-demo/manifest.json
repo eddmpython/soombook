@@ -1,0 +1,50 @@
+{
+  "formatVersion": "1.0.0",
+  "packVersion": "0.3.0",
+  "id": "book-tiger-demo",
+  "slug": "tiger-demo",
+  "title": "호랑이가 그림에서 사라졌다",
+  "status": "fixture",
+  "locale": "ko-KR",
+  "minReaderVersion": "0.1.0",
+  "entrySceneId": "scene-cover",
+  "sceneOrder": [
+    "scene-cover",
+    "scene-search",
+    "scene-reason",
+    "scene-connect"
+  ],
+  "completion": {
+    "requiredConnectionIds": [
+      "connection-museum"
+    ],
+    "requiredInteractionIds": [
+      "interaction-find-tail"
+    ],
+    "requiredReasoningIds": [
+      "reasoning-tiger-path"
+    ],
+    "review": {
+      "recallPrompt": "호랑이는 어느 길로 왜 갔을까요? 어떤 두 단서가 그 길을 알려 주었나요?",
+      "recallCards": [
+        {
+          "id": "recall-path-clues",
+          "text": "큰 발자국과 눕혀진 풀잎이 소나무 길을 가리켰어요."
+        },
+        {
+          "id": "recall-text-picture",
+          "text": "호랑이는 그림 밖 소나무 향기가 궁금해 소나무 길을 걸었어요."
+        },
+        {
+          "id": "recall-looking",
+          "text": "그림을 오래 보면 보이지 않던 이야기가 나타나요."
+        }
+      ],
+      "treasure": {
+        "interactionId": "interaction-find-tail",
+        "title": "먹빛 숲에서 찾은 보물",
+        "body": "큰 발자국과 눕혀진 풀잎이 같은 길에 있었어요. 바위 뒤에서는 줄무늬 꼬리가 보였어요."
+      }
+    }
+  }
+}
