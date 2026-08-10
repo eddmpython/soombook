@@ -33,6 +33,8 @@ jobs:
       - run: npm run qa:performance
       - run: npm run check:expert-reviews:release
       - run: npm run check:full
+      - run: npm run check:product-baseline
+      - run: npm run check:expert-reviews:baseline
       - run: npm run build:pages
       - run: npm run check:public-release-evidence -- --current-pages
       - run: npm run test:pages:built
@@ -64,6 +66,7 @@ jobs:
             ../soombook.out/playwright-pages
             ../soombook.out/playwright-review
             ../soombook.out/review-candidate
+            ../soombook.out/product-baseline
             ../soombook.out/performance
             ../soombook.out/performance-artifacts
             ../soombook.out/playwright-performance

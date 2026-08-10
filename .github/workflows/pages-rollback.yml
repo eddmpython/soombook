@@ -52,10 +52,13 @@ jobs:
       - run: npm ci
       - name: device matrix 도입 이전 SHA 차단
         run: >-
-          node -e "const p=require('./package.json');const expected={'qa:device-matrix':'node scripts/runDeviceMatrix.mjs','check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix','check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('device matrix rollback floor 미달: '+name)}"
+          node -e "const p=require('./package.json');const expected={'qa:device-matrix':'node scripts/runDeviceMatrix.mjs','check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix','check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run check:product-baseline && npm run check:expert-reviews:baseline && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('device matrix rollback floor 미달: '+name)}"
       - name: public release evidence 도입 이전 SHA 차단
         run: >-
           node -e "const p=require('./package.json');const expected={'qa:performance':'node scripts/runPerformanceAudit.mjs','check:performance-evidence':'node scripts/checkPerformanceEvidence.mjs','check:public-release-evidence':'node scripts/checkPublicReleaseEvidence.mjs','check:expert-reviews:release':'node scripts/checkExpertReviews.mjs --public-release'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('public release evidence rollback floor 미달: '+name)}"
+      - name: first-party product baseline 도입 이전 SHA 차단
+        run: >-
+          node -e "const p=require('./package.json');const expected={'check:product-baseline':'node scripts/checkProductBaseline.mjs','check:expert-reviews:baseline':'node scripts/checkExpertReviews.mjs --product-baseline'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('product baseline rollback floor 미달: '+name)}"
       - run: npx playwright install --with-deps chromium firefox webkit
       - name: rollback 작업트리 신원 재확인
         env:
@@ -70,6 +73,8 @@ jobs:
           SOOMBOOK_RELEASE_SHA: ${{ inputs.target_sha }}
       - run: npm run check:expert-reviews:release
       - run: npm run check:full
+      - run: npm run check:product-baseline
+      - run: npm run check:expert-reviews:baseline
       - run: npm run build:pages
         env:
           SOOMBOOK_RELEASE_SHA: ${{ inputs.target_sha }}
@@ -103,6 +108,7 @@ jobs:
             ../soombook.out/playwright-pages
             ../soombook.out/playwright-review
             ../soombook.out/review-candidate
+            ../soombook.out/product-baseline
             ../soombook.out/performance
             ../soombook.out/performance-artifacts
             ../soombook.out/playwright-performance

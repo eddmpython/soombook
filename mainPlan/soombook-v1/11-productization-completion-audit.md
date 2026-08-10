@@ -50,12 +50,11 @@
 | P0E | 구현 | 4장면, 4단계 힌트, 근거 추론, 연결, reflection, offline |
 | P0F | 자동 구현 | 접근성, offline과 root·Pages mobile·desktop performance green. 실제 기기와 보조기기는 OG-05 |
 | P0G | 준비 완료 | 운영자 시트, 기기 checklist, 연구 초안, license, rollback runbook 존재. 승인은 미완료 |
-| P1 review 후보 | 기술 검수 완료 | 10장면 source, compiler, exact 검수 matrix, 세 전문 에이전트 quorum, desktop keyboard·mobile actual pointer·offline 2건과 immutable `expand` decision. 외부 자산과 낭독은 현재 first-party 제품 범위 밖 |
+| P1 review 후보 | first-party 제품 기준 완료 | 10장면 source, 20 payload와 integrity sidecar, CSS fallback, 빈 audio, pending ledger, 15-file review artifact와 세 전문 에이전트 baseline quorum. 외부 자산과 낭독은 선택적 확장으로 분리 |
 
 ## 남은 순서
 
-1. first-party 10장면 후보를 제품 기준으로 고정하고 외부 자산과 낭독은 선택적 확장으로 분리한다.
-2. 라이선스, 지원, 철회, 삭제, cache purge와 사고 대응 문서를 자동 gate에 결박한다.
-3. 모든 현재 계약과 영수증을 `docs/**`로 승격하고 활성 `mainPlan/soombook-v1`을 삭제한다.
+1. 라이선스, 지원, 철회, 삭제, cache purge와 사고 대응 문서를 자동 gate에 결박한다.
+2. 모든 현재 계약과 영수증을 `docs/**`로 승격하고 활성 `mainPlan/soombook-v1`을 삭제한다.
 
 현재 전체 제품화 판정은 `부분`이다. 공개 자동 후보와 실제 제품을 같은 완료로 합치지 않는다.

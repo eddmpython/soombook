@@ -6,6 +6,7 @@ import process from 'node:process';
 import { format } from 'prettier';
 
 import { DEVICE_MATRIX_SCOPE_PATHS } from './checkDeviceMatrix.mjs';
+import { PRODUCT_BASELINE_SCOPE_PATHS } from './checkProductBaseline.mjs';
 import { PUBLIC_RELEASE_SCOPE_PATHS } from './checkPublicReleaseEvidence.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -45,6 +46,18 @@ const TOPIC_KEYS = {
     'releaseClass',
     'releaseScopeDigest',
     'releaseEvidenceDigest',
+  ],
+  'product-baseline': [
+    'id',
+    'kind',
+    'status',
+    'requiredReviewerRoles',
+    'scope',
+    'productClass',
+    'baselineScopeDigest',
+    'productBaselineDigest',
+    'candidateDigest',
+    'artifactDigest',
   ],
 };
 const REVIEW_KEYS = {
@@ -98,6 +111,21 @@ const REVIEW_KEYS = {
     'ownedEvidenceIds',
     'commands',
   ],
+  'product-baseline': [
+    'id',
+    'topicId',
+    'reviewerRole',
+    'reviewerRef',
+    'reviewedAt',
+    'status',
+    'scopeDigest',
+    'baselineScopeDigest',
+    'productBaselineDigest',
+    'candidateDigest',
+    'artifactDigest',
+    'ownedBoundaryIds',
+    'commands',
+  ],
 };
 const DEVICE_REVIEW_OWNERSHIP = {
   'engine-compatibility': ['device-chromium', 'device-firefox', 'device-webkit'],
@@ -122,6 +150,21 @@ const RELEASE_REVIEW_COMMANDS = {
   ],
   'deployment-boundary': [
     'npm run check:public-release-evidence -- --current-pages',
+    'npm run check:project',
+  ],
+};
+const PRODUCT_BASELINE_REVIEW_OWNERSHIP = {
+  'content-boundary': ['first-party-source-pack', 'pending-ledgers'],
+  'delivery-boundary': ['review-artifact', 'code-native-css-delivery'],
+  'extension-boundary': ['external-cultural-assets-absent', 'approved-narration-absent'],
+};
+const PRODUCT_BASELINE_REVIEW_COMMANDS = {
+  'content-boundary': ['npm run check:product-baseline'],
+  'delivery-boundary': ['npm run check:product-baseline', 'npm run test:review-candidate'],
+  'extension-boundary': [
+    'npm run check:product-baseline',
+    'npm run check:rights-review',
+    'npm run check:assets',
     'npm run check:project',
   ],
 };
@@ -156,11 +199,13 @@ export async function inspectExpertReviewRegistry(
   currentCandidate = null,
   currentDeviceMatrix = null,
   currentPublicRelease = null,
+  currentProductBaseline = null,
 ) {
   const errors = [];
   const normalizedCandidateReviews = [];
   const normalizedDeviceReviews = [];
   const normalizedReleaseReviews = [];
+  const normalizedProductBaselineReviews = [];
   const invalidRoot =
     registry?.schemaVersion !== 2 ||
     registry?.authority !==
@@ -174,6 +219,7 @@ export async function inspectExpertReviewRegistry(
       normalizedCandidateReviews,
       normalizedDeviceReviews,
       normalizedReleaseReviews,
+      normalizedProductBaselineReviews,
     };
   }
   const topics = registry.topics.filter((topic) => {
@@ -237,6 +283,14 @@ export async function inspectExpertReviewRegistry(
           JSON.stringify([...PUBLIC_RELEASE_SCOPE_PATHS].sort()))
     )
       errors.push(`public release 전문 검수 role 또는 scope 계약 오류: ${topic.id}`);
+    if (
+      topic.kind === 'product-baseline' &&
+      (JSON.stringify([...topic.requiredReviewerRoles].sort()) !==
+        JSON.stringify(Object.keys(PRODUCT_BASELINE_REVIEW_OWNERSHIP).sort()) ||
+        JSON.stringify([...topic.scope].sort()) !==
+          JSON.stringify([...PRODUCT_BASELINE_SCOPE_PATHS].sort()))
+    )
+      errors.push(`product baseline 전문 검수 role 또는 scope 계약 오류: ${topic.id}`);
     let scopeDigest = null;
     try {
       scopeDigest = await createExpertReviewScopeDigest(topic.scope);
@@ -309,6 +363,20 @@ export async function inspectExpertReviewRegistry(
           requiredCommands.some((command) => !review.commands.includes(command))
         )
           errors.push(`public release 전문 검수 결박 오류: ${review.id}`);
+      } else if (topic.kind === 'product-baseline') {
+        const expectedOwnedBoundaries = PRODUCT_BASELINE_REVIEW_OWNERSHIP[review.reviewerRole];
+        const requiredCommands = PRODUCT_BASELINE_REVIEW_COMMANDS[review.reviewerRole];
+        if (
+          !expectedOwnedBoundaries ||
+          !requiredCommands ||
+          JSON.stringify(review.ownedBoundaryIds) !== JSON.stringify(expectedOwnedBoundaries) ||
+          review.baselineScopeDigest !== topic.baselineScopeDigest ||
+          review.productBaselineDigest !== topic.productBaselineDigest ||
+          review.candidateDigest !== topic.candidateDigest ||
+          review.artifactDigest !== topic.artifactDigest ||
+          requiredCommands.some((command) => !review.commands.includes(command))
+        )
+          errors.push(`product baseline 전문 검수 결박 오류: ${review.id}`);
       }
     }
     if (topic.kind === 'device-matrix') {
@@ -376,6 +444,44 @@ export async function inspectExpertReviewRegistry(
         );
       }
     }
+    if (topic.kind === 'product-baseline') {
+      const ownedBoundaries = topicReviews
+        .flatMap((review) => review.ownedBoundaryIds ?? [])
+        .sort();
+      const expectedBoundaries = Object.values(PRODUCT_BASELINE_REVIEW_OWNERSHIP).flat().sort();
+      if (
+        topic.productClass !== 'first-party-review-candidate' ||
+        !SHA256_PATTERN.test(topic.baselineScopeDigest) ||
+        !SHA256_PATTERN.test(topic.productBaselineDigest) ||
+        !SHA256_PATTERN.test(topic.candidateDigest) ||
+        !SHA256_PATTERN.test(topic.artifactDigest) ||
+        topic.baselineScopeDigest !== scopeDigest ||
+        JSON.stringify(ownedBoundaries) !== JSON.stringify(expectedBoundaries) ||
+        (currentProductBaseline !== null &&
+          (topic.baselineScopeDigest !== currentProductBaseline.baselineScopeDigest ||
+            topic.productBaselineDigest !== currentProductBaseline.productBaselineDigest ||
+            topic.candidateDigest !== currentProductBaseline.candidateDigest ||
+            topic.artifactDigest !== currentProductBaseline.artifactDigest ||
+            topic.productClass !== currentProductBaseline.productClass))
+      )
+        errors.push(`product baseline topic current evidence 결박 오류: ${topic.id}`);
+      if (errors.length === topicErrorStart) {
+        normalizedProductBaselineReviews.push(
+          ...topicReviews.map((review) => ({
+            reviewerRole: review.reviewerRole,
+            reviewerRef: review.reviewerRef,
+            status: review.status,
+            scopeDigest: review.scopeDigest,
+            baselineScopeDigest: review.baselineScopeDigest,
+            productBaselineDigest: review.productBaselineDigest,
+            candidateDigest: review.candidateDigest,
+            artifactDigest: review.artifactDigest,
+            ownedBoundaryIds: review.ownedBoundaryIds,
+            commands: review.commands,
+          })),
+        );
+      }
+    }
     if (process.argv.includes('--print')) console.log(`${topic.id} ${scopeDigest}`);
   }
   for (const review of reviews) {
@@ -396,11 +502,21 @@ export async function inspectExpertReviewRegistry(
       normalizedReleaseReviews.length = 0;
     }
   }
+  if (currentProductBaseline !== null) {
+    const productBaselineTopicCount = topics.filter(
+      (topic) => topic.kind === 'product-baseline',
+    ).length;
+    if (productBaselineTopicCount !== 1 || normalizedProductBaselineReviews.length !== 3) {
+      errors.push('current product baseline 전문 검수 quorum이 exact 계약과 다릅니다.');
+      normalizedProductBaselineReviews.length = 0;
+    }
+  }
   return {
     errors,
     normalizedCandidateReviews,
     normalizedDeviceReviews,
     normalizedReleaseReviews,
+    normalizedProductBaselineReviews,
   };
 }
 
@@ -414,6 +530,7 @@ if (path.resolve(process.argv[1] ?? '') === path.resolve(import.meta.filename)) 
   const canonicalBytes = Buffer.from(await serializeExpertReviewRegistry(registry), 'utf8');
   let currentDeviceMatrix = null;
   let currentPublicRelease = null;
+  let currentProductBaseline = null;
   if (process.argv.includes('--device-matrix')) {
     const { createCurrentDeviceMatrixAggregate } = await import('./checkDeviceMatrix.mjs');
     const aggregate = await createCurrentDeviceMatrixAggregate();
@@ -435,11 +552,23 @@ if (path.resolve(process.argv[1] ?? '') === path.resolve(import.meta.filename)) 
       releaseEvidenceDigest: aggregate.releaseEvidenceDigest,
     };
   }
+  if (process.argv.includes('--product-baseline')) {
+    const { createCurrentProductBaselineReceipt } = await import('./checkProductBaseline.mjs');
+    const receipt = await createCurrentProductBaselineReceipt();
+    currentProductBaseline = {
+      productClass: 'first-party-review-candidate',
+      baselineScopeDigest: receipt.scopeDigest,
+      productBaselineDigest: receipt.baselineDigest,
+      candidateDigest: receipt.identity.candidateDigest,
+      artifactDigest: receipt.identity.artifactDigest,
+    };
+  }
   const { errors } = await inspectExpertReviewRegistry(
     registry,
     null,
     currentDeviceMatrix,
     currentPublicRelease,
+    currentProductBaseline,
   );
   if (!bytes.equals(canonicalBytes))
     errors.push('전문 검수 registry JSON이 canonical 형식이 아닙니다.');

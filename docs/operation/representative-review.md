@@ -93,6 +93,23 @@ byte-exact 결정일 때만 멱등으로 인정하고, 다른 결정으로 덮�
 외부 자산과 아동 연구를 현재 제품 범위에서 제외하는 한, 이 대기 상태는 first-party 후보의
 다음 기술 꼭지를 막지 않는다.
 
+## First-party product baseline
+
+`content/books/tiger-full-review/review/product-baseline.json`은 비공개 10장면 후보의 현재 제품
+경계를 소유한다. `npm run check:product-baseline`은 source 1개, compiled payload 20개와 integrity
+sidecar, review build 15개 파일, CSS artwork 1개, first-party rights 2개와 pending ledger를 실제
+파일에서 다시 투영한다. 모든 장면은 code-native CSS fallback을 사용하며 story image와 audio media
+byte, `AudioTrack`은 0개다. build의 `narrationAudio-*.js`는 controller code이며 승인 낭독이 아니다.
+
+동원2613 권리 요청은 metadata-only pending evidence다. 다섯 관찰 항목은 모두
+`ingestAllowed:false`이고 repository path와 download artifact가 없다. 계획된 base와 detail asset은
+source, compiled pack과 build에 포함되지 않는다. 승인 낭독 확장은 현재 `absent`이며 audio 전용 승인,
+ingest, 발음·timing과 offline 계약을 구현하기 전에는 활성화할 수 없다.
+
+`first-party-product-baseline` 전문 검수 topic은 content boundary, delivery boundary, extension boundary
+세 역할이 같은 scope, baseline, candidate와 artifact digest를 PASS하도록 요구한다. 이 PASS는 외부 권리,
+낭독, 출판, 교육 효과, 실제 기기 또는 아동 연구 승인을 파생하지 않는다.
+
 ## 실행 순서
 
 1. `npm run check:review-candidate`
@@ -103,3 +120,5 @@ byte-exact 결정일 때만 멱등으로 인정하고, 다른 결정으로 덮�
 6. `npm run check:expert-reviews`
 7. `npm run review:decide`
 8. `npm run test:review-candidate`로 browser와 멱등 decision을 다시 확인
+9. `npm run check:product-baseline`
+10. `npm run check:expert-reviews:baseline`

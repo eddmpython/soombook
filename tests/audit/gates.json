@@ -149,6 +149,20 @@
       "blocking": true
     },
     {
+      "id": "first-party-product-baseline",
+      "owner": "scripts/checkProductBaseline.mjs",
+      "command": "npm run check:product-baseline",
+      "ciJob": "browser",
+      "blocking": true
+    },
+    {
+      "id": "first-party-product-baseline-quorum",
+      "owner": "scripts/checkExpertReviews.mjs",
+      "command": "npm run check:expert-reviews:baseline",
+      "ciJob": "browser",
+      "blocking": true
+    },
+    {
       "id": "pwa-two-version-update",
       "owner": "tests/pwa/pwaUpdate.spec.ts",
       "command": "npm run test:pwa-update",

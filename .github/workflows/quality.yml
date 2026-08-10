@@ -78,8 +78,18 @@ jobs:
       - run: npm run test:e2e
       - run: npm run test:audio-fixture
       - run: npm run test:review-candidate
+      - run: npm run check:product-baseline
+      - run: npm run check:expert-reviews:baseline
       - run: npm run test:pwa-update
       - run: npm run qa:ui
+      - name: first-party product baseline 영수증 보존
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: soombook-product-baseline-${{ github.sha }}
+          path: ../soombook.out/product-baseline
+          if-no-files-found: error
+          retention-days: 30
 
   pages:
     runs-on: ubuntu-latest

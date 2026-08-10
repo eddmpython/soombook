@@ -38,6 +38,11 @@ host로 승격하기 전에는 허용하지 않는다.
 artifact를 검수해 `expand`를 판정했다. 이 결정은 외부 자산을 현재 범위에서 제외한 후보의
 기술 완성도를 뜻하며, 사용자가 요구한 에이전트 검수 경계를 충족한다.
 
+현재 first-party 제품 baseline은 source와 전체 compiled pack, CSS fallback, review artifact를 한 digest로
+결박한다. 이 기준에는 박물관 image byte와 승인 낭독이 없다. 동원2613 request는 metadata-only pending이며
+planned derivative asset의 ingest는 모두 금지돼 있다. content, delivery, extension 세 기술 역할의 PASS는
+이 부재를 검증할 뿐 OG-02부터 OG-06 또는 배포 승인을 대신하지 않는다.
+
 단, 10장면 `tiger-full-review`의 7개 review record는 모두 `pending`이다. 자동 source digest와 완주 결과는
 검토 자료의 동일성만 증명한다. 운영자가 승인 문자열을 직접 바꾸지 않고 권리, 문화, 교육, 접근성 담당의
 비개인 reviewer ref와 대상 digest를 승인 기록에서 투영해야 한다. 박물관 원본과 낭독 파일은 해당 file

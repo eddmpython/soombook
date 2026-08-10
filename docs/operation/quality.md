@@ -13,6 +13,7 @@
 | 브라우저 | `npm run test:e2e` | desktop과 mobile 완주, 회상과 보물 마무리, 실제 tap, focus, 이전과 화살표, 저장 삭제와 손상 복구, 접근성, 확대, offline |
 | 내부 오디오 | `npm run test:audio-fixture` | 격리된 3 mode fixture의 seek, rate, 종료 의미, 실패 fallback, cleanup과 offline 재생 |
 | 검수 후보 | `npm run test:review-candidate` | 격리된 10장면 review pack의 desktop·mobile 완주, truth 문구, axe, overflow와 offline |
+| First-party 제품 기준 | `npm run check:product-baseline` | 10장면 source, 전체 compiled와 review build, CSS fallback, 빈 audio, pending ledger와 선택적 외부 확장 부재를 하나의 digest로 결박 |
 | 기기 행렬 | `npm run qa:device-matrix` | 같은 10장면 artifact의 Chromium·Firefox·WebKit, CSS root 200%, forced-colors, reduced-motion, high-contrast, touch 모의 전체 여정과 21개 상태별 AX·focus·저장·offline 증거 |
 | UI 감수 | `npm run qa:ui` | 1440x900, 768x1024, 390x844 완주와 9개 시나리오 |
 | 합성 성능 | `npm run qa:performance` | 같은 root와 Pages artifact의 mobile, desktop 4개 profile, warm-up 뒤 3회 lab 중앙값, mobile 5회 heap 반복 |
@@ -42,6 +43,10 @@ candidate, plan과 scope digest를 검수한 뒤 기술 `expand`를 판정했다
 포함한다. 기기 행렬은 engine compatibility, interaction persistence, accessibility structure 세 역할이
 같은 candidate, matrix scope와 aggregate digest를 검수한다. 이 영수증은 기술 검수 증거이며 법률 승인,
 기관 승인, 실제 보조기기 사용이나 아동 연구를 가장하지 않는다.
+
+First-party 제품 기준은 content boundary, delivery boundary, extension boundary 세 역할이 같은 baseline,
+candidate와 review artifact digest를 검수한다. 외부 문화자산은 metadata-only pending, 승인 낭독은
+`absent`와 `not-implemented`로 유지되며 이 상태를 바꾸면 기존 quorum은 즉시 stale이 된다.
 
 공개 기술 체험판 release evidence는 product copy, performance evidence, deployment boundary 세 역할이 서로
 다른 reviewer ref로 같은 release scope와 stable evidence digest를 검수한다. raw 성능 수치와 실행 환경은

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "authority": "first-party-product-baseline-not-external-rights-narration-publication-or-child-study-approval",
+  "productClass": "first-party-review-candidate",
+  "technicalScope": "first-party-review-candidate-product-baseline",
+  "identity": {
+    "bookId": "book-tiger-full-review",
+    "packVersion": "0.1.0",
+    "manifestStatus": "review",
+    "sceneIds": [
+      "review-scene-01",
+      "review-scene-02",
+      "review-scene-03",
+      "review-scene-04",
+      "review-scene-05",
+      "review-scene-06",
+      "review-scene-07",
+      "review-scene-08",
+      "review-scene-09",
+      "review-scene-10"
+    ]
+  },
+  "requiredFirstParty": {
+    "delivery": "code-native-css-fallback",
+    "providerSourcePaths": [
+      "apps/reader-web/src/sceneArtwork.tsx",
+      "apps/reader-web/src/styles.css"
+    ],
+    "sceneAssetBindings": [
+      { "sceneId": "review-scene-01", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-02", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-03", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-04", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-05", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-06", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-07", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-08", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-09", "baseAssetId": null, "detailAssetId": null },
+      { "sceneId": "review-scene-10", "baseAssetId": null, "detailAssetId": null }
+    ],
+    "assetIds": ["asset-review-css-art"],
+    "rightsIds": ["rights-review-story", "rights-review-art"],
+    "compiledPaths": [
+      "audioTracks.json",
+      "book.json",
+      "connectionCards.json",
+      "interactions.json",
+      "ledgers/assets.json",
+      "ledgers/claims.json",
+      "ledgers/reviews.json",
+      "ledgers/rights.json",
+      "manifest.json",
+      "reasoningPrompts.json",
+      "scenes/review-scene-01.json",
+      "scenes/review-scene-02.json",
+      "scenes/review-scene-03.json",
+      "scenes/review-scene-04.json",
+      "scenes/review-scene-05.json",
+      "scenes/review-scene-06.json",
+      "scenes/review-scene-07.json",
+      "scenes/review-scene-08.json",
+      "scenes/review-scene-09.json",
+      "scenes/review-scene-10.json"
+    ]
+  },
+  "currentNarration": {
+    "textNarrationSceneIds": [
+      "review-scene-01",
+      "review-scene-02",
+      "review-scene-03",
+      "review-scene-04",
+      "review-scene-05",
+      "review-scene-06",
+      "review-scene-07",
+      "review-scene-08",
+      "review-scene-09",
+      "review-scene-10"
+    ],
+    "audioTrackIds": [],
+    "audioAssetIds": [],
+    "audioRightIds": [],
+    "audioReviewIds": [],
+    "buildAudioMediaPaths": []
+  },
+  "pendingLedger": {
+    "externalRightsIds": ["rights-review-source-art"],
+    "reviewRecordIds": [
+      "review-education-book-tiger-full-review",
+      "review-accessibility-book-tiger-full-review",
+      "review-rights-rights-review-story",
+      "review-rights-rights-review-art",
+      "review-rights-rights-review-source-art",
+      "review-culture-claim-review-fiction-event",
+      "review-culture-claim-review-metadata"
+    ],
+    "claimIds": ["claim-review-fiction-event", "claim-review-metadata"]
+  },
+  "optionalExtensions": {
+    "externalCulturalAssets": {
+      "status": "pending-not-included",
+      "assetIds": ["asset-review-source-base", "asset-review-source-detail"],
+      "rightsIds": ["rights-review-source-art"],
+      "sourceRepositoryPaths": [],
+      "compiledAssetIds": [],
+      "buildMediaPaths": [],
+      "derivedAssetIds": [],
+      "requiredApprovalState": "approved",
+      "requiredIngestReceipt": true
+    },
+    "approvedNarration": {
+      "status": "absent",
+      "activationCapability": "not-implemented",
+      "audioTrackIds": [],
+      "assetIds": [],
+      "rightsIds": [],
+      "reviewIds": [],
+      "sourcePaths": [],
+      "buildMediaPaths": [],
+      "requiredApprovalState": "approved",
+      "requiredIngestReceipt": true
+    }
+  },
+  "nonAuthority": {
+    "externalRightsApproved": false,
+    "approvedNarrationIncluded": false,
+    "publicationApproved": false,
+    "educationEffectApproved": false,
+    "actualDeviceOrChildStudyApproved": false
+  }
+}

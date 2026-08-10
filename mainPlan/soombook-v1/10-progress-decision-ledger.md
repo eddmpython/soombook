@@ -10,27 +10,27 @@
 | 필드 | 현재 값 |
 |---|---|
 | Primary goal ID | `completeMeaningfulStoryJourney` |
-| 현재 Phase | `P1 first-party review candidate product baseline` |
+| 현재 Phase | `P1 operations documentation gate` |
 | 현재 제품 | 공개 4장면 수직 절편, 내부 5장면 fixture, 비공개 10장면 review 후보, 정적 PWA |
-| 현재 자동화 | BookPack 전체 파일 결박, 권리 승인 경계, PWA 두 버전 갱신, 대표작 기술 promotion, 8-profile device matrix, public release evidence quorum |
-| 현재 손실 전이 | first-party 10장면 제품 기준과 선택적 외부 자산·낭독 확장 경계가 하나의 current product baseline으로 결박되지 않음 |
+| 현재 자동화 | BookPack 전체 파일 결박, 권리 승인 경계, PWA 두 버전 갱신, 대표작 기술 promotion, 8-profile device matrix, public release evidence와 first-party product baseline quorum |
+| 현재 손실 전이 | 라이선스, 지원, 철회, 삭제, cache purge와 사고 대응 문서가 하나의 current operations contract로 결박되지 않음 |
 | 원격 상태 | `main` 기준선 push 완료, 현재 꼭지 변경은 push 전 |
-| NEXT | first-party review candidate product baseline 완성 |
+| NEXT | operations documentation gate 완성 |
 
 ## 현재 확인 사실
 
-- first-party 10장면 review 후보, pending 권리·검수 ledger와 기술 promotion 증거가 존재한다.
-- 외부 문화자산과 승인 낭독은 현재 제품 기준에 포함되지 않지만, 이 부재와 선택적 확장 경계를 하나의
-  current product baseline receipt가 아직 소유하지 않는다.
+- first-party 10장면 review 후보의 source, compiled pack, CSS fallback, 빈 audio, pending ledger와 review
+  artifact가 하나의 current product baseline digest로 결박돼 있다.
+- 외부 문화자산은 metadata-only pending이며 승인 낭독은 absent와 not-implemented로 분리돼 있다.
 - public release evidence 완료 근거는 `docs/**`, 코드, 테스트와 expert registry가 소유한다.
-- 따라서 first-party 제품 기준과 선택적 확장 경계만 활성 `NEXT`에 남긴다.
+- 따라서 운영 문서의 exact inventory와 자동 gate만 활성 `NEXT`에 남긴다.
 
 ## 현재 결정
 
-1. 완료된 release evidence matrix 꼭지는 활성 원장에서 삭제했다.
-2. first-party 제품 기준은 외부 문화자산, 승인 낭독, 출판, 교육 효과 또는 실제 기기 승인을 파생하지 않는다.
-3. current product baseline과 세 전문 에이전트 PASS가 모두 없으면 이 꼭지를 닫지 않는다.
-4. 완료 뒤 확인된 현재 계약만 `docs/**`에 반영하고 이 `NEXT`를 삭제한다.
+1. 완료된 first-party product baseline 꼭지는 활성 원장에서 삭제했다.
+2. 운영 문서는 현재 자동화와 OPERATOR GATE를 혼합하지 않고 책임, 명령, 증거와 실패 복구를 exact하게 쓴다.
+3. 문서 inventory, code projection과 negative gate가 모두 없으면 운영 문서 꼭지를 닫지 않는다.
+4. 완료 뒤 확인된 현재 계약만 `docs/**`에 남기고 이 `NEXT`를 삭제한다.
 
 ## OPERATOR GATE
 
@@ -49,15 +49,14 @@
 
 ## NEXT
 
-`first-party review candidate product baseline`을 완성한다.
+`operations documentation gate`를 완성한다.
 
 완료 조건:
 
-1. first-party 10장면 후보의 source, BookPack, asset, audio와 pending ledger 정본을 exact scope로 고정한다.
-2. 현재 제품에 필수인 first-party 파일과 선택적 외부 문화자산·승인 낭독의 경계를 machine-readable
-   projection으로 분리한다.
-3. 외부 자산이나 낭독의 무단 편입, 필수 first-party 파일 누락, pending 상태 제거와 제품 기준 위조를
-   coherent 변조에도 차단한다.
-4. content boundary, delivery boundary, extension boundary 담당 전문 에이전트가 서로 다른 reviewer ref로
-   같은 product baseline digest를 PASS한다.
+1. 라이선스, 지원, 철회, 로컬 데이터 삭제, service worker와 cache purge, 사고 대응의 현재 문서 정본을
+   exact inventory로 고정한다.
+2. 각 절차의 책임 역할, 실행 명령, 입력, 증거, 실패 진단, 복구와 OPERATOR GATE를 machine-readable
+   projection으로 결박한다.
+3. 문서 누락, stale 명령, 책임자 부재, rollback·purge 순서 역전과 권한 상승 문구를 negative에서 차단한다.
+4. 현재 코드와 workflow가 문서에 적힌 절차를 실제로 제공하는지 자동 검사한다.
 5. 검증 결과를 현재 계약에 반영한 뒤 이 `NEXT`를 삭제한다.

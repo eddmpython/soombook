@@ -338,7 +338,7 @@ async function main() {
     'qa:device-matrix': 'node scripts/runDeviceMatrix.mjs',
     'check:expert-reviews:device': 'node scripts/checkExpertReviews.mjs --device-matrix',
     'check:full':
-      'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device',
+      'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run check:product-baseline && npm run check:expert-reviews:baseline && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device',
   };
   for (const [scriptName, command] of Object.entries(exactDeviceScripts)) {
     if (packageJson.scripts?.[scriptName] !== command)
@@ -399,7 +399,7 @@ async function main() {
       ? (rollbackFloorStep.run ?? '')
       : '';
   const expectedRollbackFloorCommand =
-    "node -e \"const p=require('./package.json');const expected={'qa:device-matrix':'node scripts/runDeviceMatrix.mjs','check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix','check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('device matrix rollback floor 미달: '+name)}\"";
+    "node -e \"const p=require('./package.json');const expected={'qa:device-matrix':'node scripts/runDeviceMatrix.mjs','check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix','check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run check:product-baseline && npm run check:expert-reviews:baseline && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('device matrix rollback floor 미달: '+name)}\"";
   if (rollbackFloorCommand !== expectedRollbackFloorCommand)
     errors.push('Pages rollback exact device floor command가 다릅니다.');
   for (const reviewBuildContract of [
@@ -501,6 +501,64 @@ async function main() {
       if (!evidencePaths.includes(evidencePath))
         errors.push(`${workflowName} device matrix evidence 보존 누락: ${evidencePath}`);
   }
+
+  const exactProductBaselineScripts = {
+    'check:product-baseline': 'node scripts/checkProductBaseline.mjs',
+    'check:expert-reviews:baseline': 'node scripts/checkExpertReviews.mjs --product-baseline',
+    'qa:product-baseline': 'npm run build:review-candidate && npm run check:product-baseline',
+  };
+  for (const [scriptName, command] of Object.entries(exactProductBaselineScripts)) {
+    if (packageJson.scripts?.[scriptName] !== command)
+      errors.push(`product baseline package script 계약 오류: ${scriptName}`);
+  }
+  if (
+    !packageJson.scripts['test:contracts'].includes('productBaseline.test.mjs') ||
+    !packageJson.scripts['check:full'].includes('npm run check:product-baseline') ||
+    !packageJson.scripts['check:full'].includes('npm run check:expert-reviews:baseline')
+  )
+    errors.push('product baseline negative, checker와 quorum이 전체 gate에 결박되지 않았습니다.');
+  for (const [workflowName, workflowDocument, jobName, expectedJobIf] of [
+    ['quality', workflowDocuments.quality, 'browser', undefined],
+    ['pages', workflowDocuments.pages, 'build', "github.ref == 'refs/heads/main'"],
+    [
+      'pages-rollback',
+      workflowDocuments['pages-rollback'],
+      'build',
+      "github.ref == 'refs/heads/main'",
+    ],
+  ]) {
+    for (const command of [
+      'npm run check:product-baseline',
+      'npm run check:expert-reviews:baseline',
+    ]) {
+      if (!hasExactWorkflowRun(workflowDocument, jobName, command, expectedJobIf))
+        errors.push(`${workflowName} product baseline blocking command 누락: ${command}`);
+    }
+    const uploadStep = workflowSteps(workflowDocument, jobName).find(
+      (step) =>
+        workflowNodeBlocking(step, 'always()') &&
+        typeof step.uses === 'string' &&
+        /^actions\/upload-artifact@[0-9a-f]{40}$/u.test(step.uses) &&
+        step.with?.['if-no-files-found'] === 'error' &&
+        typeof step.with?.path === 'string' &&
+        step.with.path.includes('../soombook.out/product-baseline'),
+    );
+    if (!uploadStep) errors.push(`${workflowName} product baseline evidence 보존 계약이 없습니다.`);
+  }
+  const expectedProductBaselineFloorCommand =
+    "node -e \"const p=require('./package.json');const expected={'check:product-baseline':'node scripts/checkProductBaseline.mjs','check:expert-reviews:baseline':'node scripts/checkExpertReviews.mjs --product-baseline'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('product baseline rollback floor 미달: '+name)}\"";
+  const productBaselineFloorStep = workflowSteps(workflowDocuments['pages-rollback'], 'build').find(
+    (step) =>
+      step &&
+      typeof step === 'object' &&
+      step.name === 'first-party product baseline 도입 이전 SHA 차단',
+  );
+  if (
+    !workflowNodeBlocking(productBaselineFloorStep, undefined) ||
+    productBaselineFloorStep.shell !== undefined ||
+    productBaselineFloorStep.run !== expectedProductBaselineFloorCommand
+  )
+    errors.push('Pages rollback exact product baseline floor가 다릅니다.');
 
   const exactReleaseScripts = {
     'qa:performance': 'node scripts/runPerformanceAudit.mjs',
