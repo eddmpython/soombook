@@ -165,7 +165,7 @@ function ConnectionActivity({ card, state, onConnection }: ConnectionActivityPro
         : card.truthStatus === 'unverifiedClaim'
           ? '출처와 설명을 검수 중인 자료이며 실제 자료로 확정되지 않았습니다.'
           : card.truthStatus === 'fixture'
-            ? '현재 화면의 자료는 기능 검증용 창작 픽스처입니다.'
+            ? SOOMBOOK_PUBLIC_RELEASE_SURFACES.connectionTruthNotice
             : '이 자료의 출처 상태가 아직 명시되지 않았습니다.';
 
   return (

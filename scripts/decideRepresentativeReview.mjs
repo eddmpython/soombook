@@ -16,6 +16,7 @@ import {
   inspectStoredRepresentativeDecision,
   serializeRepresentativeDecision,
 } from './representativeReview.mjs';
+import { createRepresentativeDecisionReceiptFilename } from './representativeDecisionReceipt.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const AUDIT_ROOT = path.resolve(ROOT, '../soombook.out/audit');
@@ -124,13 +125,16 @@ if (!decision.valid || decision.decision === null)
 
 const outputPath = path.join(
   AUDIT_ROOT,
-  `representative-promotion-${currentStaticReceipt.candidateDigest.slice('sha256-'.length)}.json`,
+  createRepresentativeDecisionReceiptFilename(
+    currentStaticReceipt.candidateDigest,
+    currentBuildReceipt.artifactDigest,
+  ),
 );
 try {
   const existingBytes = await readFile(outputPath);
   if (!inspectStoredRepresentativeDecision(existingBytes, decision).valid)
     throw new Error(
-      '같은 candidate의 기존 promotion decision과 새 결정이 다릅니다. 새 candidate 또는 별도 supersession evidence가 필요합니다.',
+      '같은 candidate와 artifact의 기존 promotion decision과 새 결정이 다릅니다. 새 evidence identity 또는 별도 supersession evidence가 필요합니다.',
     );
 } catch (error) {
   if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT')

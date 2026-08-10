@@ -502,6 +502,232 @@ async function main() {
         errors.push(`${workflowName} device matrix evidence 보존 누락: ${evidencePath}`);
   }
 
+  const exactReleaseScripts = {
+    'qa:performance': 'node scripts/runPerformanceAudit.mjs',
+    'check:performance-evidence': 'node scripts/checkPerformanceEvidence.mjs',
+    'check:public-release-evidence': 'node scripts/checkPublicReleaseEvidence.mjs',
+    'check:expert-reviews:release': 'node scripts/checkExpertReviews.mjs --public-release',
+  };
+  for (const [scriptName, command] of Object.entries(exactReleaseScripts)) {
+    if (packageJson.scripts?.[scriptName] !== command)
+      errors.push(`public release evidence package script 계약 오류: ${scriptName}`);
+  }
+  if (!packageJson.scripts['test:contracts'].includes('publicReleaseEvidence.test.mjs'))
+    errors.push('public release evidence negative test가 기본 contract gate에 없습니다.');
+  for (const [workflowDocument, jobName, expectedJobIf] of [
+    [workflowDocuments.quality, 'pages', undefined],
+    [workflowDocuments.pages, 'build', "github.ref == 'refs/heads/main'"],
+    [workflowDocuments['pages-rollback'], 'build', "github.ref == 'refs/heads/main'"],
+  ]) {
+    for (const command of [
+      'npm run qa:performance',
+      'npm run check:expert-reviews:release',
+      'npm run check:public-release-evidence -- --current-pages',
+    ]) {
+      if (!hasExactWorkflowRun(workflowDocument, jobName, command, expectedJobIf))
+        errors.push(`public release workflow blocking command 누락: ${jobName} ${command}`);
+    }
+  }
+  const exactRunIndex = (workflowDocument, jobName, command) =>
+    workflowSteps(workflowDocument, jobName).findIndex(
+      (step) =>
+        workflowNodeBlocking(step, undefined) && step.shell === undefined && step.run === command,
+    );
+  for (const [workflowName, workflowDocument] of [
+    ['quality', workflowDocuments.quality],
+    ['pages', workflowDocuments.pages],
+    ['pages-rollback', workflowDocuments['pages-rollback']],
+  ]) {
+    const jobName = workflowName === 'quality' ? 'pages' : 'build';
+    const commands =
+      workflowName === 'quality'
+        ? [
+            'npm run qa:performance',
+            'npm run check:performance-evidence',
+            'npm run check:public-release-evidence',
+            'npm run check:expert-reviews:release',
+            'npm run build:pages',
+            'npm run check:public-release-evidence -- --current-pages',
+            'npm run test:pages:built',
+          ]
+        : [
+            'npm run qa:performance',
+            'npm run check:expert-reviews:release',
+            'npm run check:full',
+            'npm run build:pages',
+            'npm run check:public-release-evidence -- --current-pages',
+            'npm run test:pages:built',
+          ];
+    const indexes = commands.map((command) => exactRunIndex(workflowDocument, jobName, command));
+    if (
+      indexes.some((index) => index < 0) ||
+      indexes.some((index, position) => position > 0 && index <= indexes[position - 1])
+    )
+      errors.push(`${workflowName} public release step 순서 또는 exact command 오류`);
+  }
+  const rollbackPerformanceStep = workflowSteps(workflowDocuments['pages-rollback'], 'build').find(
+    (step) => step?.run === 'npm run qa:performance',
+  );
+  const rollbackBuildSteps = workflowSteps(workflowDocuments['pages-rollback'], 'build');
+  const rollbackPerformanceIndex = rollbackBuildSteps.indexOf(rollbackPerformanceStep);
+  const rollbackHeadCheck = rollbackBuildSteps[rollbackPerformanceIndex - 1];
+  const expectedRollbackHeadCheck =
+    [
+      'if [[ "$(git rev-parse HEAD)" != "$TARGET_SHA" ]]; then',
+      '  echo "검증 직전 작업트리가 target_sha와 다릅니다."',
+      '  exit 1',
+      'fi',
+    ].join('\n') + '\n';
+  if (
+    !workflowNodeBlocking(rollbackHeadCheck, undefined) ||
+    rollbackHeadCheck?.name !== 'rollback 작업트리 신원 재확인' ||
+    rollbackHeadCheck?.shell !== undefined ||
+    rollbackHeadCheck?.run !== expectedRollbackHeadCheck ||
+    JSON.stringify(rollbackHeadCheck?.env) !==
+      JSON.stringify({ TARGET_SHA: '${{ inputs.target_sha }}' }) ||
+    JSON.stringify(rollbackPerformanceStep?.env) !==
+      JSON.stringify({ SOOMBOOK_RELEASE_SHA: '${{ inputs.target_sha }}' })
+  )
+    errors.push('Pages rollback current HEAD와 performance release SHA 결박 오류');
+  const expectedReleaseFloorCommand =
+    "node -e \"const p=require('./package.json');const expected={'qa:performance':'node scripts/runPerformanceAudit.mjs','check:performance-evidence':'node scripts/checkPerformanceEvidence.mjs','check:public-release-evidence':'node scripts/checkPublicReleaseEvidence.mjs','check:expert-reviews:release':'node scripts/checkExpertReviews.mjs --public-release'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('public release evidence rollback floor 미달: '+name)}\"";
+  const releaseFloorStep = workflowSteps(workflowDocuments['pages-rollback'], 'build').find(
+    (step) =>
+      step &&
+      typeof step === 'object' &&
+      step.name === 'public release evidence 도입 이전 SHA 차단',
+  );
+  if (
+    !workflowNodeBlocking(releaseFloorStep, undefined) ||
+    releaseFloorStep.shell !== undefined ||
+    releaseFloorStep.run !== expectedReleaseFloorCommand
+  )
+    errors.push('Pages rollback exact public release evidence floor가 다릅니다.');
+  const rollbackShaStep = workflowSteps(workflowDocuments['pages-rollback'], 'build').find(
+    (step) => step && typeof step === 'object' && step.name === 'rollback SHA 검증과 전환',
+  );
+  const expectedRollbackShaCommand =
+    [
+      'if [[ ! "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]; then',
+      '  echo "target_sha는 소문자 40자리 commit SHA여야 합니다."',
+      '  exit 1',
+      'fi',
+      'git fetch --no-tags origin main',
+      'if ! git merge-base --is-ancestor "$TARGET_SHA" origin/main; then',
+      '  echo "target_sha가 origin/main 이력에 없습니다."',
+      '  exit 1',
+      'fi',
+      'git checkout --detach "$TARGET_SHA"',
+    ].join('\n') + '\n';
+  if (
+    !workflowNodeBlocking(rollbackShaStep, undefined) ||
+    rollbackShaStep.shell !== undefined ||
+    rollbackShaStep.run !== expectedRollbackShaCommand ||
+    JSON.stringify(rollbackShaStep.env) !==
+      JSON.stringify({ TARGET_SHA: '${{ inputs.target_sha }}' })
+  )
+    errors.push('Pages rollback SHA 검증 step이 blocking exact 경계가 아닙니다.');
+  for (const [workflowName, workflowDocument, jobName] of [
+    ['quality', workflowDocuments.quality, 'pages'],
+    ['pages', workflowDocuments.pages, 'build'],
+    ['pages-rollback', workflowDocuments['pages-rollback'], 'build'],
+  ]) {
+    const uploadStep = workflowSteps(workflowDocument, jobName).find(
+      (step) =>
+        workflowNodeBlocking(step, 'always()') &&
+        typeof step.uses === 'string' &&
+        /^actions\/upload-artifact@[0-9a-f]{40}$/u.test(step.uses) &&
+        step.with?.['if-no-files-found'] === 'error' &&
+        typeof step.with?.path === 'string' &&
+        step.with.path.includes('../soombook.out/release-evidence'),
+    );
+    const evidencePaths =
+      typeof uploadStep?.with?.path === 'string'
+        ? uploadStep.with.path.split(/\r?\n/u).map((value) => value.trim())
+        : [];
+    for (const evidencePath of [
+      '../soombook.out/performance',
+      '../soombook.out/performance-artifacts',
+      '../soombook.out/playwright-performance',
+      '../soombook.out/release-evidence',
+    ])
+      if (!evidencePaths.includes(evidencePath))
+        errors.push(`${workflowName} public release evidence 보존 누락: ${evidencePath}`);
+  }
+  for (const workflowName of ['pages', 'pages-rollback']) {
+    const workflowDocument = workflowDocuments[workflowName];
+    const remoteJob = workflowDocument?.jobs?.['remote-smoke'];
+    const remoteStep = workflowSteps(workflowDocument, 'remote-smoke').find(
+      (step) => step?.run === 'npm run test:pages:remote',
+    );
+    const expectedRemoteEnvironment = {
+      PLAYWRIGHT_PAGES_BASE_URL: '${{ needs.deploy.outputs.page_url }}',
+      SOOMBOOK_EXPECTED_RELEASE_SHA: '${{ needs.build.outputs.release_sha }}',
+      SOOMBOOK_EXPECTED_ARTIFACT_DIGEST: '${{ needs.build.outputs.artifact_digest }}',
+      SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST: '${{ needs.build.outputs.book_pack_digest }}',
+      SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST: '${{ needs.build.outputs.pack_content_digest }}',
+    };
+    if (
+      workflowDocument.defaults !== undefined ||
+      !workflowNodeBlocking(remoteJob, undefined) ||
+      remoteJob.defaults !== undefined ||
+      JSON.stringify(remoteJob.needs) !== JSON.stringify(['build', 'deploy']) ||
+      !workflowNodeBlocking(remoteStep, undefined) ||
+      remoteStep.shell !== undefined ||
+      JSON.stringify(remoteStep.env) !== JSON.stringify(expectedRemoteEnvironment)
+    )
+      errors.push(`${workflowName} remote smoke identity env 계약 오류`);
+    const pagesUpload = workflowSteps(workflowDocument, 'build').find(
+      (step) =>
+        step?.uses === 'actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9',
+    );
+    if (
+      !workflowNodeBlocking(pagesUpload, undefined) ||
+      pagesUpload.shell !== undefined ||
+      JSON.stringify(pagesUpload.with) !==
+        JSON.stringify({ path: '../soombook.out/build/reader-web', 'retention-days': 30 })
+    )
+      errors.push(`${workflowName} Pages upload artifact 경계 오류`);
+    const buildSteps = workflowSteps(workflowDocument, 'build');
+    const testIndex = buildSteps.findIndex((step) => step?.run === 'npm run test:pages:built');
+    const identityIndex = buildSteps.findIndex(
+      (step) =>
+        workflowNodeBlocking(step, undefined) &&
+        step?.id === 'release-identity' &&
+        step?.run === 'node scripts/emitReleaseIdentity.mjs' &&
+        step?.shell === undefined,
+    );
+    const uploadIndex = buildSteps.indexOf(pagesUpload);
+    const finalArtifactCheck = buildSteps[uploadIndex - 1];
+    if (
+      testIndex < 0 ||
+      identityIndex <= testIndex ||
+      uploadIndex <= identityIndex ||
+      !workflowNodeBlocking(finalArtifactCheck, undefined) ||
+      finalArtifactCheck?.shell !== undefined ||
+      finalArtifactCheck?.run !== 'npm run check:public-release-evidence -- --current-pages'
+    )
+      errors.push(`${workflowName} Pages test, identity, upload 순서 오류`);
+    const deployJob = workflowDocument?.jobs?.deploy;
+    const deployStep = workflowSteps(workflowDocument, 'deploy').find(
+      (step) =>
+        step?.id === 'deployment' &&
+        step?.uses === 'actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128',
+    );
+    if (
+      !workflowNodeBlocking(deployJob, undefined) ||
+      deployJob.defaults !== undefined ||
+      deployJob.needs !== 'build' ||
+      JSON.stringify(deployJob.environment) !==
+        JSON.stringify({ name: 'github-pages', url: '${{ steps.deployment.outputs.page_url }}' }) ||
+      JSON.stringify(deployJob.outputs) !==
+        JSON.stringify({ page_url: '${{ steps.deployment.outputs.page_url }}' }) ||
+      !workflowNodeBlocking(deployStep, undefined) ||
+      deployStep.shell !== undefined
+    )
+      errors.push(`${workflowName} Pages deploy job blocking 경계 오류`);
+  }
+
   if (errors.length > 0) {
     console.error('프로젝트 registry 검증 실패');
     for (const error of errors) {

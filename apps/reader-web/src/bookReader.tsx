@@ -36,7 +36,7 @@ type SceneNavigationDirection = 'next' | 'previous';
 const APP_BASE_URL = import.meta.env.BASE_URL;
 const TRUTH_STATUS_LABELS: Record<TruthStatus, string> = {
   fiction: '숨책이 만든 이야기 그림',
-  fixture: '기능 검증용 창작 자료',
+  fixture: SOOMBOOK_PUBLIC_RELEASE_SURFACES.sceneTruthLabel,
   unverifiedClaim: '출처와 설명을 검수 중인 자료',
   verifiedSource: '출처를 확인한 실제 자료',
   derivedFromVerifiedSource: '검증된 실제 자료에서 만든 자료',
@@ -117,7 +117,7 @@ export function BookReader({ assetUrls, pack }: BookReaderProps) {
         ? '검수 후보'
         : pack.manifest.status === 'published'
           ? '출판본'
-          : '공개 체험판';
+          : SOOMBOOK_PUBLIC_RELEASE_SURFACES.experienceLabel;
   const truthStatus = scene.visual.truthStatus ?? 'fixture';
   const truthStatusLabel = TRUTH_STATUS_LABELS[truthStatus];
 
@@ -882,7 +882,11 @@ export function BookReader({ assetUrls, pack }: BookReaderProps) {
       </div>
       <footer className="siteFooter">
         <div>
-          <p>실제 문화유산 원본 대신 권리가 확인된 창작 이야기와 그림을 사용한 체험판입니다.</p>
+          <p>
+            {pack.manifest.status === 'fixture'
+              ? SOOMBOOK_PUBLIC_RELEASE_SURFACES.primaryNotice
+              : '현재 콘텐츠의 공개 범위와 권리 상태는 이 화면의 검수 표시를 따릅니다.'}
+          </p>
           <p>
             {persistenceAvailable
               ? '계정 없음 · 원격 행동 추적 없음 · Apache-2.0 코드'
@@ -904,7 +908,7 @@ export function BookReader({ assetUrls, pack }: BookReaderProps) {
                 ? '이 화면은 비공개 검수 후보입니다. 권리, 문화, 초3 교육, 실기기 접근성 승인을 아직 받지 않았고 출판본이나 교육 효과 증거가 아닙니다.'
                 : pack.manifest.status === 'published'
                   ? '이 화면은 승인된 출판 profile로 검증된 책입니다. 현재 호스트와 개인정보 안내는 배포 환경의 운영 문서를 따릅니다.'
-                  : '이 공개 체험판은 GitHub Pages에서 제공됩니다. 호스팅 사업자는 보안 운영을 위해 IP 주소를 포함한 접속 정보를 처리할 수 있습니다. 교육 효과, 실제 문화 해석, 실기기 접근성은 아직 사람 검수를 마치지 않았습니다.'}
+                  : SOOMBOOK_PUBLIC_RELEASE_SURFACES.guardianNotice}
           </p>
           <p>
             코드와 현재 기능 검증용 fixture는 Apache-2.0입니다. 숨책 상표와 향후 외부 자산의 권리는

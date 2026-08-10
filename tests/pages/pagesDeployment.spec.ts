@@ -66,7 +66,14 @@ test('release identity가 승인한 commit과 artifact digest에 결박된다', 
   const expectedDigest = process.env.SOOMBOOK_EXPECTED_ARTIFACT_DIGEST;
   const expectedBookPackDigest = process.env.SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST;
   const expectedPackContentDigest = process.env.SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST;
-  if (expectedCommit || expectedDigest) {
+  const expectedIdentity = [
+    expectedCommit,
+    expectedDigest,
+    expectedBookPackDigest,
+    expectedPackContentDigest,
+  ];
+  if (expectedIdentity.some(Boolean)) {
+    expect(expectedIdentity.every(Boolean)).toBe(true);
     expect(expectedCommit).toMatch(/^[0-9a-f]{40}$/u);
     expect(expectedDigest).toMatch(/^[0-9a-f]{64}$/u);
     expect(release.commit).toBe(expectedCommit);
@@ -124,6 +131,13 @@ test('Pages base와 PWA 설치 경계가 모두 /soombook/ 안에 있다', async
   const response = await page.goto('./');
   expect(response?.status()).toBe(200);
   await expect(page.getByRole('button', { name: '탐험 시작하기' })).toBeVisible();
+  await expect(page.locator('head > meta[name="robots"]')).toHaveCount(1);
+  await expect(page.locator('head > meta[name="robots"]')).toHaveAttribute(
+    'content',
+    'noindex, nofollow, noarchive',
+  );
+  await expect(page.locator('meta[name="googlebot"]')).toHaveCount(0);
+  await expect(page.getByText('공개 기술 체험판', { exact: true }).first()).toBeVisible();
 
   const assetUrls = await page
     .locator('link[rel="stylesheet"], script[src], link[rel="icon"]')

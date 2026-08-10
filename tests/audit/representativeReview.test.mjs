@@ -19,6 +19,7 @@ import {
   inspectExpertReviewRegistry,
 } from '../../scripts/checkExpertReviews.mjs';
 import { DEVICE_MATRIX_SCOPE_PATHS } from '../../scripts/checkDeviceMatrix.mjs';
+import { createRepresentativeDecisionReceiptFilename } from '../../scripts/representativeDecisionReceipt.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const PACK_ROOT = path.join(ROOT, 'content/books/tiger-full-review/compiled');
@@ -466,6 +467,21 @@ describe('representative candidate automated review', () => {
         expected,
       ).valid,
     ).toBe(false);
+  });
+
+  it('promotion receipt 경로를 candidate와 artifact identity로 분리한다', () => {
+    const candidateDigest = `sha256-${'1'.repeat(64)}`;
+    const firstArtifactDigest = `sha256-${'2'.repeat(64)}`;
+    const secondArtifactDigest = `sha256-${'3'.repeat(64)}`;
+    expect(createRepresentativeDecisionReceiptFilename(candidateDigest, firstArtifactDigest)).toBe(
+      `representative-promotion-${'1'.repeat(64)}-${'2'.repeat(64)}.json`,
+    );
+    expect(
+      createRepresentativeDecisionReceiptFilename(candidateDigest, secondArtifactDigest),
+    ).not.toBe(createRepresentativeDecisionReceiptFilename(candidateDigest, firstArtifactDigest));
+    expect(() =>
+      createRepresentativeDecisionReceiptFilename(candidateDigest, '../artifact'),
+    ).toThrow(/SHA-256/u);
   });
 
   it('candidate promotion registry는 세 역할과 reviewer를 exact하게 결박한다', async () => {

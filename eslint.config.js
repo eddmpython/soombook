@@ -15,6 +15,7 @@ export default tseslint.config(
       'playwright-report/**',
       'test-results/**',
       'packages/book-schema/src/bookPackValidator.generated.*',
+      '**/*.d.mts',
     ],
   },
   js.configs.recommended,

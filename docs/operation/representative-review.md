@@ -27,7 +27,7 @@ path, byte length와 SHA-256를 대조한다. browser 영수증은 같은 candid
 
 - candidate: `sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080`
 - plan: `sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c`
-- build artifact: `sha256-63881416ee4eb5b572586514241dafcead5f4804e271a0902894ee9f4adc8f9f`
+- build artifact: `sha256-2a3fb85f3555d982cc7e571994d1113a21caa3c8b2370d885832cda8f405bd49`
 
 ## 정적 검수
 
@@ -76,8 +76,10 @@ review plan의 nested record나 array가 손상되면 검사기가 예외로 중
 만든다. evidence 손상은 제품 결정으로 해석하지 않고 `promotion.evidenceStructureInvalid`
 수리 판정으로 수렴한다.
 
-결정 파일은 `../soombook.out/audit/representative-promotion-<candidate>.json`에 쓴다. 같은 candidate의
-기존 파일은 byte-exact 결정일 때만 멱등으로 인정하고, 다른 결정으로 덮어쓰지 않는다.
+결정 파일은
+`../soombook.out/audit/representative-promotion-<candidate>-<artifact>.json`에 쓴다. 같은 candidate라도
+artifact가 바뀌면 별도 evidence identity로 보존한다. 같은 candidate와 artifact의 기존 파일은
+byte-exact 결정일 때만 멱등으로 인정하고, 다른 결정으로 덮어쓰지 않는다.
 
 현재 `expand`는 first-party review 후보의 기술 품질만 뜻한다. 결정은 다음 값을 항상
 유지한다.

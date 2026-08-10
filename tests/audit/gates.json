@@ -184,6 +184,27 @@
       "blocking": true
     },
     {
+      "id": "performance-evidence",
+      "owner": "scripts/checkPerformanceEvidence.mjs",
+      "command": "npm run check:performance-evidence",
+      "ciJob": "pages",
+      "blocking": true
+    },
+    {
+      "id": "public-release-evidence",
+      "owner": "scripts/checkPublicReleaseEvidence.mjs",
+      "command": "npm run check:public-release-evidence",
+      "ciJob": "pages",
+      "blocking": true
+    },
+    {
+      "id": "public-release-expert-quorum",
+      "owner": "scripts/checkExpertReviews.mjs",
+      "command": "npm run check:expert-reviews:release",
+      "ciJob": "pages",
+      "blocking": true
+    },
+    {
       "id": "pages-artifact",
       "owner": "scripts/checkPagesBuild.mjs",
       "command": "npm run build:pages",

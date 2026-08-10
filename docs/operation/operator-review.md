@@ -50,6 +50,11 @@ OG-02의 metadata-only 요청, 외부 evidence, 서명 검증과 결정적 stagi
 소유한다. 이 registry의 PASS는 변경 scope를 technical review에 결박하지만 제3자 권리 결정, 실제 기기
 사용 기록이나 아동 동의를 대신하지 않는다.
 
+공개 release evidence 기술 검수는 product copy, performance evidence, deployment boundary 세 역할을
+exact하게 요구한다. 세 reviewer는 같은 `public-technical-demo` release scope와 stable evidence digest를
+검수하며, current checker는 실행별 raw 성능 receipt와 full Pages release byte를 다시 대조한다. 자동 결과의
+authority는 배포, 출판, 교육, 문화 해석, 실기기 접근성 또는 아동 연구 승인을 파생하지 않는다.
+
 ## 실기기와 보조기기 checklist
 
 다음 조합에서 표지부터 회상 또는 보물 마무리까지 실행한다. 자동 Playwright receipt와 별개로 사람이 화면,
@@ -88,6 +93,7 @@ OG-02의 metadata-only 요청, 외부 evidence, 서명 검증과 결정적 stagi
 | performance | 환경, cold/warm, LCP, INP, CLS, long task, memory, 반복 횟수 |
 | content | fixture 표시 또는 OG-02·03·04 승인 ref |
 | security | noindex, meta CSP, referrer, source hygiene, Pages response header 예외 |
+| technical quorum | product copy, performance evidence, deployment boundary의 서로 다른 reviewer ref와 같은 release evidence digest |
 | rollback | 마지막 정상 SHA, rollback workflow run, remote smoke |
 | operator | 승인자, 승인 날짜, 조건, 재검토 기준 |
 

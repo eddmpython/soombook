@@ -31,8 +31,10 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run qa:performance
+      - run: npm run check:expert-reviews:release
       - run: npm run check:full
       - run: npm run build:pages
+      - run: npm run check:public-release-evidence -- --current-pages
       - run: npm run test:pages:built
       - name: 검증한 배포 artifact 신원 고정
         id: release-identity
@@ -63,12 +65,15 @@ jobs:
             ../soombook.out/playwright-review
             ../soombook.out/review-candidate
             ../soombook.out/performance
+            ../soombook.out/performance-artifacts
             ../soombook.out/playwright-performance
+            ../soombook.out/release-evidence
             ../soombook.out/device-matrix
             ../soombook.out/playwright-device-matrix
           if-no-files-found: error
           retention-days: 30
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - run: npm run check:public-release-evidence -- --current-pages
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: ../soombook.out/build/reader-web

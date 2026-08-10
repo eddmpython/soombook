@@ -2,6 +2,13 @@
 
 declare const SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST: string;
 declare const SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST: string;
+declare const SOOMBOOK_PUBLIC_RELEASE_SURFACES: {
+  connectionTruthNotice: string;
+  experienceLabel: string;
+  guardianNotice: string;
+  primaryNotice: string;
+  sceneTruthLabel: string;
+};
 
 interface ImportMetaEnv {
   readonly VITE_SOOMBOOK_FIXTURE_SLUG?: string;

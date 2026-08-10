@@ -33,7 +33,7 @@
 | NFR-03 | 기술 구현 | TTS 정리, detail 404·hash fallback, audio 404·hash·duration·playback fallback과 offline 재생 |
 | NFR-04 | 구현 | 한 번 연 뒤 처음부터 완료까지 offline browser journey |
 | NFR-05 | 기술 구현 | 원격 수집·광고 0, 실제 연구는 OG-06 |
-| NFR-06 | 부분 | lockfile, meta CSP, 외부 origin 0, source hygiene. response header는 Pages 예외 |
+| NFR-06 | 자동 구현 | lockfile, meta CSP, 외부 origin 0, source hygiene와 Pages response header exact 예외 3개 |
 | NFR-07 | OPERATOR GATE | production 자산은 OG-02 |
 | NFR-08 | 기술 구현 | fixture, fiction, unverified, verified source를 schema, 검수 후보와 화면에서 구분. 실제 source 승인은 OG-02·03 |
 | NFR-09 | 구현 기반 | pack version key와 legacy mirror, rollback workflow. 공개 뒤 golden test 유지 |
@@ -54,10 +54,8 @@
 
 ## 남은 순서
 
-1. fixture 공개 문구, 합성 성능 profile과 Pages response header 예외를 에이전트 release review matrix로 고정한다.
-2. commit과 push 없이도 재현 가능한 final local release receipt, rollback floor와 remote smoke 입력 검증 도구를 완성한다.
-3. first-party 10장면 후보를 제품 기준으로 고정하고 외부 자산과 낭독은 선택적 확장으로 분리한다.
-4. 라이선스, 지원, 철회, 삭제, cache purge와 사고 대응 문서를 자동 gate에 결박한다.
-5. 모든 현재 계약과 영수증을 `docs/**`로 승격하고 활성 `mainPlan/soombook-v1`을 삭제한다.
+1. first-party 10장면 후보를 제품 기준으로 고정하고 외부 자산과 낭독은 선택적 확장으로 분리한다.
+2. 라이선스, 지원, 철회, 삭제, cache purge와 사고 대응 문서를 자동 gate에 결박한다.
+3. 모든 현재 계약과 영수증을 `docs/**`로 승격하고 활성 `mainPlan/soombook-v1`을 삭제한다.
 
 현재 전체 제품화 판정은 `부분`이다. 공개 자동 후보와 실제 제품을 같은 완료로 합치지 않는다.

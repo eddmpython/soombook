@@ -6,6 +6,7 @@ import process from 'node:process';
 import { format } from 'prettier';
 
 import { DEVICE_MATRIX_SCOPE_PATHS } from './checkDeviceMatrix.mjs';
+import { PUBLIC_RELEASE_SCOPE_PATHS } from './checkPublicReleaseEvidence.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const REGISTRY_PATH = path.join(ROOT, 'tests/audit/expert-reviews.json');
@@ -34,6 +35,16 @@ const TOPIC_KEYS = {
     'technicalScope',
     'matrixScopeDigest',
     'matrixAggregateDigest',
+  ],
+  'release-evidence': [
+    'id',
+    'kind',
+    'status',
+    'requiredReviewerRoles',
+    'scope',
+    'releaseClass',
+    'releaseScopeDigest',
+    'releaseEvidenceDigest',
   ],
 };
 const REVIEW_KEYS = {
@@ -74,6 +85,19 @@ const REVIEW_KEYS = {
     'ownedProfileIds',
     'commands',
   ],
+  'release-evidence': [
+    'id',
+    'topicId',
+    'reviewerRole',
+    'reviewerRef',
+    'reviewedAt',
+    'status',
+    'scopeDigest',
+    'releaseScopeDigest',
+    'releaseEvidenceDigest',
+    'ownedEvidenceIds',
+    'commands',
+  ],
 };
 const DEVICE_REVIEW_OWNERSHIP = {
   'engine-compatibility': ['device-chromium', 'device-firefox', 'device-webkit'],
@@ -85,6 +109,22 @@ const DEVICE_REVIEW_OWNERSHIP = {
   'accessibility-structure': ['device-forced-colors', 'device-high-contrast'],
 };
 const DEVICE_TECHNICAL_SCOPE = 'first-party-review-candidate-device-matrix';
+const RELEASE_REVIEW_OWNERSHIP = {
+  'product-copy': ['public-copy', 'fixture-provenance'],
+  'performance-evidence': ['root-mobile', 'root-desktop', 'pages-mobile', 'pages-desktop'],
+  'deployment-boundary': ['pages-artifact', 'response-header-exception', 'rollback-boundary'],
+};
+const RELEASE_REVIEW_COMMANDS = {
+  'product-copy': ['npm run check:public-release-evidence'],
+  'performance-evidence': [
+    'npm run check:performance-evidence',
+    'npm run check:public-release-evidence',
+  ],
+  'deployment-boundary': [
+    'npm run check:public-release-evidence -- --current-pages',
+    'npm run check:project',
+  ],
+};
 
 function sha256(bytes) {
   return `sha256-${createHash('sha256').update(bytes).digest('hex')}`;
@@ -115,10 +155,12 @@ export async function inspectExpertReviewRegistry(
   registry,
   currentCandidate = null,
   currentDeviceMatrix = null,
+  currentPublicRelease = null,
 ) {
   const errors = [];
   const normalizedCandidateReviews = [];
   const normalizedDeviceReviews = [];
+  const normalizedReleaseReviews = [];
   const invalidRoot =
     registry?.schemaVersion !== 2 ||
     registry?.authority !==
@@ -131,6 +173,7 @@ export async function inspectExpertReviewRegistry(
       errors: ['전문 검수 registry schema 또는 authority가 다릅니다.'],
       normalizedCandidateReviews,
       normalizedDeviceReviews,
+      normalizedReleaseReviews,
     };
   }
   const topics = registry.topics.filter((topic) => {
@@ -186,6 +229,14 @@ export async function inspectExpertReviewRegistry(
           JSON.stringify([...DEVICE_MATRIX_SCOPE_PATHS].sort()))
     )
       errors.push(`device matrix 전문 검수 role 계약 오류: ${topic.id}`);
+    if (
+      topic.kind === 'release-evidence' &&
+      (JSON.stringify([...topic.requiredReviewerRoles].sort()) !==
+        JSON.stringify(Object.keys(RELEASE_REVIEW_OWNERSHIP).sort()) ||
+        JSON.stringify([...topic.scope].sort()) !==
+          JSON.stringify([...PUBLIC_RELEASE_SCOPE_PATHS].sort()))
+    )
+      errors.push(`public release 전문 검수 role 또는 scope 계약 오류: ${topic.id}`);
     let scopeDigest = null;
     try {
       scopeDigest = await createExpertReviewScopeDigest(topic.scope);
@@ -246,6 +297,18 @@ export async function inspectExpertReviewRegistry(
           !review.commands.includes('npm run check:device-matrix')
         )
           errors.push(`device matrix 전문 검수 결박 오류: ${review.id}`);
+      } else if (topic.kind === 'release-evidence') {
+        const expectedOwnedEvidence = RELEASE_REVIEW_OWNERSHIP[review.reviewerRole];
+        const requiredCommands = RELEASE_REVIEW_COMMANDS[review.reviewerRole];
+        if (
+          !expectedOwnedEvidence ||
+          !requiredCommands ||
+          JSON.stringify(review.ownedEvidenceIds) !== JSON.stringify(expectedOwnedEvidence) ||
+          review.releaseScopeDigest !== topic.releaseScopeDigest ||
+          review.releaseEvidenceDigest !== topic.releaseEvidenceDigest ||
+          requiredCommands.some((command) => !review.commands.includes(command))
+        )
+          errors.push(`public release 전문 검수 결박 오류: ${review.id}`);
       }
     }
     if (topic.kind === 'device-matrix') {
@@ -283,6 +346,36 @@ export async function inspectExpertReviewRegistry(
         );
       }
     }
+    if (topic.kind === 'release-evidence') {
+      const ownedEvidence = topicReviews.flatMap((review) => review.ownedEvidenceIds ?? []).sort();
+      const expectedEvidence = Object.values(RELEASE_REVIEW_OWNERSHIP).flat().sort();
+      if (
+        topic.releaseClass !== 'public-technical-demo' ||
+        !SHA256_PATTERN.test(topic.releaseScopeDigest) ||
+        !SHA256_PATTERN.test(topic.releaseEvidenceDigest) ||
+        topic.releaseScopeDigest !== scopeDigest ||
+        JSON.stringify(ownedEvidence) !== JSON.stringify(expectedEvidence) ||
+        (currentPublicRelease !== null &&
+          (topic.releaseScopeDigest !== currentPublicRelease.releaseScopeDigest ||
+            topic.releaseEvidenceDigest !== currentPublicRelease.releaseEvidenceDigest ||
+            topic.releaseClass !== currentPublicRelease.releaseClass))
+      )
+        errors.push(`public release topic current evidence 결박 오류: ${topic.id}`);
+      if (errors.length === topicErrorStart) {
+        normalizedReleaseReviews.push(
+          ...topicReviews.map((review) => ({
+            reviewerRole: review.reviewerRole,
+            reviewerRef: review.reviewerRef,
+            status: review.status,
+            scopeDigest: review.scopeDigest,
+            releaseScopeDigest: review.releaseScopeDigest,
+            releaseEvidenceDigest: review.releaseEvidenceDigest,
+            ownedEvidenceIds: review.ownedEvidenceIds,
+            commands: review.commands,
+          })),
+        );
+      }
+    }
     if (process.argv.includes('--print')) console.log(`${topic.id} ${scopeDigest}`);
   }
   for (const review of reviews) {
@@ -296,7 +389,19 @@ export async function inspectExpertReviewRegistry(
       normalizedDeviceReviews.length = 0;
     }
   }
-  return { errors, normalizedCandidateReviews, normalizedDeviceReviews };
+  if (currentPublicRelease !== null) {
+    const releaseTopicCount = topics.filter((topic) => topic.kind === 'release-evidence').length;
+    if (releaseTopicCount !== 1 || normalizedReleaseReviews.length !== 3) {
+      errors.push('current public release 전문 검수 quorum이 exact 계약과 다릅니다.');
+      normalizedReleaseReviews.length = 0;
+    }
+  }
+  return {
+    errors,
+    normalizedCandidateReviews,
+    normalizedDeviceReviews,
+    normalizedReleaseReviews,
+  };
 }
 
 export async function serializeExpertReviewRegistry(registry) {
@@ -308,6 +413,7 @@ if (path.resolve(process.argv[1] ?? '') === path.resolve(import.meta.filename)) 
   const registry = JSON.parse(bytes.toString('utf8'));
   const canonicalBytes = Buffer.from(await serializeExpertReviewRegistry(registry), 'utf8');
   let currentDeviceMatrix = null;
+  let currentPublicRelease = null;
   if (process.argv.includes('--device-matrix')) {
     const { createCurrentDeviceMatrixAggregate } = await import('./checkDeviceMatrix.mjs');
     const aggregate = await createCurrentDeviceMatrixAggregate();
@@ -319,7 +425,22 @@ if (path.resolve(process.argv[1] ?? '') === path.resolve(import.meta.filename)) 
       matrixAggregateDigest: aggregate.aggregateDigest,
     };
   }
-  const { errors } = await inspectExpertReviewRegistry(registry, null, currentDeviceMatrix);
+  if (process.argv.includes('--public-release')) {
+    const { createCurrentPublicReleaseAggregate } =
+      await import('./checkPublicReleaseEvidence.mjs');
+    const aggregate = await createCurrentPublicReleaseAggregate();
+    currentPublicRelease = {
+      releaseClass: aggregate.releaseClass,
+      releaseScopeDigest: aggregate.releaseScopeDigest,
+      releaseEvidenceDigest: aggregate.releaseEvidenceDigest,
+    };
+  }
+  const { errors } = await inspectExpertReviewRegistry(
+    registry,
+    null,
+    currentDeviceMatrix,
+    currentPublicRelease,
+  );
   if (!bytes.equals(canonicalBytes))
     errors.push('전문 검수 registry JSON이 canonical 형식이 아닙니다.');
   if (errors.length > 0) {

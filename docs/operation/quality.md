@@ -15,7 +15,8 @@
 | 검수 후보 | `npm run test:review-candidate` | 격리된 10장면 review pack의 desktop·mobile 완주, truth 문구, axe, overflow와 offline |
 | 기기 행렬 | `npm run qa:device-matrix` | 같은 10장면 artifact의 Chromium·Firefox·WebKit, CSS root 200%, forced-colors, reduced-motion, high-contrast, touch 모의 전체 여정과 21개 상태별 AX·focus·저장·offline 증거 |
 | UI 감수 | `npm run qa:ui` | 1440x900, 768x1024, 390x844 완주와 9개 시나리오 |
-| 합성 성능 | `npm run qa:performance` | root와 Pages의 390x844 production profile, 3회 lab 중앙값, 5회 heap 반복 |
+| 합성 성능 | `npm run qa:performance` | 같은 root와 Pages artifact의 mobile, desktop 4개 profile, warm-up 뒤 3회 lab 중앙값, mobile 5회 heap 반복 |
+| 공개 release evidence | `npm run check:public-release-evidence` | current tiger fixture 문구, root와 Pages artifact, 4개 성능 profile, Pages header 예외를 하나의 release identity로 결박 |
 | Pages artifact | `npm run build:pages` | `/soombook/` base, PWA, noindex, source path와 sourcemap 차단 |
 | Pages browser | `npm run test:pages` | 독립 실행 시 build 후 desktop과 mobile 하위 경로 완주, manifest, service worker, offline |
 | 검증한 Pages artifact | `npm run test:pages:built` | 기존 Pages output을 재빌드하지 않고 검사해 release identity와 upload byte를 일치시킴 |
@@ -41,6 +42,12 @@ candidate, plan과 scope digest를 검수한 뒤 기술 `expand`를 판정했다
 포함한다. 기기 행렬은 engine compatibility, interaction persistence, accessibility structure 세 역할이
 같은 candidate, matrix scope와 aggregate digest를 검수한다. 이 영수증은 기술 검수 증거이며 법률 승인,
 기관 승인, 실제 보조기기 사용이나 아동 연구를 가장하지 않는다.
+
+공개 기술 체험판 release evidence는 product copy, performance evidence, deployment boundary 세 역할이 서로
+다른 reviewer ref로 같은 release scope와 stable evidence digest를 검수한다. raw 성능 수치와 실행 환경은
+매 실행마다 current evidence digest로 다시 검증하고, 전문 검수 identity는 artifact, 고정 profile, 예산,
+자동 PASS와 verifier scope처럼 재현 가능한 projection만 소유한다. 배포 담당 review는 current Pages byte와
+workflow 구조 검사를 별도로 실행한다. 이 PASS는 Pages 배포 승인, 출판 승인이나 교육 효과 승인이 아니다.
 
 ## UI 감수 영수증
 
@@ -89,14 +96,15 @@ critical raster 22,029B, social preview 1,465,962B였다. validator를 build tim
 timing WAV, sourcemap과 로컬 사용자 경로는 없다.
 
 합성 성능 gate는 390x844, CPU 2배, RTT 100ms, download 500,000B/s, cache off, service worker 차단
-조건에서 cold production 완주를 3회 실행해 중앙값을 차단 값으로 쓴다. memory는 별도 문서에서 완주 5회와
-강제 GC 뒤 heap을 기록한다. 각 cold run은 별도 Chromium process로 격리한다. 최신 root mobile은 LCP
-820ms, 합성 INP 192ms, CLS 0, 200ms 초과 long task 0, heap 증가 313,480B였고 root desktop은 LCP
-1,236ms, 합성 INP 72ms, CLS 0, long task 0, gesture 최대 frame gap 16.7ms였다. Pages mobile은 LCP
-872ms, 합성 INP 192ms, CLS 0, long task 0, heap 증가 323,700B였고 Pages desktop은 LCP 1,592ms,
-합성 INP 112ms, CLS 0, long task 0, gesture 최대 frame gap 16.8ms였다. 네 profile 모두 현재 예산을
-통과했다.
-영수증 권위는 `three-run-synthetic-lab-not-field-cwv`다. 실제 사용자 field CWV, 4배 CPU 진단, 실제
+조건에서 warm-up 완주 뒤 production 완주를 3회 실행해 중앙값을 차단 값으로 쓴다. memory는 완주 5회와
+강제 GC 뒤 heap을 기록한다. 각 measured run은 별도 Chromium process로 격리한다. 최신 root mobile은
+LCP 760ms, 합성 INP 88ms, CLS 0, 200ms 초과 long task 0, heap 증가 303,532B였고 root desktop은 LCP
+1,108ms, 합성 INP 56ms, CLS 0.0271, long task 0, gesture 최대 frame gap 16.7ms였다. Pages mobile은 LCP
+696ms, 합성 INP 88ms, CLS 0, long task 0, heap 증가 305,980B였고 Pages desktop은 LCP 1,144ms,
+합성 INP 64ms, CLS 0.0271, long task 0, gesture 최대 frame gap 16.8ms였다. 네 profile 모두 현재 예산을
+통과했다. current performance stable digest는 `sha256-4de103f6...`다.
+영수증 권위는 `three-run-synthetic-lab-not-field-cwv-or-real-device-approval`이다. 실제 사용자 field CWV,
+4배 CPU 진단, 실제
 보조기기와 실기기 검수는 이 자동 gate로 완료 처리하지 않는다.
 
 오디오와 fixture build 격리 변경 직후 호스트 CPU가 79%에서 99%로 포화된 상태에서는 root 합성 INP가

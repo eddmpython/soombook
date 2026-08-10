@@ -68,12 +68,13 @@ if (!npmCli) {
 const fixtureRegistry = JSON.parse(
   await readFile(path.join(ROOT, 'content', 'fixture-registry.json'), 'utf8'),
 );
-const publicFixture = fixtureRegistry.fixtures?.find(
+const publicFixtures = fixtureRegistry.fixtures?.filter(
   (fixture) => fixture.exposure === 'public-demo',
 );
-if (!publicFixture?.slug) {
-  throw new Error('공개 체험판 fixture registry 항목이 없습니다.');
+if (publicFixtures?.length !== 1 || publicFixtures[0]?.slug !== 'tiger-demo') {
+  throw new Error('공개 기술 체험판 fixture는 tiger-demo 하나여야 합니다.');
 }
+const publicFixture = publicFixtures[0];
 const buildEnvironment = {
   ...process.env,
   SOOMBOOK_BUILD_PROFILE: 'reader-web',

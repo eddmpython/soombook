@@ -91,7 +91,11 @@ test('세 화면 크기에서 완주 흐름과 시각 영수증을 만든다', a
   await page.getByRole('button', { name: '다음 장면', exact: true }).click();
   await page.getByRole('button', { name: '이 장면 읽었어요' }).click();
   await page.getByRole('button', { name: '작은 새 발자국이 있는 연못 길, 목이 말라서' }).click();
-  await expect(page.getByText(/다시 생각할 수 있어요/)).toBeVisible();
+  await expect(
+    page.getByText('괜찮아요. 찾기 장면의 두 특징과 호랑이의 편지를 함께 떠올려 보세요.', {
+      exact: true,
+    }),
+  ).toBeVisible();
   await capture(page, testInfo, '03-reason-retry');
 
   await page

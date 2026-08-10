@@ -1,14 +1,32 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { chromium, expect, test, type Browser, type Locator, type Page } from '@playwright/test';
 
+import {
+  createPerformanceReceiptDigest,
+  derivePerformanceOutcome,
+  normalizePerformanceRuns,
+  PERFORMANCE_AUTHORITY,
+  PERFORMANCE_BUDGETS,
+  PERFORMANCE_THROTTLING,
+} from '../../scripts/performanceEvidenceContract.mjs';
+
 const ROOT_DIRECTORY = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const PROFILE = process.env.SOOMBOOK_PERFORMANCE_PROFILE === 'pages' ? 'pages' : 'root';
+const PROFILE = process.env.SOOMBOOK_PERFORMANCE_PROFILE;
+if (PROFILE !== 'root' && PROFILE !== 'pages') {
+  throw new Error('SOOMBOOK_PERFORMANCE_PROFILE은 root 또는 pages여야 합니다.');
+}
 const LAB_URL = PROFILE === 'pages' ? 'http://127.0.0.1:4173/soombook/' : 'http://127.0.0.1:4173/';
 const RECEIPT_DIRECTORY = path.resolve(ROOT_DIRECTORY, `../soombook.out/performance/${PROFILE}`);
+const PROFILE_CONTEXT_PATH = path.join(RECEIPT_DIRECTORY, 'profile-context.json');
 const FIVE_MEBIBYTES = 5 * 1024 * 1024;
+const PLAYWRIGHT_VERSION = (
+  JSON.parse(
+    await readFile(path.join(ROOT_DIRECTORY, 'node_modules/@playwright/test/package.json'), 'utf8'),
+  ) as { version: string }
+).version;
 
 interface BrowserLabMetrics {
   actions: Array<{ label: string; startTime: number }>;
@@ -218,6 +236,57 @@ function median(values: number[]) {
   return sorted[Math.floor(sorted.length / 2)]!;
 }
 
+async function createReceipt(
+  layout: 'desktop' | 'mobile',
+  browserVersion: string,
+  performanceRuns: ReturnType<typeof summarizeJourney>[],
+  heapSamplesBytes: number[],
+) {
+  const profileId = `${PROFILE}-${layout}`;
+  const context = JSON.parse(await readFile(PROFILE_CONTEXT_PATH, 'utf8')) as {
+    runId: string;
+    performanceScopeDigest: string;
+    artifactIdentity: Record<string, unknown>;
+  };
+  const runs = normalizePerformanceRuns(performanceRuns);
+  const outcome = derivePerformanceOutcome(profileId, runs, heapSamplesBytes);
+  if (!outcome) throw new Error(`성능 outcome을 만들 수 없습니다: ${profileId}`);
+  const receiptWithoutDigest = {
+    schemaVersion: 2,
+    authority: PERFORMANCE_AUTHORITY,
+    runId: context.runId,
+    measuredAt: new Date().toISOString(),
+    profileId,
+    performanceScopeDigest: context.performanceScopeDigest,
+    artifactIdentity: context.artifactIdentity,
+    environment: {
+      nodeVersion: process.version,
+      playwrightVersion: PLAYWRIGHT_VERSION,
+      browserVersion,
+      platform: process.platform,
+      architecture: process.arch,
+    },
+    viewport:
+      layout === 'mobile'
+        ? { width: 390, height: 844, deviceScaleFactor: 1, isMobile: true, hasTouch: true }
+        : { width: 1440, height: 900, deviceScaleFactor: 1, isMobile: false, hasTouch: true },
+    throttling: PERFORMANCE_THROTTLING,
+    performanceJourneyCycles: 3,
+    warmupJourneyCycles: 1,
+    memoryJourneyCycles: layout === 'mobile' ? 5 : 0,
+    runs,
+    heapSamplesBytes,
+    summary: outcome.summary,
+    budgets: PERFORMANCE_BUDGETS,
+    breaches: outcome.breaches,
+    passed: outcome.breaches.length === 0,
+  };
+  return {
+    ...receiptWithoutDigest,
+    receiptDigest: createPerformanceReceiptDigest(receiptWithoutDigest),
+  };
+}
+
 async function createLabSession(
   browser: Browser,
   collectHeap = false,
@@ -327,6 +396,19 @@ async function createLabSession(
   return { cdp, context, page };
 }
 
+test.beforeAll(async () => {
+  const browser = await chromium.launch();
+  const session = await createLabSession(browser);
+  try {
+    await session.page.goto(LAB_URL, { waitUntil: 'load' });
+    await expect(session.page.getByRole('button', { name: '탐험 시작하기' })).toBeVisible();
+    await completeStory(session.page);
+  } finally {
+    await session.context.close();
+    await browser.close();
+  }
+});
+
 test('production mobile lab 예산과 반복 완주 heap을 영수증으로 남긴다', async () => {
   const performanceRuns = [];
   let browserVersion = '';
@@ -418,43 +500,7 @@ test('production mobile lab 예산과 반복 완주 heap을 영수증으로 남�
     breaches.push(`GC 뒤 heap 증가 ${heapGrowthBytes}B가 5MiB를 넘습니다.`);
   }
 
-  const receipt = {
-    schemaVersion: 1,
-    measuredAt: new Date().toISOString(),
-    profile: PROFILE,
-    authority: 'three-run-synthetic-lab-not-field-cwv',
-    commit: process.env.SOOMBOOK_RELEASE_SHA ?? process.env.GITHUB_SHA ?? 'local',
-    browser: browserVersion,
-    viewport: { width: 390, height: 844, deviceScaleFactor: 1 },
-    throttling: {
-      cpuRate: 2,
-      latencyMs: 100,
-      downloadBytesPerSecond: 500_000,
-      uploadBytesPerSecond: 187_500,
-      cacheDisabled: true,
-      serviceWorkerBlocked: true,
-    },
-    performanceJourneyCycles: 3,
-    memoryJourneyCycles: 5,
-    metrics: {
-      lcpMs,
-      syntheticInpMs: inpMs,
-      cls,
-      longTasksOver200Ms,
-      performanceRuns,
-      heapSamplesBytes,
-      heapGrowthBytes,
-    },
-    budgets: {
-      lcpMs: 2500,
-      syntheticInpMs: 200,
-      cls: 0.1,
-      longTasksOver200Ms: 0,
-      heapGrowthBytes: FIVE_MEBIBYTES,
-    },
-    breaches,
-    passed: breaches.length === 0,
-  };
+  const receipt = await createReceipt('mobile', browserVersion, performanceRuns, heapSamplesBytes);
   await mkdir(RECEIPT_DIRECTORY, { recursive: true });
   await writeFile(
     path.join(RECEIPT_DIRECTORY, 'receipt.json'),
@@ -553,43 +599,7 @@ test('production desktop 양면과 가장자리 gesture 예산을 영수증으�
     );
   }
 
-  const receipt = {
-    schemaVersion: 1,
-    measuredAt: new Date().toISOString(),
-    profile: PROFILE,
-    authority: 'three-run-desktop-gesture-synthetic-lab-not-field-cwv',
-    commit: process.env.SOOMBOOK_RELEASE_SHA ?? process.env.GITHUB_SHA ?? 'local',
-    browser: browserVersion,
-    viewport: { width: 1440, height: 900, deviceScaleFactor: 1 },
-    throttling: {
-      cpuRate: 2,
-      latencyMs: 100,
-      downloadBytesPerSecond: 500_000,
-      uploadBytesPerSecond: 187_500,
-      cacheDisabled: true,
-      serviceWorkerBlocked: true,
-    },
-    performanceJourneyCycles: 3,
-    metrics: {
-      lcpMs,
-      syntheticInpMs: inpMs,
-      cls,
-      longTasksOver200Ms,
-      pointerMoveMaxEventMs,
-      gestureMaxFrameGapMs,
-      performanceRuns,
-    },
-    budgets: {
-      lcpMs: 2500,
-      syntheticInpMs: 200,
-      cls: 0.1,
-      longTasksOver200Ms: 0,
-      pointerMoveMaxEventMs: 50,
-      gestureMaxFrameGapMs: 100,
-    },
-    breaches,
-    passed: breaches.length === 0,
-  };
+  const receipt = await createReceipt('desktop', browserVersion, performanceRuns, []);
   await mkdir(RECEIPT_DIRECTORY, { recursive: true });
   await writeFile(
     path.join(RECEIPT_DIRECTORY, 'desktop-gesture-receipt.json'),

@@ -4,7 +4,10 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from '@playwright/test';
 
 const ROOT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
-const PROFILE = process.env.SOOMBOOK_PERFORMANCE_PROFILE === 'pages' ? 'pages' : 'root';
+const PROFILE = process.env.SOOMBOOK_PERFORMANCE_PROFILE;
+if (PROFILE !== 'root' && PROFILE !== 'pages') {
+  throw new Error('SOOMBOOK_PERFORMANCE_PROFILE은 root 또는 pages여야 합니다.');
+}
 const OUTPUT_ROOT = path.resolve(
   ROOT_DIRECTORY,
   `../soombook.out/playwright-performance/${PROFILE}`,

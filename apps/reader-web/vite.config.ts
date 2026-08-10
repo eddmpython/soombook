@@ -40,6 +40,15 @@ const OUTPUT_DIRECTORY = path.resolve(
 const PUBLIC_BASE = process.env.SOOMBOOK_PUBLIC_BASE ?? '/';
 const PREVIEW_PORT = Number(process.env.SOOMBOOK_PREVIEW_PORT ?? 4173);
 const FIXTURE_REGISTRY_PATH = path.resolve(APP_DIRECTORY, '../../content/fixture-registry.json');
+const PUBLIC_RELEASE_COPY_PATH = path.resolve(
+  APP_DIRECTORY,
+  '../../content/public-release-copy.json',
+);
+const PUBLIC_RELEASE_SURFACES = (
+  JSON.parse(readFileSync(PUBLIC_RELEASE_COPY_PATH, 'utf8')) as {
+    surfaces: Record<string, string>;
+  }
+).surfaces;
 const VIRTUAL_BOOK_PACK_ID = 'virtual:soombook-book-pack';
 const RESOLVED_VIRTUAL_BOOK_PACK_ID = `\0${VIRTUAL_BOOK_PACK_ID}`;
 const VIRTUAL_BOOK_ASSET_URLS_ID = 'virtual:soombook-book-asset-urls';
@@ -87,9 +96,15 @@ function readJson<T>(filePath: string): T {
 function configuredFixture() {
   const registry = readJson<FixtureRegistry>(FIXTURE_REGISTRY_PATH);
   const requestedSlug = process.env.VITE_SOOMBOOK_FIXTURE_SLUG?.trim();
+  const publicFixtures = registry.fixtures.filter(
+    (candidate) => candidate.exposure === 'public-demo',
+  );
+  if (!requestedSlug && (publicFixtures.length !== 1 || publicFixtures[0]?.slug !== 'tiger-demo')) {
+    throw new Error('공개 기술 체험판 fixture는 tiger-demo 하나여야 합니다.');
+  }
   const fixture = requestedSlug
     ? registry.fixtures.find((candidate) => candidate.slug === requestedSlug)
-    : registry.fixtures.find((candidate) => candidate.exposure === 'public-demo');
+    : publicFixtures[0];
   if (!fixture) {
     throw new Error(
       requestedSlug
@@ -156,6 +171,14 @@ function configuredPackSnapshot(): ConfiguredPackSnapshot {
     );
   }
   const pack = assembleBookPackFromFileMap(files) as BookPack;
+  if (
+    fixture.exposure === 'public-demo' &&
+    (pack.manifest.id !== 'book-tiger-demo' ||
+      pack.manifest.packVersion !== '0.3.0' ||
+      pack.manifest.status !== 'fixture')
+  ) {
+    throw new Error('공개 기술 체험판 BookPack identity가 승인된 fixture와 다릅니다.');
+  }
   const manifest = pack.manifest as FixtureManifest & BookPack['manifest'];
   const assets = pack.assets;
   const integrityEntryByPath = new Map(
@@ -405,6 +428,7 @@ export function createReaderWebViteConfig(options: ReaderWebConfigOptions = {}) 
     root: APP_DIRECTORY,
     base: publicBase,
     define: {
+      SOOMBOOK_PUBLIC_RELEASE_SURFACES: JSON.stringify(PUBLIC_RELEASE_SURFACES),
       SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST: JSON.stringify(buildSnapshot.integrity.bookPackDigest),
       SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST: JSON.stringify(
         buildSnapshot.integrity.packContentDigest,

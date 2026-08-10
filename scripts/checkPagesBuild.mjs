@@ -7,12 +7,11 @@ import {
   inspectReleaseBookPackEvidence,
   inspectServiceWorkerPrecache,
 } from './bookPackBuildContract.mjs';
+import { inspectDocumentPolicy } from './publicReleaseEvidence.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const BUILD_ROOT = path.resolve(ROOT, '../soombook.out/build/reader-web');
 const PUBLIC_BASE = '/soombook/';
-const EXPECTED_CSP =
-  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; media-src 'self'; object-src 'none'; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'none'";
 const TEXT_EXTENSIONS = new Set(['.css', '.html', '.js', '.json', '.svg', '.webmanifest']);
 const LOCAL_PATH_PATTERN = new RegExp(
   ['[A-Za-z]:[\\\\/]Users[\\\\/]', ['One', 'Drive'].join('') + '[\\\\/]'].join('|'),
@@ -94,19 +93,13 @@ try {
   }
 
   const index = await readFile(path.join(BUILD_ROOT, 'index.html'), 'utf8');
+  const publicReleaseCopy = JSON.parse(
+    await readFile(path.join(ROOT, 'content/public-release-copy.json'), 'utf8'),
+  );
   if (/(?:href|src)=["']\/(?!soombook\/)/u.test(index)) {
     errors.push('index.html에 Pages base 밖의 root asset URL이 있습니다.');
   }
-  if (!index.includes('noindex, nofollow, noarchive')) {
-    errors.push('index.html에 공개 체험판 noindex 정책이 없습니다.');
-  }
-  if (!index.includes('name="referrer" content="no-referrer"')) {
-    errors.push('index.html의 referrer 정책이 no-referrer가 아닙니다.');
-  }
-  const cspMatch = index.match(/http-equiv="Content-Security-Policy"\s+content="([^"]+)"/u);
-  if (cspMatch?.[1] !== EXPECTED_CSP) {
-    errors.push('index.html의 meta CSP가 승인된 공개 체험판 정책과 다릅니다.');
-  }
+  errors.push(...inspectDocumentPolicy(index, publicReleaseCopy));
   if (/<script[^>]+src=["']https?:\/\//iu.test(index)) {
     errors.push('index.html에 외부 script가 있습니다.');
   }

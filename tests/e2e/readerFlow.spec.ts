@@ -21,7 +21,11 @@ async function reachReasoning(page: Page) {
   await readAndAdvance(page);
   await page.getByRole('button', { name: '이 장면 읽었어요' }).click();
   await page.getByRole('button', { name: '소나무 길: 큰 발자국과 한쪽으로 눕혀진 풀' }).click();
-  await expect(page.getByText(/두 특징을 비교해/)).toBeVisible();
+  await expect(
+    page.getByText('소나무 길의 두 단서가 편지와 맞았어요. 바위 뒤에서는 줄무늬 꼬리도 보였어요.', {
+      exact: true,
+    }),
+  ).toBeVisible();
   await page.getByRole('button', { name: '다음 장면', exact: true }).click();
   await page.getByRole('button', { name: '이 장면 읽었어요' }).click();
 }
@@ -39,17 +43,32 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('읽기, 찾기, 생각, 연결을 거쳐 이야기를 완주한다', async ({ page }) => {
+  await expect(page.getByText('공개 기술 체험판', { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByText(
+      '기능 검증용 창작 이야기와 그림을 사용한 공개 기술 체험판입니다. 실제 문화유산 원본이나 출판본이 아니며 교육 효과를 증명하지 않습니다.',
+    ),
+  ).toBeVisible();
   await reachReasoning(page);
 
   await page.getByRole('button', { name: '작은 새 발자국이 있는 연못 길, 목이 말라서' }).click();
-  await expect(page.getByText(/다시 생각할 수 있어요/)).toBeVisible();
+  await expect(
+    page.getByText('괜찮아요. 찾기 장면의 두 특징과 호랑이의 편지를 함께 떠올려 보세요.', {
+      exact: true,
+    }),
+  ).toBeVisible();
 
   await page
     .getByRole('button', {
       name: '큰 발자국과 눕혀진 풀이 있는 소나무 길, 그림 밖 향기가 궁금해서',
     })
     .click();
-  await expect(page.getByText(/찾은 단서와 잘 맞는 근거/)).toBeVisible();
+  await expect(
+    page.getByText(
+      '큰 발자국과 눕혀진 풀잎은 소나무 길을, 편지는 호랑이가 떠난 까닭을 알려 주었어요.',
+      { exact: true },
+    ),
+  ).toBeVisible();
   await page.getByRole('button', { name: '다음 장면', exact: true }).click();
 
   await page.getByRole('button', { name: '이 장면 읽었어요' }).click();

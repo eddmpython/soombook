@@ -94,13 +94,21 @@ export function resolveFixtureAssetUrls(pack: BookPack): Record<string, string> 
 }
 
 export function loadDemoBookPack(): BookPack {
-  const publicFixture = fixtureRegistry.fixtures.find(
+  const publicFixtures = fixtureRegistry.fixtures.filter(
     (fixture) => fixture.exposure === 'public-demo',
   );
-  if (!publicFixture) {
-    throw new Error('공개 체험판 fixture registry 항목이 없습니다.');
+  if (publicFixtures.length !== 1 || publicFixtures[0]?.slug !== 'tiger-demo') {
+    throw new Error('공개 기술 체험판 fixture는 tiger-demo 하나여야 합니다.');
   }
-  return loadFixtureBookPack(publicFixture.slug);
+  const pack = loadFixtureBookPack(publicFixtures[0].slug);
+  if (
+    pack.manifest.id !== 'book-tiger-demo' ||
+    pack.manifest.packVersion !== '0.3.0' ||
+    pack.manifest.status !== 'fixture'
+  ) {
+    throw new Error('공개 기술 체험판 BookPack identity가 승인된 fixture와 다릅니다.');
+  }
+  return pack;
 }
 
 export function loadDemoBookPackWithAssets(): LoadedBookPack {

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "authority": "public-technical-demo-copy-not-publication-education-or-cultural-approval",
+  "releaseClass": "public-technical-demo",
+  "publicFixture": {
+    "slug": "tiger-demo",
+    "exposure": "public-demo",
+    "bookId": "book-tiger-demo",
+    "packVersion": "0.3.0",
+    "status": "fixture",
+    "sceneIds": ["scene-cover", "scene-search", "scene-reason", "scene-connect"],
+    "connectionIds": ["connection-museum"],
+    "rightsIds": [
+      "rights-fixture-story",
+      "rights-fixture-art",
+      "rights-fixture-claim",
+      "rights-fixture-art-files"
+    ],
+    "claimIds": ["claim-fixture-observation"]
+  },
+  "surfaces": {
+    "documentDescription": "읽고, 찾고, 생각하고, 연결하는 초등 3학년 독서 탐험 공개 기술 체험판",
+    "experienceLabel": "공개 기술 체험판",
+    "primaryNotice": "기능 검증용 창작 이야기와 그림을 사용한 공개 기술 체험판입니다. 실제 문화유산 원본이나 출판본이 아니며 교육 효과를 증명하지 않습니다.",
+    "guardianNotice": "이 공개 기술 체험판은 GitHub Pages에서 제공됩니다. 호스팅 사업자는 보안 운영을 위해 IP 주소를 포함한 접속 정보를 처리할 수 있습니다. 교육 효과, 실제 문화 해석, 실기기 접근성은 아직 사람 검수를 마치지 않았습니다.",
+    "sceneTruthLabel": "기능 검증용 창작 자료",
+    "connectionTruthNotice": "현재 화면의 자료는 기능 검증용 창작 픽스처입니다."
+  },
+  "nonPromotion": {
+    "publicationApproved": false,
+    "educationEffectApproved": false,
+    "culturalInterpretationApproved": false,
+    "actualDeviceAccessibilityApproved": false,
+    "deploymentApproved": false
+  },
+  "responseHeaderExceptions": [
+    "content-security-policy:frame-ancestors",
+    "permissions-policy",
+    "strict-transport-security"
+  ]
+}

@@ -84,8 +84,17 @@ CSP와 `referrer=no-referrer`, HTTPS, 외부 origin 0 브라우저 검사를 적
 artifact에 넣지 않는다.
 
 GitHub Pages에서는 `frame-ancestors`, Permissions-Policy, HSTS 같은 custom response header를 저장소에서
-제어할 수 없다. 이 예외는 창작 기술 체험판에만 허용한다. 계정, 아동 조사, 자유 입력, 제휴 콘텐츠 또는
+제어할 수 없다. 자동 정책의 exact 예외는 `content-security-policy:frame-ancestors`, `permissions-policy`,
+`strict-transport-security` 세 항목뿐이며 `public-technical-demo`와 GitHub Pages 조합에서만 허용한다. 예외
+추가나 wildcard는 release evidence를 실패시킨다. 이 예외는 창작 기술 체험판에만 허용한다. 계정, 아동 조사, 자유 입력, 제휴 콘텐츠 또는
 민감한 거래를 넣기 전에 호스트를 재평가한다.
+
+`npm run qa:performance`는 clean output에서 root와 Pages artifact를 각각 빌드하고 mobile, desktop 네 profile을
+측정한다. `npm run check:public-release-evidence`는 current tiger source integrity와 두 artifact의 BookPack
+digest, active `head > meta`의 noindex, 공개 문구, 고정 성능 profile과 위 세 header 예외를 한 release
+evidence에 결박한다. product copy, performance evidence, deployment boundary 세 전문 reviewer의 exact
+quorum은 같은 stable digest를 승인한다. 실행별 raw 성능과 full `release.json` byte는 별도 run evidence로
+다시 대조한다.
 
 앱의 원격 행동 추적이 없더라도 GitHub는 Pages 보안 운영을 위해 방문 IP 주소를 처리할 수 있다. 화면의
 보호자 안내에 이 한계와 저장 범위, 삭제 제어를 표시한다. public repository에는 미승인 원고, 연구 자료,
@@ -93,8 +102,9 @@ GitHub Pages에서는 `frame-ancestors`, Permissions-Policy, HSTS 같은 custom 
 
 ## 수동 배포 순서
 
-1. `npm run check:release:automated`를 통과한다. 이 명령은 가장 먼저 root와 Pages 합성 성능
-   gate를 격리 실행한 뒤 `check:full`, Pages build, Pages browser gate를 순서대로 실행한다.
+1. `npm run check:release:automated`를 통과한다. 이 명령은 가장 먼저 root와 Pages 합성 성능과 공개 release
+   evidence를 격리 실행하고 세 전문 reviewer quorum을 확인한 뒤 `check:full`, Pages build, current byte
+   대조와 Pages browser gate를 순서대로 실행한다.
 2. 공개 문서와 artifact에서 비밀정보, 사용자 절대 경로, 미승인 자산이 없음을 확인한다.
 3. 운영자가 최초 commit과 public push를 별도로 승인한다.
 4. repository Settings에서 Pages source를 GitHub Actions로 선택한다.

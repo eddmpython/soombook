@@ -48,7 +48,7 @@ export default defineConfig({
       ? 'npm run check:pages-build && npm run preview:pages'
       : 'npm run build:pages && npm run preview:pages',
     url: 'http://127.0.0.1:4173/soombook/',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });

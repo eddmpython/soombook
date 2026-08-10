@@ -40,6 +40,7 @@ export const DEVICE_MATRIX_SCOPE_PATHS = [
   'scripts/reviewCandidateServer.mjs',
   'scripts/runDeviceMatrix.mjs',
   'scripts/checkProject.mjs',
+  'scripts/representativeDecisionReceipt.mjs',
   'tests/audit/gates.json',
   'tests/audit/deviceMatrixContract.test.mjs',
   'tests/audit/representativeReview.test.mjs',

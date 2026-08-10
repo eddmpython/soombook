@@ -53,12 +53,27 @@ jobs:
       - name: device matrix 도입 이전 SHA 차단
         run: >-
           node -e "const p=require('./package.json');const expected={'qa:device-matrix':'node scripts/runDeviceMatrix.mjs','check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix','check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('device matrix rollback floor 미달: '+name)}"
+      - name: public release evidence 도입 이전 SHA 차단
+        run: >-
+          node -e "const p=require('./package.json');const expected={'qa:performance':'node scripts/runPerformanceAudit.mjs','check:performance-evidence':'node scripts/checkPerformanceEvidence.mjs','check:public-release-evidence':'node scripts/checkPublicReleaseEvidence.mjs','check:expert-reviews:release':'node scripts/checkExpertReviews.mjs --public-release'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('public release evidence rollback floor 미달: '+name)}"
       - run: npx playwright install --with-deps chromium firefox webkit
+      - name: rollback 작업트리 신원 재확인
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$TARGET_SHA" ]]; then
+            echo "검증 직전 작업트리가 target_sha와 다릅니다."
+            exit 1
+          fi
       - run: npm run qa:performance
+        env:
+          SOOMBOOK_RELEASE_SHA: ${{ inputs.target_sha }}
+      - run: npm run check:expert-reviews:release
       - run: npm run check:full
       - run: npm run build:pages
         env:
           SOOMBOOK_RELEASE_SHA: ${{ inputs.target_sha }}
+      - run: npm run check:public-release-evidence -- --current-pages
       - run: npm run test:pages:built
       - name: 검증한 rollback artifact 신원 고정
         id: release-identity
@@ -89,12 +104,15 @@ jobs:
             ../soombook.out/playwright-review
             ../soombook.out/review-candidate
             ../soombook.out/performance
+            ../soombook.out/performance-artifacts
             ../soombook.out/playwright-performance
+            ../soombook.out/release-evidence
             ../soombook.out/device-matrix
             ../soombook.out/playwright-device-matrix
           if-no-files-found: error
           retention-days: 30
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - run: npm run check:public-release-evidence -- --current-pages
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: ../soombook.out/build/reader-web
