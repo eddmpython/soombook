@@ -9,6 +9,7 @@ import { createCurrentDeviceMatrixScopeDigest } from './checkDeviceMatrix.mjs';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MATRIX_ROOT = path.resolve(ROOT, '../soombook.out/device-matrix');
 const PLAYWRIGHT_ROOT = path.resolve(ROOT, '../soombook.out/playwright-device-matrix');
+const BUILD_ROOT = path.resolve(ROOT, '../soombook.out/build/review-candidate');
 const npmCli = process.env.npm_execpath;
 if (!npmCli) throw new Error('npm 실행 경로를 찾을 수 없습니다.');
 
@@ -44,6 +45,7 @@ function run(argumentsList) {
 
 await rm(MATRIX_ROOT, { recursive: true, force: true });
 await rm(PLAYWRIGHT_ROOT, { recursive: true, force: true });
+await rm(BUILD_ROOT, { recursive: true, force: true });
 await mkdir(MATRIX_ROOT, { recursive: true });
 const runContext = {
   schemaVersion: 1,

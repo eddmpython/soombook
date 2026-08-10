@@ -6,6 +6,9 @@ import process from 'node:process';
 import { createCurrentReviewBuildReceipt } from './checkReviewBuild.mjs';
 import {
   createDeviceMatrixDigest,
+  createNormalizedDeviceAriaSnapshotDigest,
+  DEVICE_MATRIX_ACCESSIBILITY_BASELINES,
+  DEVICE_MATRIX_RAW_ACCESSIBILITY_BASELINES,
   DEVICE_MATRIX_AGGREGATE_AUTHORITY,
   DEVICE_MATRIX_PROFILES,
   DEVICE_MATRIX_STATES,
@@ -24,12 +27,17 @@ export const DEVICE_MATRIX_SCOPE_PATHS = [
   '.github/workflows/pages.yml',
   '.github/workflows/pages-rollback.yml',
   'THIRD_PARTY_NOTICES.md',
+  'apps/reader-web/src/bookReader.tsx',
+  'apps/reader-web/src/reflectionStep.tsx',
+  'apps/reader-web/src/styles.css',
   'package.json',
   'package-lock.json',
   'playwright.device-matrix.config.ts',
   'scripts/deviceMatrixContract.mjs',
   'scripts/checkDeviceMatrix.mjs',
   'scripts/checkExpertReviews.mjs',
+  'scripts/buildReviewCandidate.mjs',
+  'scripts/reviewCandidateServer.mjs',
   'scripts/runDeviceMatrix.mjs',
   'scripts/checkProject.mjs',
   'tests/audit/gates.json',
@@ -74,9 +82,29 @@ export function createDeviceMatrixAggregateDigest(aggregate) {
     binding: aggregate.binding,
     bindingDigest: aggregate.bindingDigest,
     profileIds: aggregate.profileIds,
+    profileAccessibilityDigests: aggregate.profileAccessibilityDigests,
+    profileOutcomeDigests: aggregate.profileOutcomeDigests,
     finalStateDigest: aggregate.finalStateDigest,
     valid: aggregate.valid,
   });
+}
+
+export function createDeviceMatrixEvidenceDigest(aggregate) {
+  return createDeviceMatrixDigest({
+    runId: aggregate.runId,
+    profileRawAccessibilityDigests: aggregate.profileRawAccessibilityDigests,
+    evidenceFiles: aggregate.evidenceFiles,
+    stateStructureDigests: aggregate.stateStructureDigests,
+  });
+}
+
+function stableOfflineProbeProjection(probe) {
+  return {
+    attempted: probe.attempted,
+    blocked: probe.blocked,
+    requestKind: probe.requestKind,
+    failedRequestCount: probe.failedRequestCount,
+  };
 }
 
 function canonicalBytes(value) {
@@ -167,6 +195,8 @@ export async function createCurrentDeviceMatrixAggregate() {
       nodeVersion: process.version,
       platform: process.platform,
     },
+    DEVICE_MATRIX_ACCESSIBILITY_BASELINES,
+    DEVICE_MATRIX_RAW_ACCESSIBILITY_BASELINES,
   );
   if (errors.length > 0) throw new Error(errors.join('\n'));
   const orderedReceipts = [...receipts].sort((left, right) =>
@@ -185,12 +215,48 @@ export async function createCurrentDeviceMatrixAggregate() {
     profileIds: orderedReceipts.map((receipt) => receipt.project),
     profileAccessibilityDigests: orderedReceipts.map((receipt) => ({
       project: receipt.project,
+      states: receipt.stateChecks.map((check) => ({
+        stateId: check.stateId,
+        normalizedAriaSnapshotDigest: createNormalizedDeviceAriaSnapshotDigest(check.ariaSnapshot),
+      })),
+    })),
+    profileRawAccessibilityDigests: orderedReceipts.map((receipt) => ({
+      project: receipt.project,
       engine: receipt.engine,
       browserVersion: receipt.environment.browserVersion,
       states: receipt.stateChecks.map((check) => ({
         stateId: check.stateId,
         ariaSnapshotDigest: check.ariaSnapshotDigest,
       })),
+    })),
+    profileOutcomeDigests: orderedReceipts.map((receipt) => ({
+      project: receipt.project,
+      engine: receipt.engine,
+      outcomeDigest: createDeviceMatrixDigest({
+        inputRoute: receipt.inputRoute,
+        offlineMode: receipt.offlineMode,
+        navigatorOnlineAfterOffline: receipt.navigatorOnlineAfterOffline,
+        offlineProbe: stableOfflineProbeProjection(receipt.offlineProbe),
+        scenarios: receipt.scenarios,
+        stateChecks: receipt.stateChecks.map((check) => ({
+          stateId: check.stateId,
+          structureProjection: check.structureProjection,
+          semanticCounts: check.semanticCounts,
+          activeElement: check.activeElement,
+          liveAnnouncementEvents: check.liveAnnouncementEvents,
+          axeViolationCount: check.axeViolationCount,
+          horizontalOverflowPx: check.horizontalOverflowPx,
+          focusIndicatorOk: check.focusIndicatorOk,
+          forcedColorStateOk: check.forcedColorStateOk,
+          reducedMotionStateOk: check.reducedMotionStateOk,
+        })),
+        finalStateDigest: receipt.finalStateDigest,
+        storageBeforeDigest: receipt.storageBeforeDigest,
+        storageAfterDigest: receipt.storageAfterDigest,
+        reloadedStorageDigest: receipt.reloadedStorageDigest,
+        storageReload: receipt.storageReload,
+        offlineCompletion: receipt.offlineCompletion,
+      }),
     })),
     evidenceFiles: [
       {
@@ -210,9 +276,13 @@ export async function createCurrentDeviceMatrixAggregate() {
     finalStateDigest: firstReceipt.finalStateDigest,
     valid: true,
   };
-  return {
+  const aggregateWithEvidence = {
     ...aggregateWithoutDigest,
-    aggregateDigest: createDeviceMatrixAggregateDigest(aggregateWithoutDigest),
+    evidenceDigest: createDeviceMatrixEvidenceDigest(aggregateWithoutDigest),
+  };
+  return {
+    ...aggregateWithEvidence,
+    aggregateDigest: createDeviceMatrixAggregateDigest(aggregateWithEvidence),
   };
 }
 

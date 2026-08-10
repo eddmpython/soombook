@@ -334,23 +334,74 @@ async function main() {
     const steps = workflowDocument?.jobs?.[jobName]?.steps;
     return Array.isArray(steps) ? steps : [];
   };
-  const hasExactWorkflowRun = (workflowDocument, jobName, command) =>
-    workflowSteps(workflowDocument, jobName).some(
-      (step) => step && typeof step === 'object' && step.run === command,
-    );
-  const rollbackFloorCommand =
-    workflowSteps(workflowDocuments['pages-rollback'], 'build').find(
-      (step) =>
-        step && typeof step === 'object' && step.name === 'device matrix 도입 이전 SHA 차단',
-    )?.run ?? '';
-  for (const exactFloorContract of [
-    "'qa:device-matrix':'node scripts/runDeviceMatrix.mjs'",
-    "'check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix'",
-    "'check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'",
-  ]) {
-    if (!rollbackFloorCommand.includes(exactFloorContract))
-      errors.push(`Pages rollback exact device floor 누락: ${exactFloorContract}`);
+  const exactDeviceScripts = {
+    'qa:device-matrix': 'node scripts/runDeviceMatrix.mjs',
+    'check:expert-reviews:device': 'node scripts/checkExpertReviews.mjs --device-matrix',
+    'check:full':
+      'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device',
+  };
+  for (const [scriptName, command] of Object.entries(exactDeviceScripts)) {
+    if (packageJson.scripts?.[scriptName] !== command)
+      errors.push(`device matrix package script 계약 오류: ${scriptName}`);
   }
+  const qualityTriggers = workflowDocuments.quality?.on;
+  if (
+    !qualityTriggers ||
+    typeof qualityTriggers !== 'object' ||
+    JSON.stringify(Object.keys(qualityTriggers).sort()) !==
+      JSON.stringify(['pull_request', 'push', 'schedule', 'workflow_dispatch'].sort()) ||
+    qualityTriggers.pull_request !== null ||
+    qualityTriggers.workflow_dispatch !== null ||
+    JSON.stringify(Object.keys(qualityTriggers.push ?? {}).sort()) !==
+      JSON.stringify(['branches']) ||
+    !Array.isArray(qualityTriggers.push?.branches) ||
+    JSON.stringify(qualityTriggers.push.branches) !== JSON.stringify(['main']) ||
+    !Array.isArray(qualityTriggers.schedule) ||
+    qualityTriggers.schedule.length !== 1 ||
+    qualityTriggers.schedule[0]?.cron !== '17 19 * * 1'
+  )
+    errors.push('quality workflow PR, main push trigger 계약이 누락됐습니다.');
+  if (JSON.stringify(workflowDocuments.pages?.on) !== JSON.stringify({ workflow_dispatch: null }))
+    errors.push('Pages workflow 수동 실행 trigger 계약이 다릅니다.');
+  if (
+    JSON.stringify(workflowDocuments['pages-rollback']?.on) !==
+    JSON.stringify({
+      workflow_dispatch: {
+        inputs: {
+          target_sha: {
+            description: 'main 이력에 있는 마지막 정상 40자리 commit SHA',
+            required: true,
+            type: 'string',
+          },
+        },
+      },
+    })
+  )
+    errors.push('Pages rollback target SHA trigger 계약이 다릅니다.');
+  const workflowNodeBlocking = (node, expectedIf) =>
+    node &&
+    typeof node === 'object' &&
+    node.if === expectedIf &&
+    (node['continue-on-error'] === undefined || node['continue-on-error'] === false);
+  const hasExactWorkflowRun = (workflowDocument, jobName, command, expectedJobIf) =>
+    workflowDocument.defaults === undefined &&
+    workflowNodeBlocking(workflowDocument?.jobs?.[jobName], expectedJobIf) &&
+    workflowDocument.jobs[jobName].defaults === undefined &&
+    workflowSteps(workflowDocument, jobName).some(
+      (step) =>
+        workflowNodeBlocking(step, undefined) && step.run === command && step.shell === undefined,
+    );
+  const rollbackFloorStep = workflowSteps(workflowDocuments['pages-rollback'], 'build').find(
+    (step) => step && typeof step === 'object' && step.name === 'device matrix 도입 이전 SHA 차단',
+  );
+  const rollbackFloorCommand =
+    workflowNodeBlocking(rollbackFloorStep, undefined) && rollbackFloorStep.shell === undefined
+      ? (rollbackFloorStep.run ?? '')
+      : '';
+  const expectedRollbackFloorCommand =
+    "node -e \"const p=require('./package.json');const expected={'qa:device-matrix':'node scripts/runDeviceMatrix.mjs','check:expert-reviews:device':'node scripts/checkExpertReviews.mjs --device-matrix','check:full':'npm run check && npm run build && npm run test:e2e && npm run test:audio-fixture && npm run test:review-candidate && npm run test:pwa-update && npm run qa:ui && npm run qa:device-matrix && npm run check:expert-reviews:device'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('device matrix rollback floor 미달: '+name)}\"";
+  if (rollbackFloorCommand !== expectedRollbackFloorCommand)
+    errors.push('Pages rollback exact device floor command가 다릅니다.');
   for (const reviewBuildContract of [
     "exposure === 'review-candidate'",
     'SOOMBOOK_REVIEW_BUILD',
@@ -383,29 +434,48 @@ async function main() {
     !packageJson.scripts['test:contracts'].includes('deviceMatrixContract.test.mjs') ||
     !packageJson.scripts['check:full'].includes('npm run qa:device-matrix') ||
     !packageJson.scripts['check:full'].includes('npm run check:expert-reviews:device') ||
-    !hasExactWorkflowRun(workflowDocuments.quality, 'compatibility', 'npm run qa:device-matrix') ||
+    !hasExactWorkflowRun(
+      workflowDocuments.quality,
+      'compatibility',
+      'npm run qa:device-matrix',
+      undefined,
+    ) ||
     !hasExactWorkflowRun(
       workflowDocuments.quality,
       'compatibility',
       'npm run check:expert-reviews:device',
+      undefined,
     ) ||
     !hasExactWorkflowRun(
       workflowDocuments.quality,
       'compatibility',
       'npx playwright install --with-deps chromium firefox webkit',
+      undefined,
     ) ||
     !hasExactWorkflowRun(
       workflowDocuments.pages,
       'build',
       'npx playwright install --with-deps chromium firefox webkit',
+      "github.ref == 'refs/heads/main'",
     ) ||
     !hasExactWorkflowRun(
       workflowDocuments['pages-rollback'],
       'build',
       'npx playwright install --with-deps chromium firefox webkit',
+      "github.ref == 'refs/heads/main'",
     ) ||
-    !hasExactWorkflowRun(workflowDocuments.pages, 'build', 'npm run check:full') ||
-    !hasExactWorkflowRun(workflowDocuments['pages-rollback'], 'build', 'npm run check:full')
+    !hasExactWorkflowRun(
+      workflowDocuments.pages,
+      'build',
+      'npm run check:full',
+      "github.ref == 'refs/heads/main'",
+    ) ||
+    !hasExactWorkflowRun(
+      workflowDocuments['pages-rollback'],
+      'build',
+      'npm run check:full',
+      "github.ref == 'refs/heads/main'",
+    )
   )
     errors.push('device matrix negative, 전체 제품, cross-engine CI 결박이 누락됐습니다.');
   for (const [workflowName, workflowDocument, jobName] of [
@@ -415,11 +485,9 @@ async function main() {
   ]) {
     const uploadStep = workflowSteps(workflowDocument, jobName).find(
       (step) =>
-        step &&
-        typeof step === 'object' &&
+        workflowNodeBlocking(step, 'always()') &&
         typeof step.uses === 'string' &&
-        step.uses.startsWith('actions/upload-artifact@') &&
-        step.if === 'always()' &&
+        /^actions\/upload-artifact@[0-9a-f]{40}$/u.test(step.uses) &&
         step.with?.['if-no-files-found'] === 'error',
     );
     const evidencePaths =

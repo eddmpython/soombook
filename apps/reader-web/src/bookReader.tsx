@@ -42,6 +42,16 @@ const TRUTH_STATUS_LABELS: Record<TruthStatus, string> = {
   derivedFromVerifiedSource: '검증된 실제 자료에서 만든 자료',
 };
 
+function focusElementWithoutSmoothScroll(element: HTMLElement | null) {
+  if (!element) return;
+  const root = document.documentElement;
+  const previousInlineScrollBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = 'auto';
+  element.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
+  element.focus({ preventScroll: true });
+  root.style.scrollBehavior = previousInlineScrollBehavior;
+}
+
 function useCommandId() {
   const sequence = useRef(0);
   return useCallback((prefix: string) => {
@@ -121,15 +131,50 @@ export function BookReader({ assetUrls, pack }: BookReaderProps) {
   }, [scene.title, state.status]);
 
   useEffect(() => {
+    let correctionFrame = 0;
+    let focusFrame = 0;
+    const root = document.documentElement;
+    const previousInlineScrollBehavior = root.style.scrollBehavior;
     const animationFrame = window.requestAnimationFrame(() => {
       const heading = sceneTitleRef.current;
       if (!heading || state.status === 'ready') {
         return;
       }
-      heading.focus({ preventScroll: true });
-      heading.scrollIntoView({ block: 'start', behavior: 'auto' });
+      root.style.scrollBehavior = 'auto';
+      const keepHeadingInViewport = () => {
+        const rect = heading.getBoundingClientRect();
+        const viewportMargin = 16;
+        const left =
+          rect.left < viewportMargin
+            ? rect.left - viewportMargin
+            : rect.right > window.innerWidth - viewportMargin
+              ? rect.right - window.innerWidth + viewportMargin
+              : 0;
+        const top =
+          rect.top < viewportMargin
+            ? rect.top - viewportMargin
+            : rect.bottom > window.innerHeight - viewportMargin
+              ? rect.bottom - window.innerHeight + viewportMargin
+              : 0;
+        if (left !== 0 || top !== 0) window.scrollBy({ left, top, behavior: 'auto' });
+      };
+      heading.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
+      correctionFrame = window.requestAnimationFrame(() => {
+        keepHeadingInViewport();
+        focusFrame = window.requestAnimationFrame(() => {
+          keepHeadingInViewport();
+          heading.focus({ preventScroll: true });
+          keepHeadingInViewport();
+          root.style.scrollBehavior = previousInlineScrollBehavior;
+        });
+      });
     });
-    return () => window.cancelAnimationFrame(animationFrame);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.cancelAnimationFrame(correctionFrame);
+      window.cancelAnimationFrame(focusFrame);
+      root.style.scrollBehavior = previousInlineScrollBehavior;
+    };
   }, [state.currentSceneId, state.status]);
 
   useEffect(() => {
@@ -612,7 +657,9 @@ export function BookReader({ assetUrls, pack }: BookReaderProps) {
               onKeyboardExplore={
                 clue
                   ? () => {
-                      document.getElementById(`${clue.id}-first-choice`)?.focus();
+                      focusElementWithoutSmoothScroll(
+                        document.getElementById(`${clue.id}-first-choice`),
+                      );
                       setAnnouncement('세 길을 글로 비교할 수 있는 목록으로 이동했어요.');
                     }
                   : undefined

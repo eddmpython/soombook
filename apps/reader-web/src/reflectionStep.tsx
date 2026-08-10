@@ -11,6 +11,39 @@ interface ReflectionStepProps {
 
 type ReflectionView = 'choice' | 'recall' | 'treasure';
 
+function focusElementWithMargin(element: HTMLElement | null) {
+  if (!element) return 0;
+  const root = document.documentElement;
+  const previousInlineScrollBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = 'auto';
+  const keepElementInViewport = () => {
+    const rect = element.getBoundingClientRect();
+    const viewportMargin = 16;
+    if (rect.top < viewportMargin) {
+      window.scrollBy({ top: rect.top - viewportMargin, behavior: 'auto' });
+    } else if (rect.bottom > window.innerHeight - viewportMargin) {
+      window.scrollBy({
+        top: rect.bottom - window.innerHeight + viewportMargin,
+        behavior: 'auto',
+      });
+    }
+  };
+  element.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+  keepElementInViewport();
+  element.focus({ preventScroll: true });
+  keepElementInViewport();
+  root.style.scrollBehavior = previousInlineScrollBehavior;
+  return 0;
+}
+
+function scrollElementWithoutSmoothScroll(element: HTMLElement) {
+  const root = document.documentElement;
+  const previousInlineScrollBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = 'auto';
+  element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+  root.style.scrollBehavior = previousInlineScrollBehavior;
+}
+
 export function ReflectionStep({ headingRef, onComplete, pack }: ReflectionStepProps) {
   const [view, setView] = useState<ReflectionView>('choice');
   const [selectedRecallId, setSelectedRecallId] = useState<string | null>(null);
@@ -20,28 +53,34 @@ export function ReflectionStep({ headingRef, onComplete, pack }: ReflectionStepP
   const review = pack.manifest.completion.review;
 
   useEffect(() => {
+    let correctionFrame = 0;
     const animationFrame = window.requestAnimationFrame(() => {
-      headingRef.current?.focus({ preventScroll: true });
-      headingRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      correctionFrame = focusElementWithMargin(headingRef.current);
     });
-    return () => window.cancelAnimationFrame(animationFrame);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.cancelAnimationFrame(correctionFrame);
+    };
   }, [headingRef]);
 
   useEffect(() => {
     if (view === 'choice') {
       return;
     }
+    let correctionFrame = 0;
     const animationFrame = window.requestAnimationFrame(() => {
-      detailHeadingRef.current?.focus({ preventScroll: true });
-      detailHeadingRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      correctionFrame = focusElementWithMargin(detailHeadingRef.current);
     });
-    return () => window.cancelAnimationFrame(animationFrame);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.cancelAnimationFrame(correctionFrame);
+    };
   }, [view]);
 
   function returnToChoices(buttonRef: RefObject<HTMLButtonElement | null>) {
     setView('choice');
     setSelectedRecallId(null);
-    window.requestAnimationFrame(() => buttonRef.current?.focus());
+    window.requestAnimationFrame(() => focusElementWithMargin(buttonRef.current));
   }
 
   return (
@@ -94,6 +133,11 @@ export function ReflectionStep({ headingRef, onComplete, pack }: ReflectionStepP
                     checked={selectedRecallId === card.id}
                     name="completion-recall"
                     onChange={() => setSelectedRecallId(card.id)}
+                    onFocus={(event) => {
+                      const visualCard = event.currentTarget.nextElementSibling;
+                      if (!(visualCard instanceof HTMLElement)) return;
+                      scrollElementWithoutSmoothScroll(visualCard);
+                    }}
                     type="radio"
                     value={card.id}
                   />

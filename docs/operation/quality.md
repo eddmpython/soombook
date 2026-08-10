@@ -13,16 +13,18 @@
 | 브라우저 | `npm run test:e2e` | desktop과 mobile 완주, 회상과 보물 마무리, 실제 tap, focus, 이전과 화살표, 저장 삭제와 손상 복구, 접근성, 확대, offline |
 | 내부 오디오 | `npm run test:audio-fixture` | 격리된 3 mode fixture의 seek, rate, 종료 의미, 실패 fallback, cleanup과 offline 재생 |
 | 검수 후보 | `npm run test:review-candidate` | 격리된 10장면 review pack의 desktop·mobile 완주, truth 문구, axe, overflow와 offline |
+| 기기 행렬 | `npm run qa:device-matrix` | 같은 10장면 artifact의 Chromium·Firefox·WebKit, CSS root 200%, forced-colors, reduced-motion, high-contrast, touch 모의 전체 여정과 21개 상태별 AX·focus·저장·offline 증거 |
 | UI 감수 | `npm run qa:ui` | 1440x900, 768x1024, 390x844 완주와 9개 시나리오 |
 | 합성 성능 | `npm run qa:performance` | root와 Pages의 390x844 production profile, 3회 lab 중앙값, 5회 heap 반복 |
 | Pages artifact | `npm run build:pages` | `/soombook/` base, PWA, noindex, source path와 sourcemap 차단 |
 | Pages browser | `npm run test:pages` | 독립 실행 시 build 후 desktop과 mobile 하위 경로 완주, manifest, service worker, offline |
 | 검증한 Pages artifact | `npm run test:pages:built` | 기존 Pages output을 재빌드하지 않고 검사해 release identity와 upload byte를 일치시킴 |
 | PWA 두 버전 | `npm run test:pwa-update` | 열린 v1 유지, 신규 v2 진입, 진행 보존, v2 offline reload와 실패 복구 |
-| 로컬 전체 | `npm run check:full` | quick, root build, 공개 browser, 내부 오디오, 10장면 review 후보, UI 감수. release는 build 뒤 `test:pages:built` 실행 |
+| 로컬 전체 | `npm run check:full` | quick, root build, 공개 browser, 내부 오디오, 10장면 review 후보, UI 감수, 기기 행렬과 기기 전문 검수 quorum. release는 build 뒤 `test:pages:built` 실행 |
 
 GitHub Actions의 `.github/workflows/quality.yml`은 quick, contracts, build, browser, pages job으로 같은 명령을
-재실행한다. 월요일 정기 compatibility job은 Chromium, Firefox, WebKit을 동시 2개 이하로 실행한다.
+재실행한다. compatibility job은 모든 quality trigger에서 Chromium, Firefox, WebKit을 한 worker로 실행하고
+실패 여부와 무관하게 matrix 영수증을 보존한다.
 offline PWA 차단 게이트는 서비스 워커 자동화가 안정적인 Chromium이 소유하고 다른 엔진은 전체 완주와
 저장 복구 smoke를 소유한다.
 
@@ -36,8 +38,9 @@ BookPack 전체 파일 및 build artifact 결박이 각각 세 역할의 독립 
 candidate, plan과 scope digest를 검수한 뒤 기술 `expand`를 판정했다. 상세 순서와 영수증
 계약은 `docs/operation/representative-review.md`가 소유한다. BookPack 검수는
 누락, 추가, 중복 byte, profile과 base 교차, worker와 main payload 및 asset URL, precache와 release 역할을
-포함한다. 이 영수증은 기술 검수 증거이며 법률 승인, 기관 승인, 실제
-보조기기 사용이나 아동 연구를 가장하지 않는다.
+포함한다. 기기 행렬은 engine compatibility, interaction persistence, accessibility structure 세 역할이
+같은 candidate, matrix scope와 aggregate digest를 검수한다. 이 영수증은 기술 검수 증거이며 법률 승인,
+기관 승인, 실제 보조기기 사용이나 아동 연구를 가장하지 않는다.
 
 ## UI 감수 영수증
 
@@ -68,8 +71,15 @@ runtime unit은 13건이 통과했다.
 offline 완주, `reflecting`과 `completed` 재진입을 확인했다. 내부 오디오 production profile 5건은 mode
 위치 보존, 직접 읽기 비자동재생, 문장 seek, 1.2배 속도, 비승인 종료, 404 fallback, pack별 geometry와
 offline 재생을 통과했다. 10장면 review 후보는 desktop과 mobile 2건에서 axe,
-overflow, 전체 완주와 offline 완료 복구를 통과했다. 주간 호환성 workflow는 Firefox와 WebKit을 1-worker로
-직렬 실행한다.
+overflow, 전체 완주와 offline 완료 복구를 통과했다.
+
+2026-08-10 기기 행렬은 current review artifact `sha256-702b3a4a...`의 서버 제공 파일 15개를 build
+receipt의 byte length와 SHA-256에 대조한 뒤 8개 profile, profile당 21개 상태를 전부 통과했다. current
+matrix scope는 `sha256-78f2418d...`, aggregate는 `sha256-8dcd351a...`다. 각 상태는 normalized AX와
+profile별 raw AX, landmark, heading, 진행 이름과 완료·현재·예정 상태, status와 live event, truth,
+reflection, visible focus, overflow, 저장 전·후·reload, same-origin uncached offline probe를 결박한다.
+CSS root 200%와 touch는 합성 또는 모의 profile이며 실제 browser zoom, 실기기와 보조기기 승인은 OG-05에
+남는다.
 
 세 화면 UI 감수 3건은 심각 접근성 위반 0, 가로 넘침 0, console error 0, request 실패 0, third-party
 origin 0, 완주 true로 기록됐다. 원본 캡처에서 desktop과 mobile의 시작, 찾기, 오답 회복, 연결, 마무리,

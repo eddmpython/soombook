@@ -4,14 +4,19 @@ import { describe, expect, it } from 'vitest';
 
 import {
   createDeviceMatrixDigest,
+  createNormalizedDeviceAriaSnapshotDigest,
   DEVICE_MATRIX_AUTHORITY,
   DEVICE_MATRIX_PROFILES,
   DEVICE_MATRIX_STATE_EXPECTATIONS,
   DEVICE_MATRIX_STATES,
   expectedDeviceMatrixScenarios,
+  expectedDeviceProfileVariantLines,
   inspectDeviceMatrixReceipts,
 } from '../../scripts/deviceMatrixContract.mjs';
-import { createDeviceMatrixAggregateDigest } from '../../scripts/checkDeviceMatrix.mjs';
+import {
+  createDeviceMatrixAggregateDigest,
+  createDeviceMatrixEvidenceDigest,
+} from '../../scripts/checkDeviceMatrix.mjs';
 
 const binding = {
   schemaVersion: 1,
@@ -54,13 +59,7 @@ function createReceipt(project) {
     const statusText = expectation.statusTexts;
     const progress = expectation.progressStates.map((progressState, index) => ({
       current: progressState === 'current' ? 'step' : null,
-      text: `${stateId}-${index}, ${
-        progressState === 'done'
-          ? '완료 단계'
-          : progressState === 'current'
-            ? '현재 단계'
-            : '예정 단계'
-      }`,
+      text: expectation.progressTexts[index],
     }));
     const structureProjection = {
       lang: 'ko',
@@ -79,7 +78,9 @@ function createReceipt(project) {
       if (landmark.role === 'footer') return ['- contentinfo:'];
       if (landmark.role === 'aside' && landmark.name)
         return [`  - complementary "${landmark.name}":`];
+      if (landmark.role === 'aside') return ['  - complementary:'];
       if (landmark.role === 'section' && landmark.name) return [`  - region "${landmark.name}":`];
+      if (landmark.role === 'section') return ['  - region:'];
       return [];
     });
     const connectionLines =
@@ -93,6 +94,12 @@ function createReceipt(project) {
       stateId === 'reflection-recall-selected'
         ? ['  - radio "큰 발자국과 눕혀진 풀잎이 소나무 길을 알려 주었어요." [checked]']
         : [];
+    const profileVariantLines = expectedDeviceProfileVariantLines(project, stateId);
+    const variantEdgeLines = profileVariantLines.edgeButtons.map((line) => `  ${line}`);
+    const variantSpeechLines = profileVariantLines.speech.map((line) => `  ${line}`);
+    const variantSpeechButtonCount = profileVariantLines.speech.filter((line) =>
+      line.startsWith('- button '),
+    ).length;
     const checkedRadioLines = Array.from(
       { length: expectation.rawRoleCounts.checked - selectedRecallLines.length },
       (_, index) => `  - radio "checked-${index}" [checked]`,
@@ -104,9 +111,7 @@ function createReceipt(project) {
       },
       (_, index) => `  - radio "radio-${index}"`,
     );
-    const ariaSnapshot = [
-      ...(expectation.navigationRequired ? ['- navigation "독서 탐험 진행 단계":'] : []),
-      '- main:',
+    const ariaLines = [
       ...landmarkLines,
       ...expectation.headings.map(
         (heading) => `  - heading "${heading.name}" [level=${heading.level}]`,
@@ -114,13 +119,20 @@ function createReceipt(project) {
       ...progress.map((entry) => `  - listitem: ${entry.text}`),
       ...statusText.map((status) => `  - status: ${status}`),
       ...expectation.truth.map((entry) => `  - text: ${entry.text}`),
-      ...expectation.reflectionRequiredTexts.map((text) => `  - text: ${text}`),
+      ...(expectation.reflectionRequiredTexts.length > 0
+        ? [`  - text: ${expectation.reflectionRequiredTexts.join(' ')}`]
+        : []),
       ...expectation.requiredAccessibleTexts.map((text) => `  - paragraph: ${text}`),
+      ...variantEdgeLines,
+      ...variantSpeechLines,
       ...connectionLines,
       ...recallGroupLines,
       ...selectedRecallLines,
       ...Array.from(
-        { length: expectation.rawRoleCounts.buttons - connectionLines.length },
+        {
+          length:
+            expectation.rawRoleCounts.buttons - connectionLines.length - variantSpeechButtonCount,
+        },
         (_, index) => `  - button "button-${index}"`,
       ),
       ...checkedRadioLines,
@@ -133,7 +145,40 @@ function createReceipt(project) {
         { length: expectation.rawRoleCounts.groups - recallGroupLines.length },
         (_, index) => `  - group "group-${index}":`,
       ),
-    ].join('\n');
+      ...Array.from(
+        { length: expectation.rawRoleCounts.articles },
+        (_, index) => `  - article "article-${index}":`,
+      ),
+    ];
+    const fillRole = (role, expectedCount, line) => {
+      const currentCount = ariaLines.filter((entry) =>
+        new RegExp(`^\\s*- ${role}(?::|\\s)`, 'u').test(entry),
+      ).length;
+      ariaLines.push(
+        ...Array.from({ length: expectedCount - currentCount }, (_, index) => line(index)),
+      );
+    };
+    fillRole(
+      'definition',
+      expectation.rawRoleCounts.definitions,
+      (index) => `  - definition: definition-${index}`,
+    );
+    fillRole('img', expectation.rawRoleCounts.images, (index) => `  - img "image-${index}"`);
+    fillRole('list', expectation.rawRoleCounts.lists, () => '  - list:');
+    fillRole(
+      'listitem',
+      expectation.rawRoleCounts.listitems,
+      (index) => `  - listitem: listitem-${index}`,
+    );
+    fillRole(
+      'paragraph',
+      expectation.rawRoleCounts.paragraphs,
+      (index) => `  - paragraph: paragraph-${index}`,
+    );
+    fillRole('strong', expectation.rawRoleCounts.strongs, (index) => `  - strong: strong-${index}`);
+    fillRole('term', expectation.rawRoleCounts.terms, (index) => `  - term: term-${index}`);
+    fillRole('text', expectation.rawRoleCounts.texts, (index) => `  - text: text-${index}`);
+    const ariaSnapshot = ariaLines.join('\n');
     const activeElement = { tag: expectation.activeTag, role: null, name: expectation.activeName };
     return {
       stateId,
@@ -155,9 +200,7 @@ function createReceipt(project) {
       axeViolationCount: 0,
       horizontalOverflowPx: 0,
       duplicateAnnouncementCount: 0,
-      liveAnnouncementEvents: stateId.endsWith('-retry')
-        ? [{ messages: statusText, surfaceCount: 1 }]
-        : [],
+      liveAnnouncementEvents: expectation.liveAnnouncementEvents,
       focusOk: true,
       focusIndicatorOk: true,
       structureViolationCount: 0,
@@ -176,7 +219,7 @@ function createReceipt(project) {
     engine: profile.engine,
     inputRoute: profile.inputRoute,
     offlineMode: profile.offlineMode,
-    navigatorOnlineAfterOffline: false,
+    navigatorOnlineAfterOffline: profile.engine === 'chromium',
     offlineProbeBlocked: true,
     offlineProbe: {
       attempted: true,
@@ -226,6 +269,21 @@ function currentReceipts() {
   return Object.keys(DEVICE_MATRIX_PROFILES).map(createReceipt);
 }
 
+const syntheticAccessibilityBaselines = Object.fromEntries(
+  currentReceipts()[0].stateChecks.map((check) => [
+    check.stateId,
+    createNormalizedDeviceAriaSnapshotDigest(check.ariaSnapshot),
+  ]),
+);
+const syntheticRawAccessibilityBaselines = Object.fromEntries(
+  currentReceipts().map((receipt) => [
+    receipt.project,
+    Object.fromEntries(
+      receipt.stateChecks.map((check) => [check.stateId, check.ariaSnapshotDigest]),
+    ),
+  ]),
+);
+
 function inspect(receipts) {
   return inspectDeviceMatrixReceipts(
     receipts,
@@ -236,6 +294,8 @@ function inspect(receipts) {
     matrixScopeDigest,
     runId,
     currentEnvironment,
+    syntheticAccessibilityBaselines,
+    syntheticRawAccessibilityBaselines,
   );
 }
 
@@ -263,7 +323,11 @@ describe('device matrix receipt contract', () => {
       binding,
       bindingDigest,
       profileIds: ['device-chromium'],
+      profileOutcomeDigests: [
+        { project: 'device-chromium', outcomeDigest: `sha256-${'4'.repeat(64)}` },
+      ],
       profileAccessibilityDigests: [{ project: 'device-chromium', states: [] }],
+      profileRawAccessibilityDigests: [{ project: 'device-chromium', states: [] }],
       stateStructureDigests: [],
       finalStateDigest: afterDigest,
       valid: true,
@@ -277,14 +341,42 @@ describe('device matrix receipt contract', () => {
       ...semantic,
       runId: '22222222-2222-4222-8222-222222222222',
       evidenceFiles: [{ sha256: `sha256-${'2'.repeat(64)}` }],
-      profileAccessibilityDigests: [{ project: 'device-webkit', states: [] }],
       stateStructureDigests: [{ stateId: 'start', structureDigest: `sha256-${'3'.repeat(64)}` }],
     });
     expect(second).toBe(first);
     expect(
       createDeviceMatrixAggregateDigest({
         ...semantic,
+        profileAccessibilityDigests: [{ project: 'device-webkit', states: [] }],
+      }),
+    ).not.toBe(first);
+    expect(
+      createDeviceMatrixEvidenceDigest({
+        ...semantic,
+        runId: '11111111-1111-4111-8111-111111111111',
+        evidenceFiles: [{ sha256: `sha256-${'1'.repeat(64)}` }],
+        profileRawAccessibilityDigests: [{ project: 'device-chromium', states: [] }],
+      }),
+    ).not.toBe(
+      createDeviceMatrixEvidenceDigest({
+        ...semantic,
+        runId: '22222222-2222-4222-8222-222222222222',
+        evidenceFiles: [{ sha256: `sha256-${'2'.repeat(64)}` }],
+        profileRawAccessibilityDigests: [{ project: 'device-webkit', states: [] }],
+      }),
+    );
+    expect(
+      createDeviceMatrixAggregateDigest({
+        ...semantic,
         artifactDigest: `sha256-${'9'.repeat(64)}`,
+      }),
+    ).not.toBe(first);
+    expect(
+      createDeviceMatrixAggregateDigest({
+        ...semantic,
+        profileOutcomeDigests: [
+          { project: 'device-chromium', outcomeDigest: `sha256-${'5'.repeat(64)}` },
+        ],
       }),
     ).not.toBe(first);
   });
@@ -301,7 +393,7 @@ describe('device matrix receipt contract', () => {
     expect(source).toContain('projection.focusIndicator.contrastRatio >= 3');
     expect(source).toContain('projection.focusIndicator.visible');
     expect(source).toContain('projection.focusIndicator.associated');
-    expect(source).toContain('`${stateId} visible focus indicator`');
+    expect(source).toContain('`${stateId} visible focus indicator:');
     expect(source).not.toContain('!forcedColors ||\n    (projection.focusIndicator');
     expect(source).not.toContain('ariaSnapshotDigest: sha256(ariaSnapshot)');
   });
@@ -388,6 +480,16 @@ describe('device matrix receipt contract', () => {
         return state;
       },
       (receipt) => {
+        const state = receipt.stateChecks.find((check) => check.stateId === 'scene-05-reading');
+        for (const [index, entry] of state.structureProjection.progress.entries()) {
+          const changed = entry.text.replace(/^[^,]+/u, `fake-${index}`);
+          state.ariaSnapshot = state.ariaSnapshot.replace(entry.text, changed);
+          entry.text = changed;
+        }
+        recommitState(receipt, state);
+        return state;
+      },
+      (receipt) => {
         const state = receipt.stateChecks.find((check) => check.stateId === 'scene-01-reading');
         const heading = state.structureProjection.headings[0];
         state.ariaSnapshot = state.ariaSnapshot.replace(
@@ -428,6 +530,69 @@ describe('device matrix receipt contract', () => {
       const receipts = currentReceipts();
       const receipt = receipts[0];
       const state = mutate(receipt);
+      expect(inspect(receipts).errors).toContain(
+        `device.stateInvalid:${receipt.project}:${state.stateId}`,
+      );
+    }
+  });
+
+  it('중복 landmark, 추가 role, 비예상 live event와 상충 공개 문구를 거부한다', () => {
+    const mutations = [
+      (state) => {
+        state.ariaSnapshot += '\n  - main:';
+      },
+      (state) => {
+        state.ariaSnapshot += '\n  - status: 위조된 상태';
+      },
+      (state) => {
+        state.ariaSnapshot += '\n  - article "위조 article":';
+      },
+      ...['text', 'paragraph', 'img', 'listitem'].map((role) => (state) => {
+        state.ariaSnapshot += `\n  - ${role}: 위조 ${role}`;
+      }),
+      (state) => {
+        state.liveAnnouncementEvents = [{ messages: ['위조 알림'], surfaceCount: 1 }];
+      },
+      (state) => {
+        state.ariaSnapshot += '\n  - text: 사람 검수 없이 공개 자료로 올려도 됩니다.';
+      },
+    ];
+    for (const mutate of mutations) {
+      const receipts = currentReceipts();
+      const receipt = receipts[0];
+      const state = receipt.stateChecks.find((check) => check.stateId === 'scene-05-reading');
+      mutate(state);
+      recommitState(receipt, state);
+      expect(inspect(receipts).errors).toContain(
+        `device.stateInvalid:${receipt.project}:${state.stateId}`,
+      );
+    }
+  });
+
+  it('profile별 edge와 보조 음성 variant의 누락, 중복, 역할 치환을 거부한다', () => {
+    const mutations = [
+      (state) => {
+        state.ariaSnapshot = state.ariaSnapshot.replace(
+          '\n  - button "책 왼쪽 가장자리, 이전 장면": 이전',
+          '',
+        );
+      },
+      (state) => {
+        state.ariaSnapshot += '\n  - button "책 왼쪽 가장자리, 이전 장면": 이전';
+      },
+      (state) => {
+        state.ariaSnapshot = state.ariaSnapshot.replace(
+          '- button "브라우저 보조 음성 듣기"',
+          '- button "브라우저 보조 음성 듣기" [disabled]',
+        );
+      },
+    ];
+    for (const mutate of mutations) {
+      const receipts = currentReceipts();
+      const receipt = receipts.find((candidate) => candidate.project === 'device-chromium');
+      const state = receipt.stateChecks.find((check) => check.stateId === 'scene-02-reading');
+      mutate(state);
+      recommitState(receipt, state);
       expect(inspect(receipts).errors).toContain(
         `device.stateInvalid:${receipt.project}:${state.stateId}`,
       );
@@ -638,12 +803,22 @@ describe('device matrix receipt contract', () => {
     receipt.failedRequests = ['https://example.invalid'];
     receipt.thirdPartyOrigins = ['https://example.invalid'];
     receipt.storageReload = false;
-    receipt.navigatorOnlineAfterOffline = true;
+    receipt.navigatorOnlineAfterOffline = !receipt.navigatorOnlineAfterOffline;
     receipt.storageAfterDigest = beforeDigest;
     recommit(receipt);
     const errors = inspect(receipts).errors;
     expect(errors).toContain(`device.browserFailure:${receipt.project}`);
+    expect(errors).toContain(`device.profileIdentity:${receipt.project}`);
     expect(errors).toContain(`device.storageIdentity:${receipt.project}`);
+
+    const completedAtStart = currentReceipts();
+    for (const candidate of completedAtStart) {
+      candidate.storageBeforeDigest = candidate.storageAfterDigest;
+      recommit(candidate);
+    }
+    expect(inspect(completedAtStart).errors).toEqual(
+      expect.arrayContaining([expect.stringContaining('device.storageIdentity:')]),
+    );
   });
 
   it('receipt 변조와 malformed nested input을 예외 없이 거부한다', () => {
@@ -670,6 +845,8 @@ describe('device matrix receipt contract', () => {
         matrixScopeDigest,
         runId,
         null,
+        syntheticAccessibilityBaselines,
+        syntheticRawAccessibilityBaselines,
       ),
     ).not.toThrow();
     expect(
@@ -682,6 +859,8 @@ describe('device matrix receipt contract', () => {
         matrixScopeDigest,
         runId,
         null,
+        syntheticAccessibilityBaselines,
+        syntheticRawAccessibilityBaselines,
       ).errors,
     ).toEqual(['device.inputInvalid']);
   });

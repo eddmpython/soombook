@@ -1,6 +1,6 @@
 # 11. Productization Completion Audit
 
-확인일: 2026-08-09
+확인일: 2026-08-10
 
 이 문서는 PRD 요구, 현재 코드 증거, 미구현, 사람 승인을 한 표에서 추적한다. `구현`은 실제 실행 증거가
 있는 항목, `부분`은 일부 수용 기준만 통과한 항목, `OPERATOR GATE`는 사람 책임을 뜻한다.
@@ -28,7 +28,7 @@
 
 | ID | 판정 | 남은 조건 |
 |---|---|---|
-| NFR-01 | 부분 | 자동 axe·keyboard·touch·zoom은 구현, OG-05 필요 |
+| NFR-01 | 자동 구현 | 8-profile cross-engine·CSS root 200%·forced-colors·reduced-motion·high-contrast·touch 모의와 21-state AX·focus·offline 검수. 실제 zoom·기기·보조기기는 OG-05 |
 | NFR-02 | 자동 구현 | root와 Pages의 mobile·desktop 3회 합성 lab과 5회 heap green. field와 실기기는 OG-05 필요 |
 | NFR-03 | 기술 구현 | TTS 정리, detail 404·hash fallback, audio 404·hash·duration·playback fallback과 offline 재생 |
 | NFR-04 | 구현 | 한 번 연 뒤 처음부터 완료까지 offline browser journey |
@@ -54,11 +54,10 @@
 
 ## 남은 순서
 
-1. cross-engine, zoom, forced-colors, reduced motion과 screen-reader 구조를 전체 여정으로 자동 검수하는 device matrix 영수증을 닫는다.
-2. fixture 공개 문구, 합성 성능 profile과 Pages response header 예외를 에이전트 release review matrix로 고정한다.
-3. commit과 push 없이도 재현 가능한 final local release receipt, rollback floor와 remote smoke 입력 검증 도구를 완성한다.
-4. first-party 10장면 후보를 제품 기준으로 고정하고 외부 자산과 낭독은 선택적 확장으로 분리한다.
-5. 라이선스, 지원, 철회, 삭제, cache purge와 사고 대응 문서를 자동 gate에 결박한다.
-6. 모든 현재 계약과 영수증을 `docs/**`로 승격하고 활성 `mainPlan/soombook-v1`을 삭제한다.
+1. fixture 공개 문구, 합성 성능 profile과 Pages response header 예외를 에이전트 release review matrix로 고정한다.
+2. commit과 push 없이도 재현 가능한 final local release receipt, rollback floor와 remote smoke 입력 검증 도구를 완성한다.
+3. first-party 10장면 후보를 제품 기준으로 고정하고 외부 자산과 낭독은 선택적 확장으로 분리한다.
+4. 라이선스, 지원, 철회, 삭제, cache purge와 사고 대응 문서를 자동 gate에 결박한다.
+5. 모든 현재 계약과 영수증을 `docs/**`로 승격하고 활성 `mainPlan/soombook-v1`을 삭제한다.
 
 현재 전체 제품화 판정은 `부분`이다. 공개 자동 후보와 실제 제품을 같은 완료로 합치지 않는다.

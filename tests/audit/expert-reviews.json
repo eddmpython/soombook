@@ -131,6 +131,44 @@
       "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
       "reviewPlanDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
       "technicalScope": "first-party-review-candidate"
+    },
+    {
+      "id": "representative-device-matrix",
+      "kind": "device-matrix",
+      "status": "closed",
+      "requiredReviewerRoles": [
+        "engine-compatibility",
+        "interaction-persistence",
+        "accessibility-structure"
+      ],
+      "scope": [
+        ".github/workflows/quality.yml",
+        ".github/workflows/pages.yml",
+        ".github/workflows/pages-rollback.yml",
+        "THIRD_PARTY_NOTICES.md",
+        "apps/reader-web/src/bookReader.tsx",
+        "apps/reader-web/src/reflectionStep.tsx",
+        "apps/reader-web/src/styles.css",
+        "package.json",
+        "package-lock.json",
+        "playwright.device-matrix.config.ts",
+        "scripts/deviceMatrixContract.mjs",
+        "scripts/checkDeviceMatrix.mjs",
+        "scripts/checkExpertReviews.mjs",
+        "scripts/buildReviewCandidate.mjs",
+        "scripts/reviewCandidateServer.mjs",
+        "scripts/runDeviceMatrix.mjs",
+        "scripts/checkProject.mjs",
+        "tests/audit/gates.json",
+        "tests/audit/deviceMatrixContract.test.mjs",
+        "tests/audit/representativeReview.test.mjs",
+        "tests/device/deviceMatrix.spec.ts"
+      ],
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "reviewPlanDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "technicalScope": "first-party-review-candidate-device-matrix",
+      "matrixScopeDigest": "sha256-78f2418d4f2c75947641c633a826487747542a578b0add8c5cbc21296778bc93",
+      "matrixAggregateDigest": "sha256-8dcd351a592dd7aa408931638412b27f9e4ff022ab8804ed92c6ead0449bb454"
     }
   ],
   "reviews": [
@@ -179,7 +217,7 @@
       "reviewerRef": "agent:hosting-productization-review",
       "reviewedAt": "2026-08-10",
       "status": "passed",
-      "scopeDigest": "sha256-26c3c537020b35c4b3820efcd7b78bf51bd9517bd3fb95f47b287a6f87de4e7a",
+      "scopeDigest": "sha256-2595955ffe7e686eac8b3a247f23d77d01d018ac8b1d6a5b5eee39ba6787a3e6",
       "commands": [
         "npm exec vitest run apps/reader-web/src/serviceWorkerLifecycle.test.ts",
         "npm run test:pwa-update",
@@ -196,7 +234,7 @@
       "reviewerRef": "agent:representative-content-review",
       "reviewedAt": "2026-08-10",
       "status": "passed",
-      "scopeDigest": "sha256-26c3c537020b35c4b3820efcd7b78bf51bd9517bd3fb95f47b287a6f87de4e7a",
+      "scopeDigest": "sha256-2595955ffe7e686eac8b3a247f23d77d01d018ac8b1d6a5b5eee39ba6787a3e6",
       "commands": [
         "npm exec vitest run apps/reader-web/src/serviceWorkerLifecycle.test.ts",
         "npm run test:pwa-update",
@@ -210,7 +248,7 @@
       "reviewerRef": "agent:next-product-bundle",
       "reviewedAt": "2026-08-10",
       "status": "passed",
-      "scopeDigest": "sha256-26c3c537020b35c4b3820efcd7b78bf51bd9517bd3fb95f47b287a6f87de4e7a",
+      "scopeDigest": "sha256-2595955ffe7e686eac8b3a247f23d77d01d018ac8b1d6a5b5eee39ba6787a3e6",
       "commands": [
         "npm exec vitest run apps/reader-web/src/serviceWorkerLifecycle.test.ts",
         "npm run test:pwa-update",
@@ -273,7 +311,7 @@
       "reviewerRef": "agent:representative-content-review",
       "reviewedAt": "2026-08-10",
       "status": "passed",
-      "scopeDigest": "sha256-5c2b75894f4bfd1287e3086c6798f4e6b87664b3ecd6bdac2d8b0f690c196985",
+      "scopeDigest": "sha256-cedd7f815f6884b9062101158e5c4f6a896683bb2da60fea8d63559b29b17e83",
       "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
       "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
       "commands": [
@@ -290,7 +328,7 @@
       "reviewerRef": "agent:hosting-productization-review",
       "reviewedAt": "2026-08-10",
       "status": "passed",
-      "scopeDigest": "sha256-5c2b75894f4bfd1287e3086c6798f4e6b87664b3ecd6bdac2d8b0f690c196985",
+      "scopeDigest": "sha256-cedd7f815f6884b9062101158e5c4f6a896683bb2da60fea8d63559b29b17e83",
       "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
       "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
       "commands": [
@@ -306,7 +344,7 @@
       "reviewerRef": "agent:next-product-bundle",
       "reviewedAt": "2026-08-10",
       "status": "passed",
-      "scopeDigest": "sha256-5c2b75894f4bfd1287e3086c6798f4e6b87664b3ecd6bdac2d8b0f690c196985",
+      "scopeDigest": "sha256-cedd7f815f6884b9062101158e5c4f6a896683bb2da60fea8d63559b29b17e83",
       "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
       "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
       "commands": [
@@ -315,6 +353,61 @@
         "npm run typecheck",
         "npm run lint",
         "npm run format:check"
+      ]
+    },
+    {
+      "id": "device-matrix-engine-compatibility-2026-08-10",
+      "topicId": "representative-device-matrix",
+      "reviewerRole": "engine-compatibility",
+      "reviewerRef": "agent:hosting-productization-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-d16c6ccc090d138df338bd943f83311a22735c56804bd35383a959b3f56be06e",
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "matrixScopeDigest": "sha256-78f2418d4f2c75947641c633a826487747542a578b0add8c5cbc21296778bc93",
+      "matrixAggregateDigest": "sha256-8dcd351a592dd7aa408931638412b27f9e4ff022ab8804ed92c6ead0449bb454",
+      "ownedProfileIds": ["device-chromium", "device-firefox", "device-webkit"],
+      "commands": ["npm run check:device-matrix"]
+    },
+    {
+      "id": "device-matrix-interaction-persistence-2026-08-10",
+      "topicId": "representative-device-matrix",
+      "reviewerRole": "interaction-persistence",
+      "reviewerRef": "agent:next-product-bundle",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-d16c6ccc090d138df338bd943f83311a22735c56804bd35383a959b3f56be06e",
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "matrixScopeDigest": "sha256-78f2418d4f2c75947641c633a826487747542a578b0add8c5cbc21296778bc93",
+      "matrixAggregateDigest": "sha256-8dcd351a592dd7aa408931638412b27f9e4ff022ab8804ed92c6ead0449bb454",
+      "ownedProfileIds": [
+        "device-css-root-font-scale-200-synthetic",
+        "device-emulated-touch",
+        "device-reduced-motion"
+      ],
+      "commands": [
+        "npm run check:device-matrix",
+        "npm exec vitest run tests/audit/deviceMatrixContract.test.mjs"
+      ]
+    },
+    {
+      "id": "device-matrix-accessibility-structure-2026-08-10",
+      "topicId": "representative-device-matrix",
+      "reviewerRole": "accessibility-structure",
+      "reviewerRef": "agent:representative-content-review",
+      "reviewedAt": "2026-08-10",
+      "status": "passed",
+      "scopeDigest": "sha256-d16c6ccc090d138df338bd943f83311a22735c56804bd35383a959b3f56be06e",
+      "candidateDigest": "sha256-41061427afeda995c67fbce1c304b2b2a5129511d625cdc18ba9ab618f599080",
+      "planDigest": "sha256-80615d0f07f1bad5fd4001a3eaef7a700560d2028ede30bfd33be4f481fab90c",
+      "matrixScopeDigest": "sha256-78f2418d4f2c75947641c633a826487747542a578b0add8c5cbc21296778bc93",
+      "matrixAggregateDigest": "sha256-8dcd351a592dd7aa408931638412b27f9e4ff022ab8804ed92c6ead0449bb454",
+      "ownedProfileIds": ["device-forced-colors", "device-high-contrast"],
+      "commands": [
+        "npm run check:device-matrix",
+        "npm exec vitest run tests/audit/deviceMatrixContract.test.mjs tests/audit/representativeReview.test.mjs"
       ]
     }
   ]

@@ -180,6 +180,7 @@ async function activate(locator: Locator, route: 'keyboard' | 'pointer') {
   if (route === 'pointer') {
     await locator.tap();
   } else {
+    await locator.scrollIntoViewIfNeeded();
     await locator.focus();
     await expect(locator).toBeFocused();
     await locator.press('Enter');
@@ -194,9 +195,6 @@ async function measureState(
   inputRoute: 'keyboard' | 'pointer',
 ) {
   await expect(focus).toBeFocused();
-  const axe = await new AxeBuilder({ page }).analyze();
-  expect(axe.violations, `${stateId} axe`).toEqual([]);
-  const ariaSnapshot = await page.locator('body').ariaSnapshot();
   const projection = await page.evaluate(() => {
     const visible = (element: Element) => {
       const style = getComputedStyle(element);
@@ -270,7 +268,13 @@ async function measureState(
         if (
           style.display === 'none' ||
           style.visibility === 'hidden' ||
-          Number.parseFloat(style.opacity) !== 1
+          Number.parseFloat(style.opacity) !== 1 ||
+          style.clipPath !== 'none' ||
+          style.filter !== 'none' ||
+          style.backdropFilter !== 'none' ||
+          style.transform !== 'none' ||
+          style.maskImage !== 'none' ||
+          !['', 'none'].includes(style.getPropertyValue('-webkit-mask-image'))
         )
           return false;
         current = current.parentElement;
@@ -314,30 +318,48 @@ async function measureState(
       const [red, green, blue] = channels;
       return red * 0.2126 + green * 0.7152 + blue * 0.0722;
     };
-    const effectiveBackdrop = (() => {
-      const layers: Rgba[] = [];
+    const backdropEvidence = (() => {
+      let foreground: Rgba = { rgb: [0, 0, 0], alpha: 0 };
       let current = focusVisualElement instanceof Element ? focusVisualElement.parentElement : null;
       while (current) {
-        const layer = parseRgba(getComputedStyle(current).backgroundColor);
-        if (layer) layers.push(layer);
+        const style = getComputedStyle(current);
+        if (style.backgroundImage !== 'none') {
+          const supportedBodyGradient =
+            current === document.body &&
+            /^linear-gradient\(rgb\(248,\s*243,\s*233\)\s+0(?:px|%),\s*rgb\(238,\s*229,\s*213\)\s+100%\)$/u.test(
+              style.backgroundImage,
+            );
+          if (!supportedBodyGradient) return { backdrops: [], supported: false };
+          return {
+            backdrops: [
+              composite(foreground, { rgb: [248, 243, 233], alpha: 1 }),
+              composite(foreground, { rgb: [238, 229, 213], alpha: 1 }),
+            ],
+            supported: true,
+          };
+        }
+        const layer = parseRgba(style.backgroundColor);
+        if (layer) foreground = composite(foreground, layer);
+        if (foreground.alpha === 1) return { backdrops: [foreground], supported: true };
         current = current.parentElement;
       }
-      return layers
-        .reverse()
-        .reduce((background, foreground) => composite(foreground, background), {
-          rgb: [255, 255, 255],
-          alpha: 1,
-        });
+      return {
+        backdrops: [composite(foreground, { rgb: [255, 255, 255], alpha: 1 })],
+        supported: true,
+      };
     })();
     const outlineColor = parseRgba(activeStyle?.outlineColor ?? 'transparent');
-    const renderedOutline = outlineColor ? composite(outlineColor, effectiveBackdrop) : null;
-    const focusContrastRatio = renderedOutline
-      ? (() => {
-          const first = relativeLuminance(renderedOutline.rgb);
-          const second = relativeLuminance(effectiveBackdrop.rgb);
-          return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
-        })()
-      : 0;
+    const focusContrastRatio =
+      outlineColor && backdropEvidence.backdrops.length > 0
+        ? Math.min(
+            ...backdropEvidence.backdrops.map((backdrop) => {
+              const renderedOutline = composite(outlineColor, backdrop);
+              const first = relativeLuminance(renderedOutline.rgb);
+              const second = relativeLuminance(backdrop.rgb);
+              return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+            }),
+          )
+        : 0;
     const focusOutlineWidth = Number.parseFloat(activeStyle?.outlineWidth ?? '0');
     const focusOutlineOffset = Number.parseFloat(activeStyle?.outlineOffset ?? '0');
     const focusRingExpansion = Math.max(0, focusOutlineWidth + focusOutlineOffset);
@@ -366,11 +388,15 @@ async function measureState(
           /^(?:auto|clip|hidden|scroll)$/u.test(style.overflowY)
         ) {
           const rect = current.getBoundingClientRect();
+          const clipLeft = rect.left + current.clientLeft;
+          const clipTop = rect.top + current.clientTop;
+          const clipRight = clipLeft + current.clientWidth;
+          const clipBottom = clipTop + current.clientHeight;
           if (
-            focusRingRect.top < rect.top - 1 ||
-            focusRingRect.left < rect.left - 1 ||
-            focusRingRect.bottom > rect.bottom + 1 ||
-            focusRingRect.right > rect.right + 1
+            focusRingRect.top < clipTop - 1 ||
+            focusRingRect.left < clipLeft - 1 ||
+            focusRingRect.bottom > clipBottom + 1 ||
+            focusRingRect.right > clipRight + 1
           )
             return false;
         }
@@ -495,7 +521,7 @@ async function measureState(
       ...(activeInViewport
         ? []
         : [
-            `active-offscreen:${Math.round(activeRect?.top ?? -999)},${Math.round(activeRect?.right ?? -999)},${Math.round(activeRect?.bottom ?? -999)},${Math.round(activeRect?.left ?? -999)}@${innerWidth}x${innerHeight}`,
+            `active-offscreen:${Math.round(activeRect?.top ?? -999)},${Math.round(activeRect?.right ?? -999)},${Math.round(activeRect?.bottom ?? -999)},${Math.round(activeRect?.left ?? -999)}@${innerWidth}x${innerHeight};scroll=${Math.round(scrollX)},${Math.round(scrollY)};document=${Math.round((activeRect?.left ?? -999) + scrollX)},${Math.round((activeRect?.top ?? -999) + scrollY)}`,
           ]),
       ...(activeUnobscured ? [] : ['active-obscured']),
     ].sort();
@@ -565,7 +591,9 @@ async function measureState(
         width: focusOutlineWidth,
         offset: focusOutlineOffset,
         color: activeStyle?.outlineColor ?? 'transparent',
-        backgroundColor: `rgba(${effectiveBackdrop.rgb.join(',')},${effectiveBackdrop.alpha})`,
+        backgroundColor: backdropEvidence.backdrops
+          .map((backdrop) => `rgba(${backdrop.rgb.join(',')},${backdrop.alpha})`)
+          .join('|'),
         contrastRatio: focusContrastRatio,
         opacity: Number.parseFloat(activeStyle?.opacity ?? '0'),
         visible: Boolean(
@@ -578,7 +606,7 @@ async function measureState(
         ),
         associated: focusProxyAssociated,
         ancestorsVisible: focusVisualAncestorsVisible,
-        unclipped: focusRingUnclipped,
+        unclipped: focusRingUnclipped && backdropEvidence.supported,
       },
       overflow: Math.max(0, document.body.scrollWidth - document.documentElement.clientWidth),
       duplicateAnnouncementCount: Math.max(0, announcements.length - 1),
@@ -599,6 +627,9 @@ async function measureState(
       scrollBehavior: getComputedStyle(document.documentElement).scrollBehavior,
     };
   });
+  const ariaSnapshot = await page.locator('body').ariaSnapshot();
+  const axe = await new AxeBuilder({ page }).analyze();
+  expect(axe.violations, `${stateId} axe`).toEqual([]);
   expect(projection.overflow, `${stateId} overflow`).toBe(0);
   expect(projection.structureViolationCodes, `${stateId} semantic structure`).toEqual([]);
   const focusIndicatorOk =
@@ -615,7 +646,10 @@ async function measureState(
       projection.focusIndicator.associated &&
       projection.focusIndicator.ancestorsVisible &&
       projection.focusIndicator.unclipped);
-  expect(focusIndicatorOk, `${stateId} visible focus indicator`).toBe(true);
+  expect(
+    focusIndicatorOk,
+    `${stateId} visible focus indicator: ${JSON.stringify(projection.focusIndicator)}`,
+  ).toBe(true);
   const forcedColorStateOk = !forcedColors || projection.forcedColorUnidentifiedCount === 0;
   expect(forcedColorStateOk, `${stateId} forced-colors state identity`).toBe(true);
   const reducedMotion = await page.evaluate(
@@ -782,26 +816,14 @@ test('10장면 검수 후보가 엔진과 시각 설정이 달라도 같은 구�
   const consoleErrors: string[] = [];
   const failedRequests: string[] = [];
   const thirdPartyOrigins = new Set<string>();
-  let offlineProbeInProgress = false;
   let offlineProbeUrl: string | null = null;
   let offlineProbeFailedRequestCount = 0;
   let offlineProbeConsoleErrorCount = 0;
   page.on('console', (message) => {
-    const locationUrl = message.location().url;
-    const expectedProbeNoise =
-      offlineProbeInProgress &&
-      offlineProbeConsoleErrorCount === 0 &&
-      (locationUrl === '' || locationUrl === offlineProbeUrl) &&
-      (message.text().includes('Failed to load resource: net::ERR_INTERNET_DISCONNECTED') ||
-        message.text().includes('Failed to load resource: WebKit encountered an internal error'));
-    if (message.type() === 'error' && !expectedProbeNoise) consoleErrors.push(message.text());
-    else if (message.type() === 'error') offlineProbeConsoleErrorCount += 1;
+    if (message.type() === 'error') consoleErrors.push(message.text());
   });
   page.on('pageerror', (error) => consoleErrors.push(error.message));
-  page.on('requestfailed', (request) => {
-    if (request.url() === offlineProbeUrl) offlineProbeFailedRequestCount += 1;
-    else failedRequests.push(request.url());
-  });
+  page.on('requestfailed', (request) => failedRequests.push(request.url()));
   page.on('request', (request) => {
     const url = new URL(request.url());
     if (['http:', 'https:'].includes(url.protocol) && url.origin !== 'http://127.0.0.1:4175')
@@ -809,6 +831,23 @@ test('10장면 검수 후보가 엔진과 시각 설정이 달라도 같은 구�
   });
 
   await page.goto('/');
+  const servedArtifactFiles = buildReceipt.files as Array<{
+    path: string;
+    byteLength: number;
+    sha256: string;
+  }>;
+  expect(Array.isArray(servedArtifactFiles)).toBe(true);
+  for (const file of servedArtifactFiles) {
+    const servedResponse = await context.request.get(
+      new URL(file.path, 'http://127.0.0.1:4175/').href,
+      { failOnStatusCode: true },
+    );
+    const servedBytes = await servedResponse.body();
+    expect(servedBytes.byteLength, `served artifact byteLength: ${file.path}`).toBe(
+      file.byteLength,
+    );
+    expect(sha256(servedBytes), `served artifact sha256: ${file.path}`).toBe(file.sha256);
+  }
   await page.evaluate(() => localStorage.clear());
   await page.reload();
   await page.evaluate(async () => navigator.serviceWorker.ready);
@@ -816,11 +855,27 @@ test('10장면 검수 후보가 엔진과 시각 설정이 달라도 같은 구�
   await page.evaluate(() => localStorage.clear());
   const storageBeforeDigest = sha256(JSON.stringify(await storageProjection(page)));
   offlineProbeUrl = new URL(`/device-matrix-uncached-probe-${randomUUID()}.txt`, page.url()).href;
+  const probePage = await context.newPage();
+  await probePage.goto('/');
+  await probePage.evaluate(async () => navigator.serviceWorker.ready);
   await context.setOffline(true);
   if (profile.offlineMode === 'service-worker-fresh-reload') await page.reload();
   const navigatorOnlineAfterOffline = await page.evaluate(() => navigator.onLine);
-  offlineProbeInProgress = true;
-  const offlineProbeBlocked = await page.evaluate(async (probeUrl) => {
+  probePage.on('requestfailed', (request) => {
+    if (request.url() === offlineProbeUrl) offlineProbeFailedRequestCount += 1;
+    else failedRequests.push(request.url());
+  });
+  probePage.on('console', (message) => {
+    if (message.type() !== 'error') return;
+    const expectedProbeNoise =
+      offlineProbeConsoleErrorCount === 0 &&
+      (message.location().url === '' || message.location().url === offlineProbeUrl) &&
+      (message.text().includes('Failed to load resource: net::ERR_INTERNET_DISCONNECTED') ||
+        message.text().includes('Failed to load resource: WebKit encountered an internal error'));
+    if (expectedProbeNoise) offlineProbeConsoleErrorCount += 1;
+    else consoleErrors.push(`probe:${message.text()}`);
+  });
+  const offlineProbeBlocked = await probePage.evaluate(async (probeUrl) => {
     try {
       await fetch(probeUrl, {
         cache: 'no-store',
@@ -830,7 +885,8 @@ test('10장면 검수 후보가 엔진과 시각 설정이 달라도 같은 구�
       return true;
     }
   }, offlineProbeUrl);
-  await page.waitForTimeout(100);
+  await probePage.waitForTimeout(500);
+  await probePage.close();
   expect(offlineProbeBlocked).toBe(true);
   if (profile.modes.cssRootScalePercent === 200)
     await page.evaluate(() => {
@@ -848,6 +904,7 @@ test('10장면 검수 후보가 엔진과 시각 설정이 달라도 같은 구�
 
   const stateChecks = [];
   const startButton = page.getByRole('button', { name: '탐험 시작하기' });
+  await startButton.scrollIntoViewIfNeeded();
   await startButton.focus();
   stateChecks.push(
     await measureState(page, 'start', startButton, profile.modes.forcedColors, route),
@@ -1069,8 +1126,6 @@ test('10장면 검수 후보가 엔진과 시각 설정이 달라도 같은 구�
   if (profile.offlineMode === 'controlled-loaded-document') await context.setOffline(false);
   await page.reload();
   await expect(completeHeading).toBeVisible();
-  await page.waitForTimeout(100);
-  offlineProbeInProgress = false;
   const authoredConsoleErrors = await page.evaluate(
     () =>
       (
