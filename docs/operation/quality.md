@@ -14,6 +14,7 @@
 | 내부 오디오 | `npm run test:audio-fixture` | 격리된 3 mode fixture의 seek, rate, 종료 의미, 실패 fallback, cleanup과 offline 재생 |
 | 검수 후보 | `npm run test:review-candidate` | 격리된 10장면 review pack의 desktop·mobile 완주, truth 문구, axe, overflow와 offline |
 | First-party 제품 기준 | `npm run check:product-baseline` | 10장면 source, 전체 compiled와 review build, CSS fallback, 빈 audio, pending ledger와 선택적 외부 확장 부재를 하나의 digest로 결박 |
+| 운영 문서 | `npm run check:operations` | license, 지원 route, 로컬 삭제, service worker 실패 복구, 원격 cache 한계, rollback, 철회와 사고 대응의 책임·입력·증거·실패·순서·운영자 게이트를 결박 |
 | 기기 행렬 | `npm run qa:device-matrix` | 같은 10장면 artifact의 Chromium·Firefox·WebKit, CSS root 200%, forced-colors, reduced-motion, high-contrast, touch 모의 전체 여정과 21개 상태별 AX·focus·저장·offline 증거 |
 | UI 감수 | `npm run qa:ui` | 1440x900, 768x1024, 390x844 완주와 9개 시나리오 |
 | 합성 성능 | `npm run qa:performance` | 같은 root와 Pages artifact의 mobile, desktop 4개 profile, warm-up 뒤 3회 lab 중앙값, mobile 5회 heap 반복 |
@@ -47,6 +48,11 @@ candidate, plan과 scope digest를 검수한 뒤 기술 `expand`를 판정했다
 First-party 제품 기준은 content boundary, delivery boundary, extension boundary 세 역할이 같은 baseline,
 candidate와 review artifact digest를 검수한다. 외부 문화자산은 metadata-only pending, 승인 낭독은
 `absent`와 `not-implemented`로 유지되며 이 상태를 바꾸면 기존 quorum은 즉시 stale이 된다.
+
+운영 문서는 licensing-support boundary, local-data-cache lifecycle, withdrawal-incident boundary 세 역할이
+같은 operations scope, contract, document inventory digest를 검수한다. `npm run
+check:expert-reviews:operations`는 11개 procedure ID가 정확히 한 역할에만 속하는지 검사한다. 자동 PASS는
+법률, 지원 SLA, 배포, 사고 종료, 원격 client cache 삭제 또는 `OG-01`부터 `OG-08` 만족을 승인하지 않는다.
 
 공개 기술 체험판 release evidence는 product copy, performance evidence, deployment boundary 세 역할이 서로
 다른 reviewer ref로 같은 release scope와 stable evidence digest를 검수한다. raw 성능 수치와 실행 환경은

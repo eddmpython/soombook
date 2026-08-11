@@ -28,7 +28,8 @@ host로 승격하기 전에는 허용하지 않는다.
 | OG-03 문화 | 사실, 허구, fixture, 미확인이 분리되고 해석이 왜곡되지 않는가 | claim ledger, 원자료, caveat, 문화 검토 기록 | 미승인 | 문화 전문가 |
 | OG-04 교육 | 초3 문장, 질문, 실패 회복, 회상이 이해 가능하고 안전한가 | 장면 script, 질문 근거, 교육 검토 의견 | 미승인 | 교육 검토자 |
 | OG-05 접근성 | 실제 기기와 보조기기에서 핵심 여정을 독립 수행할 수 있는가 | 아래 실기기 checklist와 원본 화면 기록 | 미실시 | 접근성 검토자 |
-| OG-06 연구 | 목적, 최소 수집, 보호자·아동 동의, 중단, 삭제가 승인됐는가 | 연구 protocol 승인본과 동의 문서 | 미승인 | 연구 책임자 |
+| OG-06 연구 | 목적, 최소 수집, 보호자·아동 동의, 중단, 삭제가 승인됐는가 | [연구 안전 경계](child-study.md), protocol 승인본과 동의 문서 | 미승인 | 연구 책임자 |
+| OG-07 개인정보·계정 | 계정, 입력, 원격 수집과 private support의 목적·보존·삭제·incident 절차가 승인됐는가 | data inventory, private intake, retention과 deletion 증거 | 범위 밖 | 개인정보 책임자 |
 | OG-08 배포 | SHA, artifact digest, 전체 gate, 성능, rollback, 보안 예외를 확인했는가 | release receipt, CI run, remote smoke | 미승인 | 운영자 |
 
 각 승인 기록에는 검토자 실명 또는 조직 내부 식별자, 날짜, 대상 commit SHA, 판정, 조건, 만료 또는 재검토

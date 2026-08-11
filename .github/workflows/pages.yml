@@ -30,6 +30,8 @@ jobs:
           python-version: '3.13.7'
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run check:operations
+      - run: npm run check:expert-reviews:operations
       - run: npm run qa:performance
       - run: npm run check:expert-reviews:release
       - run: npm run check:full
@@ -73,6 +75,7 @@ jobs:
             ../soombook.out/release-evidence
             ../soombook.out/device-matrix
             ../soombook.out/playwright-device-matrix
+            ../soombook.out/operations-documentation
           if-no-files-found: error
           retention-days: 30
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6

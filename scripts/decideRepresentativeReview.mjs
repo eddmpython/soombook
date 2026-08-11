@@ -116,7 +116,7 @@ const decision = decideRepresentativePromotion({
   unverifiedItems: ['publication-rights', 'child-outcome'],
   nextLossTransition: optionValue(
     '--next-loss',
-    'review 후보를 유지하며 다음 미완료 mainPlan 꼭지를 같은 검수 순서로 시작한다.',
+    'review 후보를 유지하며 다음 미완료 initiative를 같은 검수 순서로 시작한다.',
   ),
   rollbackRef: optionValue('--rollback', `candidate:${currentStaticReceipt.candidateDigest}`),
 });

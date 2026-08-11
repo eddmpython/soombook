@@ -59,6 +59,9 @@ jobs:
       - name: first-party product baseline 도입 이전 SHA 차단
         run: >-
           node -e "const p=require('./package.json');const expected={'check:product-baseline':'node scripts/checkProductBaseline.mjs','check:expert-reviews:baseline':'node scripts/checkExpertReviews.mjs --product-baseline'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('product baseline rollback floor 미달: '+name)}"
+      - name: operations documentation 도입 이전 SHA 차단
+        run: >-
+          node -e "const p=require('./package.json');const expected={'check:operations':'node scripts/checkOperationsDocumentation.mjs','check:expert-reviews:operations':'node scripts/checkExpertReviews.mjs --operations-documentation'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('operations documentation rollback floor 미달: '+name)}"
       - run: npx playwright install --with-deps chromium firefox webkit
       - name: rollback 작업트리 신원 재확인
         env:
@@ -71,6 +74,8 @@ jobs:
       - run: npm run qa:performance
         env:
           SOOMBOOK_RELEASE_SHA: ${{ inputs.target_sha }}
+      - run: npm run check:operations
+      - run: npm run check:expert-reviews:operations
       - run: npm run check:expert-reviews:release
       - run: npm run check:full
       - run: npm run check:product-baseline
@@ -115,6 +120,7 @@ jobs:
             ../soombook.out/release-evidence
             ../soombook.out/device-matrix
             ../soombook.out/playwright-device-matrix
+            ../soombook.out/operations-documentation
           if-no-files-found: error
           retention-days: 30
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6

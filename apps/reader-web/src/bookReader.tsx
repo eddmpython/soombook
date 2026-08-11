@@ -137,7 +137,7 @@ export function BookReader({ assetUrls, pack }: BookReaderProps) {
     const previousInlineScrollBehavior = root.style.scrollBehavior;
     const animationFrame = window.requestAnimationFrame(() => {
       const heading = sceneTitleRef.current;
-      if (!heading || state.status === 'ready') {
+      if (!heading || state.status === 'ready' || state.status === 'reflecting') {
         return;
       }
       root.style.scrollBehavior = 'auto';
@@ -915,8 +915,8 @@ export function BookReader({ assetUrls, pack }: BookReaderProps) {
             별도입니다. 문의에는 아동 개인정보를 쓰지 마세요.
           </p>
           <p>
-            <a href="https://github.com/eddmpython/soombook" rel="noreferrer">
-              소스와 문의 경로 보기
+            <a href="https://github.com/eddmpython/soombook/issues" rel="noreferrer">
+              기술 문의 경로 보기
             </a>
           </p>
           <div className="progressDeletion">

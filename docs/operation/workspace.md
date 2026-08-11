@@ -33,7 +33,6 @@ soombook/
 ├─ tests/
 ├─ .github/workflows/
 ├─ .githooks/
-├─ mainPlan/
 └─ scripts/
 ```
 
@@ -85,7 +84,7 @@ SHA-256: C7247AEB8179F881E3EB1EFBD21AD4DA6CB567E3EA134C2F3B64718EFACB47D3
 ```
 
 원본은 기획 입력이며 저장소 정본이 아니다. 원본이 이동해도 실행 판단은
-`mainPlan/soombook-v1/01-source-audit.md`와 나머지 PRD 계약으로 재현할 수 있어야 한다.
+`docs/**`, 코드, 테스트와 검증 영수증으로 재현할 수 있어야 한다.
 
 ## 알려진 환경 함정
 

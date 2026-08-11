@@ -16,7 +16,7 @@ npm run setup:workspace
 ## 변경 순서
 
 1. `git status --short --branch`로 기존 변경을 확인한다.
-2. 관련 현재 계약과 활성 `mainPlan`을 읽는다.
+2. 관련 현재 계약을 읽고, 활성 initiative가 있으면 해당 계획도 읽는다.
 3. 가장 좁은 test나 contract부터 수정한다.
 4. `npm run check`를 통과시킨다.
 5. 화면이나 공개 경계를 바꿨다면 `npm run check:full`을 통과시킨다.

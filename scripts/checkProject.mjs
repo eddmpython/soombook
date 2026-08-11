@@ -26,6 +26,8 @@ const REQUIRED_SCRIPTS = [
   'check:project',
   'check:expert-reviews',
   'check:expert-reviews:device',
+  'check:expert-reviews:operations',
+  'check:operations',
   'check:device-matrix',
   'check:text',
   'check:source',
@@ -67,13 +69,16 @@ const REQUIRED_PATHS = [
   'apps/reader-web/src/serviceWorkerLifecycle.test.ts',
   'content/fixture-registry.json',
   'docs/architecture/book-pack-runtime.md',
+  'docs/operation/child-study.md',
   'docs/operation/contribution-workflow.md',
   'docs/operation/github-pages.md',
   'docs/operation/operator-review.md',
+  'docs/operation/operations-contract.json',
+  'docs/operation/support.md',
+  'docs/operation/data-lifecycle.md',
+  'docs/operation/withdrawal-incident.md',
   'docs/operation/rights-review.md',
   'docs/operation/quality.md',
-  'mainPlan/soombook-v1/11-productization-completion-audit.md',
-  'mainPlan/soombook-v1/12-child-study-protocol.md',
   'docs/product/reader-contract.md',
   'package-lock.json',
   'packages/book-runtime/package.json',
@@ -122,10 +127,13 @@ const REQUIRED_PATHS = [
   'tests/audit/bookPackBuildContract.test.mjs',
   'tests/pwa/pwaUpdate.spec.ts',
   'scripts/checkExpertReviews.mjs',
+  'scripts/checkOperationsDocumentation.mjs',
+  'scripts/operationsDocumentation.mjs',
   'scripts/deviceMatrixContract.mjs',
   'scripts/checkDeviceMatrix.mjs',
   'scripts/runDeviceMatrix.mjs',
   'tests/audit/deviceMatrixContract.test.mjs',
+  'tests/audit/operationsDocumentation.test.mjs',
   'tests/device/deviceMatrix.spec.ts',
 ];
 const SOURCE_ROOTS = [
@@ -785,6 +793,91 @@ async function main() {
     )
       errors.push(`${workflowName} Pages deploy job blocking 경계 오류`);
   }
+
+  const exactOperationsScripts = {
+    'check:operations': 'node scripts/checkOperationsDocumentation.mjs',
+    'check:expert-reviews:operations':
+      'node scripts/checkExpertReviews.mjs --operations-documentation',
+  };
+  for (const [scriptName, command] of Object.entries(exactOperationsScripts)) {
+    if (packageJson.scripts?.[scriptName] !== command)
+      errors.push(`operations documentation package script 계약 오류: ${scriptName}`);
+  }
+  if (
+    !packageJson.scripts.check.includes('npm run check:operations') ||
+    !packageJson.scripts.check.includes('npm run check:expert-reviews:operations') ||
+    !packageJson.scripts['test:contracts'].includes('operationsDocumentation.test.mjs') ||
+    !packageJson.scripts['test:contracts'].includes('runtimeStore.test.ts')
+  )
+    errors.push('operations documentation checker, quorum과 negative가 기본 gate에 없습니다.');
+  for (const [workflowName, workflowDocument, jobName, expectedJobIf] of [
+    ['quality', workflowDocuments.quality, 'quick', undefined],
+    ['pages', workflowDocuments.pages, 'build', "github.ref == 'refs/heads/main'"],
+    [
+      'pages-rollback',
+      workflowDocuments['pages-rollback'],
+      'build',
+      "github.ref == 'refs/heads/main'",
+    ],
+  ]) {
+    const steps = workflowSteps(workflowDocument, jobName);
+    for (const command of ['npm run check:operations', 'npm run check:expert-reviews:operations']) {
+      if (!hasExactWorkflowRun(workflowDocument, jobName, command, expectedJobIf))
+        errors.push(`${workflowName} operations documentation blocking command 누락: ${command}`);
+    }
+    const uploadStep = workflowSteps(workflowDocument, jobName).find((step) => {
+      const pathEntries =
+        typeof step.with?.path === 'string'
+          ? step.with.path.split(/\r?\n/u).map((entry) => entry.trim())
+          : [];
+      return (
+        workflowNodeBlocking(step, 'always()') &&
+        typeof step.uses === 'string' &&
+        /^actions\/upload-artifact@[0-9a-f]{40}$/u.test(step.uses) &&
+        step.with?.['if-no-files-found'] === 'error' &&
+        step.with?.['retention-days'] === 30 &&
+        pathEntries.includes('../soombook.out/operations-documentation') &&
+        pathEntries.every((entry) => !entry.startsWith('!'))
+      );
+    });
+    if (!uploadStep)
+      errors.push(`${workflowName} operations documentation evidence 보존 계약이 없습니다.`);
+    const operationsIndex = steps.findIndex(
+      (step) =>
+        workflowNodeBlocking(step, undefined) &&
+        step?.shell === undefined &&
+        step?.run === 'npm run check:operations',
+    );
+    const quorumIndex = steps.findIndex(
+      (step) =>
+        workflowNodeBlocking(step, undefined) &&
+        step?.shell === undefined &&
+        step?.run === 'npm run check:expert-reviews:operations',
+    );
+    const uploadIndex = steps.indexOf(uploadStep);
+    const buildIndex = steps.findIndex((step) => step?.run === 'npm run build:pages');
+    if (
+      operationsIndex < 0 ||
+      quorumIndex !== operationsIndex + 1 ||
+      uploadIndex <= quorumIndex ||
+      (buildIndex >= 0 && quorumIndex >= buildIndex)
+    )
+      errors.push(`${workflowName} operations checker, quorum, evidence 순서 오류`);
+  }
+  const expectedOperationsFloorCommand =
+    "node -e \"const p=require('./package.json');const expected={'check:operations':'node scripts/checkOperationsDocumentation.mjs','check:expert-reviews:operations':'node scripts/checkExpertReviews.mjs --operations-documentation'};for(const [name,value] of Object.entries(expected)){if(p.scripts?.[name]!==value)throw new Error('operations documentation rollback floor 미달: '+name)}\"";
+  const operationsFloorStep = workflowSteps(workflowDocuments['pages-rollback'], 'build').find(
+    (step) =>
+      step &&
+      typeof step === 'object' &&
+      step.name === 'operations documentation 도입 이전 SHA 차단',
+  );
+  if (
+    !workflowNodeBlocking(operationsFloorStep, undefined) ||
+    operationsFloorStep.shell !== undefined ||
+    operationsFloorStep.run !== expectedOperationsFloorCommand
+  )
+    errors.push('Pages rollback exact operations documentation floor가 다릅니다.');
 
   if (errors.length > 0) {
     console.error('프로젝트 registry 검증 실패');

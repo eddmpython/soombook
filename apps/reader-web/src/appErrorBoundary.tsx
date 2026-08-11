@@ -8,18 +8,27 @@ interface AppErrorBoundaryProps {
 
 interface AppErrorBoundaryState {
   hasError: boolean;
+  resetFailed: boolean;
+}
+
+export function resetAllRuntimeProgress(
+  clear: () => boolean = clearAllRuntimeState,
+  reload: () => void = () => window.location.reload(),
+): boolean {
+  if (!clear()) return false;
+  reload();
+  return true;
 }
 
 export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
-  state: AppErrorBoundaryState = { hasError: false };
+  state: AppErrorBoundaryState = { hasError: false, resetFailed: false };
 
   static getDerivedStateFromError(): AppErrorBoundaryState {
-    return { hasError: true };
+    return { hasError: true, resetFailed: false };
   }
 
   private resetProgress = () => {
-    clearAllRuntimeState();
-    window.location.reload();
+    if (!resetAllRuntimeProgress()) this.setState({ resetFailed: true });
   };
 
   private retry = () => {
@@ -55,6 +64,11 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             <button className="textButton" onClick={this.resetProgress} type="button">
               진행을 지우고 다시 열기
             </button>
+            {this.state.resetFailed ? (
+              <p role="alert">
+                저장 공간을 열 수 없어 진행을 지우지 못했어요. 오류 코드 LOCAL_DELETE_002
+              </p>
+            ) : null}
           </details>
           <small>오류 코드 READER_RENDER_001</small>
         </section>

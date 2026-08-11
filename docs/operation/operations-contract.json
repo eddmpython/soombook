@@ -1,0 +1,657 @@
+{
+  "schemaVersion": 1,
+  "authority": "automated-operations-documentation-evidence-not-legal-deployment-support-sla-or-incident-approval",
+  "technicalScope": "soombook-current-operations-documentation",
+  "hostClass": "github-pages-public-technical-demo",
+  "capabilities": {
+    "automaticRollbackAfterRemoteFailure": false,
+    "operatorDirectedClientCachePurge": false,
+    "remoteTelemetry": false,
+    "accounts": false,
+    "externalInput": false,
+    "privateSupportIntakeConfigured": false
+  },
+  "operatorGates": [
+    { "id": "OG-01", "state": "unconfirmed" },
+    { "id": "OG-02", "state": "unapproved" },
+    { "id": "OG-03", "state": "unapproved" },
+    { "id": "OG-04", "state": "unapproved" },
+    { "id": "OG-05", "state": "not-run" },
+    { "id": "OG-06", "state": "unapproved" },
+    { "id": "OG-07", "state": "out-of-scope" },
+    { "id": "OG-08", "state": "unapproved" }
+  ],
+  "documentInventory": [
+    "LICENSE",
+    "NOTICE",
+    "SECURITY.md",
+    "THIRD_PARTY_NOTICES.md",
+    "docs/architecture/book-pack-runtime.md",
+    "docs/operation/child-study.md",
+    "docs/operation/data-lifecycle.md",
+    "docs/operation/github-pages.md",
+    "docs/operation/licensing.md",
+    "docs/operation/operator-review.md",
+    "docs/operation/quality.md",
+    "docs/operation/rights-review.md",
+    "docs/operation/support.md",
+    "docs/operation/withdrawal-incident.md",
+    "docs/product/reader-contract.md"
+  ],
+  "supportRoutes": [
+    {
+      "id": "general-technical",
+      "state": "public-non-sensitive-only",
+      "ownerRole": "repository-maintainer",
+      "route": "https://github.com/eddmpython/soombook/issues",
+      "publicDataForbidden": [
+        "secrets",
+        "credentials",
+        "personal-data",
+        "child-data",
+        "research-records",
+        "private-rights-evidence"
+      ],
+      "operatorGates": []
+    },
+    {
+      "id": "security-privacy",
+      "state": "not-configured",
+      "ownerRole": "incident-commander",
+      "route": null,
+      "publicDataForbidden": [
+        "secrets",
+        "credentials",
+        "personal-data",
+        "child-data",
+        "vulnerability-details"
+      ],
+      "operatorGates": ["OG-07", "OG-08"]
+    },
+    {
+      "id": "rights-takedown",
+      "state": "not-configured",
+      "ownerRole": "rights-owner",
+      "route": null,
+      "publicDataForbidden": ["private-rights-evidence", "personal-data", "credentials"],
+      "operatorGates": ["OG-02", "OG-08"]
+    },
+    {
+      "id": "child-safety-research",
+      "state": "not-configured",
+      "ownerRole": "research-lead",
+      "route": null,
+      "publicDataForbidden": ["child-data", "guardian-data", "research-records", "personal-data"],
+      "operatorGates": ["OG-06", "OG-07", "OG-08"]
+    }
+  ],
+  "binaryLicensePolicy": {
+    "copyrightLicense": "Apache-2.0",
+    "assetPaths": [
+      "apps/reader-web/public/og.png",
+      "apps/reader-web/public/soombook-mark-192.png",
+      "apps/reader-web/public/soombook-mark-512.png",
+      "apps/reader-web/public/soombook-mark.svg",
+      "content/fixtures/lantern-demo/assets/lantern-base.svg",
+      "content/fixtures/lantern-demo/assets/lantern-detail.svg",
+      "content/fixtures/lantern-demo/assets/lantern-timing.wav",
+      "content/fixtures/tiger-demo/assets/tiger-base.svg",
+      "content/fixtures/tiger-demo/assets/tiger-detail.svg"
+    ],
+    "trademarkUseGranted": false,
+    "productionContentApproved": false
+  },
+  "procedures": [
+    {
+      "id": "license-inventory",
+      "availability": "implemented",
+      "responsibility": {
+        "decisionOwner": "license-maintainer",
+        "executor": "repository-maintainer",
+        "verifier": "license-reviewer"
+      },
+      "documentPath": "docs/operation/licensing.md",
+      "sectionId": "ops-license-inventory",
+      "actionEntrypoint": { "kind": "npm", "value": "npm run check:operations" },
+      "verificationCommands": [
+        "npm run check:source",
+        "npm run check:assets",
+        "npm run check:operations"
+      ],
+      "requiredEnvironment": [],
+      "inputs": [
+        "LICENSE",
+        "NOTICE",
+        "THIRD_PARTY_NOTICES.md",
+        "package-lock.json",
+        "tests/audit/binary-assets.json"
+      ],
+      "evidence": ["dependency-name-version-license", "binary-license-map", "asset-rights-ledger"],
+      "failureModes": [
+        {
+          "code": "OPS_LICENSE_INVENTORY_DRIFT",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["license-freeze", "license-repair", "license-recheck"]
+        },
+        {
+          "code": "OPS_LICENSE_AUTHORITY_ESCALATION",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["license-freeze", "license-remove-unapproved", "license-recheck"]
+        }
+      ],
+      "sequence": [
+        { "id": "license-freeze", "action": "신규 release를 동결한다." },
+        { "id": "license-repair", "action": "dependency, binary와 rights inventory를 복구한다." },
+        { "id": "license-remove-unapproved", "action": "미승인 자산을 release에서 제외한다." },
+        { "id": "license-recheck", "action": "source, asset와 operations gate를 다시 실행한다." }
+      ],
+      "operatorGates": ["OG-01", "OG-02"]
+    },
+    {
+      "id": "public-support-intake",
+      "availability": "implemented",
+      "responsibility": {
+        "decisionOwner": "repository-maintainer",
+        "executor": "issue-triager",
+        "verifier": "repository-maintainer"
+      },
+      "documentPath": "docs/operation/support.md",
+      "sectionId": "ops-support-intake",
+      "actionEntrypoint": {
+        "kind": "url",
+        "value": "https://github.com/eddmpython/soombook/issues"
+      },
+      "verificationCommands": ["npm run check:operations", "npm run check:project"],
+      "requiredEnvironment": [],
+      "inputs": ["commit-sha", "browser", "error-code", "non-sensitive-reproduction"],
+      "evidence": ["issue-url", "reproduction-result", "owner"],
+      "failureModes": [
+        {
+          "code": "OPS_SUPPORT_SENSITIVE_PUBLIC_DATA",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["support-stop", "support-remove-public-data", "support-escalate"]
+        }
+      ],
+      "sequence": [
+        { "id": "support-classify", "action": "민감 정보 포함 여부를 분류한다." },
+        { "id": "support-route-public", "action": "비민감 재현만 public issue로 보낸다." },
+        { "id": "support-stop", "action": "민감 정보가 있으면 공개 기록을 중단한다." },
+        {
+          "id": "support-remove-public-data",
+          "action": "공개된 민감 정보를 운영 절차로 제거한다."
+        },
+        {
+          "id": "support-escalate",
+          "action": "승인된 private route가 없으면 production 확장을 차단한다."
+        }
+      ],
+      "operatorGates": []
+    },
+    {
+      "id": "private-security-intake-boundary",
+      "availability": "operator-gated",
+      "responsibility": {
+        "decisionOwner": "privacy-security-owner",
+        "executor": "operator",
+        "verifier": "incident-commander"
+      },
+      "documentPath": "docs/operation/support.md",
+      "sectionId": "ops-private-security-boundary",
+      "actionEntrypoint": { "kind": "unavailable", "value": "not-configured" },
+      "verificationCommands": ["npm run check:operations"],
+      "requiredEnvironment": [],
+      "inputs": ["approved-private-route", "retention-policy", "deletion-policy", "response-owner"],
+      "evidence": ["operator-approval", "private-route-id", "retention-and-deletion-record"],
+      "failureModes": [
+        {
+          "code": "OPS_SUPPORT_PRIVATE_CHANNEL_MISSING",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["private-block-expansion"]
+        }
+      ],
+      "sequence": [
+        {
+          "id": "private-block-expansion",
+          "action": "private route 승인 전 production 범위 확장을 차단한다."
+        }
+      ],
+      "operatorGates": ["OG-07", "OG-08"]
+    },
+    {
+      "id": "local-book-progress-delete",
+      "availability": "implemented",
+      "responsibility": {
+        "decisionOwner": "user-or-guardian",
+        "executor": "reader-runtime",
+        "verifier": "reader-maintainer"
+      },
+      "documentPath": "docs/operation/data-lifecycle.md",
+      "sectionId": "ops-local-data-delete",
+      "actionEntrypoint": { "kind": "ui", "value": "보호자 안내 > 저장된 진행 삭제 확인" },
+      "verificationCommands": [
+        "npm run test:e2e",
+        "npm exec vitest run apps/reader-web/src/runtimeStore.test.ts",
+        "npm run check:operations"
+      ],
+      "requiredEnvironment": [],
+      "inputs": ["book-id", "pack-versioned-local-storage", "legacy-mirror", "user-confirmation"],
+      "evidence": [
+        "before-key-inventory",
+        "delete-confirmation",
+        "after-key-inventory",
+        "fresh-runtime"
+      ],
+      "failureModes": [
+        {
+          "code": "OPS_LOCAL_DELETE_FAILED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["local-preserve-failure", "local-memory-session"]
+        }
+      ],
+      "sequence": [
+        { "id": "local-confirm", "action": "사용자 확인을 받는다." },
+        { "id": "local-cancel-audio", "action": "재생 중인 음성을 취소한다." },
+        { "id": "local-delete-book-keys", "action": "현재 book의 모든 pack key를 지운다." },
+        { "id": "local-delete-legacy", "action": "현재 book legacy mirror를 지운다." },
+        { "id": "local-fresh-runtime", "action": "새 runtime을 만든다." },
+        { "id": "local-preserve-failure", "action": "실패 때 다른 storage와 cache를 보존한다." },
+        { "id": "local-memory-session", "action": "memory session으로 읽기를 유지한다." }
+      ],
+      "operatorGates": []
+    },
+    {
+      "id": "render-error-all-progress-reset",
+      "availability": "implemented",
+      "responsibility": {
+        "decisionOwner": "user-or-guardian",
+        "executor": "reader-error-boundary",
+        "verifier": "reader-maintainer"
+      },
+      "documentPath": "docs/operation/data-lifecycle.md",
+      "sectionId": "ops-render-error-all-progress-reset",
+      "actionEntrypoint": { "kind": "ui", "value": "READER_RENDER_001 > 진행을 지우고 다시 열기" },
+      "verificationCommands": [
+        "npm exec vitest run apps/reader-web/src/runtimeStore.test.ts",
+        "npm run typecheck",
+        "npm run check:operations"
+      ],
+      "requiredEnvironment": [],
+      "inputs": ["user-confirmation", "soombook-runtime-prefix"],
+      "evidence": [
+        "before-key-inventory",
+        "after-key-inventory",
+        "unrelated-key-preserved",
+        "reload-or-error-code"
+      ],
+      "failureModes": [
+        {
+          "code": "OPS_RENDER_RESET_FAILED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["render-preserve-storage", "render-show-failure"]
+        }
+      ],
+      "sequence": [
+        { "id": "render-confirm", "action": "사용자 확인을 받는다." },
+        { "id": "render-delete-prefix", "action": "soombook.runtime prefix만 삭제한다." },
+        { "id": "render-reload-success", "action": "삭제 성공 때만 reload한다." },
+        {
+          "id": "render-preserve-storage",
+          "action": "실패 때 reload를 막고 unrelated storage와 cache를 보존한다."
+        },
+        { "id": "render-show-failure", "action": "LOCAL_DELETE_002를 표시한다." }
+      ],
+      "operatorGates": []
+    },
+    {
+      "id": "service-worker-failure-recovery",
+      "availability": "implemented",
+      "responsibility": {
+        "decisionOwner": "pwa-maintainer",
+        "executor": "reader-service-worker-lifecycle",
+        "verifier": "pwa-reviewer"
+      },
+      "documentPath": "docs/operation/data-lifecycle.md",
+      "sectionId": "ops-service-worker-failure-recovery",
+      "actionEntrypoint": { "kind": "runtime", "value": "recoverServiceWorkerToOnlineOnly" },
+      "verificationCommands": [
+        "npm run test:pwa-update",
+        "npm exec vitest run apps/reader-web/src/serviceWorkerLifecycle.test.ts",
+        "npm run check:operations"
+      ],
+      "requiredEnvironment": [],
+      "inputs": ["app-scope", "service-worker-registrations", "cache-names"],
+      "evidence": [
+        "deleted-cache-count",
+        "unregistered-worker-count",
+        "foreign-scope-preserved",
+        "progress-preserved",
+        "recovery-code"
+      ],
+      "failureModes": [
+        {
+          "code": "OPS_CACHE_SCOPE_MISMATCH",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["sw-stop-unknown-scope"]
+        },
+        {
+          "code": "OPS_CACHE_RECOVERY_FAILED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["sw-report-failure"]
+        }
+      ],
+      "sequence": [
+        { "id": "sw-match-scope", "action": "현재 app scope를 exact 비교한다." },
+        { "id": "sw-unregister-owned", "action": "소유 worker만 해제한다." },
+        { "id": "sw-match-cache", "action": "prefix와 scope suffix를 모두 비교한다." },
+        { "id": "sw-delete-owned", "action": "소유 cache만 지운다." },
+        { "id": "sw-preserve-progress", "action": "local progress를 보존한다." },
+        { "id": "sw-stop-unknown-scope", "action": "scope 불명확 시 삭제를 중단한다." },
+        { "id": "sw-report-failure", "action": "실패 시 SW_RECOVERY_002를 표시한다." }
+      ],
+      "operatorGates": []
+    },
+    {
+      "id": "remote-cache-withdrawal-limit",
+      "availability": "unavailable-current-host",
+      "responsibility": {
+        "decisionOwner": "release-operator",
+        "executor": "operator",
+        "verifier": "remote-verifier"
+      },
+      "documentPath": "docs/operation/data-lifecycle.md",
+      "sectionId": "ops-remote-cache-withdrawal-limit",
+      "actionEntrypoint": {
+        "kind": "unavailable",
+        "value": "no-operator-directed-client-cache-purge"
+      },
+      "verificationCommands": ["npm run test:pages:remote", "npm run check:operations"],
+      "requiredEnvironment": [
+        "PLAYWRIGHT_PAGES_BASE_URL",
+        "SOOMBOOK_EXPECTED_RELEASE_SHA",
+        "SOOMBOOK_EXPECTED_ARTIFACT_DIGEST",
+        "SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST",
+        "SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST"
+      ],
+      "inputs": [
+        "safe-replacement-release",
+        "fresh-client-remote-identity-evidence",
+        "open-and-inactive-client-residual-record"
+      ],
+      "evidence": [
+        "remote-smoke-fresh-client",
+        "current-release-identity",
+        "open-and-inactive-client-residual-unresolved"
+      ],
+      "failureModes": [
+        {
+          "code": "OPS_REMOTE_CACHE_RESIDUAL",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["remote-cache-record-unresolved"]
+        }
+      ],
+      "sequence": [
+        { "id": "remote-cache-safe-release", "action": "안전 대체 release를 배포한다." },
+        {
+          "id": "remote-cache-verify-fresh",
+          "action": "fresh client의 remote identity를 검증한다."
+        },
+        {
+          "id": "remote-cache-record-unresolved",
+          "action": "열린 client와 비활성 client 잔여 cache를 unresolved로 기록한다."
+        }
+      ],
+      "operatorGates": ["OG-08"]
+    },
+    {
+      "id": "remote-smoke-failure",
+      "availability": "operator-gated",
+      "responsibility": {
+        "decisionOwner": "incident-commander",
+        "executor": "release-operator",
+        "verifier": "remote-verifier"
+      },
+      "documentPath": "docs/operation/withdrawal-incident.md",
+      "sectionId": "ops-remote-smoke-failure",
+      "actionEntrypoint": { "kind": "workflow", "value": "pages-preview remote-smoke" },
+      "verificationCommands": ["npm run test:pages:remote", "npm run check:operations"],
+      "requiredEnvironment": [
+        "PLAYWRIGHT_PAGES_BASE_URL",
+        "SOOMBOOK_EXPECTED_RELEASE_SHA",
+        "SOOMBOOK_EXPECTED_ARTIFACT_DIGEST",
+        "SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST",
+        "SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST"
+      ],
+      "inputs": ["failed-run-id", "release-identity", "remote-url", "last-known-good-main-sha"],
+      "evidence": ["failed-remote-receipt", "uploaded-artifacts", "classification", "owner"],
+      "failureModes": [
+        {
+          "code": "OPS_REMOTE_SMOKE_FAILED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["remote-freeze", "remote-preserve", "remote-classify"]
+        },
+        {
+          "code": "OPS_REMOTE_FAILURE_UNCLASSIFIED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["remote-classify"]
+        }
+      ],
+      "sequence": [
+        { "id": "remote-freeze", "action": "신규 dispatch를 동결한다." },
+        { "id": "remote-preserve", "action": "실패 영수증과 artifact를 보존한다." },
+        { "id": "remote-classify", "action": "platform, artifact, rights와 safety를 분류한다." },
+        { "id": "remote-select", "action": "rollback 또는 withdrawal을 선택한다." },
+        { "id": "remote-operator-approve", "action": "운영자 승인을 받는다." },
+        { "id": "remote-reverify", "action": "remote identity와 여정을 다시 검증한다." },
+        { "id": "remote-record", "action": "resolved 또는 escalated를 기록한다." }
+      ],
+      "operatorGates": ["OG-08"]
+    },
+    {
+      "id": "rollback-last-known-good",
+      "availability": "operator-gated",
+      "responsibility": {
+        "decisionOwner": "incident-commander",
+        "executor": "release-operator",
+        "verifier": "remote-verifier"
+      },
+      "documentPath": "docs/operation/withdrawal-incident.md",
+      "sectionId": "ops-rollback-last-known-good",
+      "actionEntrypoint": { "kind": "workflow-dispatch", "value": "pages-rollback" },
+      "verificationCommands": [
+        "npm run check:release:automated",
+        "npm run test:pages:remote",
+        "npm run check:operations"
+      ],
+      "requiredEnvironment": [
+        "target_sha",
+        "PLAYWRIGHT_PAGES_BASE_URL",
+        "SOOMBOOK_EXPECTED_RELEASE_SHA",
+        "SOOMBOOK_EXPECTED_ARTIFACT_DIGEST",
+        "SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST",
+        "SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST"
+      ],
+      "inputs": ["lowercase-40-main-ancestor-sha", "green-remote-receipt", "incident-id"],
+      "evidence": [
+        "main-ancestor-check",
+        "full-gate",
+        "artifact-digest",
+        "operator-approval",
+        "remote-smoke"
+      ],
+      "failureModes": [
+        {
+          "code": "OPS_ROLLBACK_TARGET_UNSAFE",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["rollback-switch-withdrawal"]
+        },
+        {
+          "code": "OPS_ROLLBACK_REMOTE_UNVERIFIED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["rollback-keep-open"]
+        }
+      ],
+      "sequence": [
+        { "id": "rollback-confirm-green", "action": "green remote receipt를 확인한다." },
+        { "id": "rollback-validate-sha", "action": "main ancestor SHA를 검증한다." },
+        {
+          "id": "rollback-switch-withdrawal",
+          "action": "affected content면 배포 전에 withdrawal로 전환한다."
+        },
+        { "id": "rollback-run-gates", "action": "full gate와 build를 실행한다." },
+        { "id": "rollback-operator-approve", "action": "운영자 배포 승인을 받는다." },
+        { "id": "rollback-deploy", "action": "검증한 artifact를 배포한다." },
+        { "id": "rollback-remote-verify", "action": "remote smoke를 실행한다." },
+        { "id": "rollback-keep-open", "action": "remote 미검증 상태를 unresolved로 유지한다." }
+      ],
+      "operatorGates": ["OG-08"]
+    },
+    {
+      "id": "content-withdrawal",
+      "availability": "operator-gated",
+      "responsibility": {
+        "decisionOwner": "rights-or-safety-owner",
+        "executor": "release-operator",
+        "verifier": "remote-verifier"
+      },
+      "documentPath": "docs/operation/withdrawal-incident.md",
+      "sectionId": "ops-content-withdrawal",
+      "actionEntrypoint": {
+        "kind": "workflow-dispatch",
+        "value": "pages-preview safe replacement"
+      },
+      "verificationCommands": [
+        "npm run check:release:automated",
+        "npm run check:operations",
+        "npm run test:pages:remote"
+      ],
+      "requiredEnvironment": [
+        "PLAYWRIGHT_PAGES_BASE_URL",
+        "SOOMBOOK_EXPECTED_RELEASE_SHA",
+        "SOOMBOOK_EXPECTED_ARTIFACT_DIGEST",
+        "SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST",
+        "SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST"
+      ],
+      "inputs": [
+        "affected-content-id",
+        "rights-or-safety-state",
+        "safe-replacement",
+        "incident-id"
+      ],
+      "evidence": [
+        "replacement-sha",
+        "artifact-digest",
+        "cause-owner",
+        "ci-run",
+        "fresh-client-remote-smoke",
+        "open-and-inactive-cache-residual",
+        "operator-decision"
+      ],
+      "failureModes": [
+        {
+          "code": "OPS_WITHDRAWAL_REPLACEMENT_UNVERIFIED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["withdrawal-keep-open"]
+        }
+      ],
+      "sequence": [
+        { "id": "withdrawal-freeze", "action": "신규 release와 재게시를 동결한다." },
+        {
+          "id": "withdrawal-safe-replacement",
+          "action": "affected content가 없는 안전 대체를 만든다."
+        },
+        { "id": "withdrawal-run-gates", "action": "자동 release와 operations gate를 실행한다." },
+        { "id": "withdrawal-operator-approve", "action": "OG-08 제거 배포 승인을 받는다." },
+        { "id": "withdrawal-deploy", "action": "안전 대체를 배포한다." },
+        {
+          "id": "withdrawal-remote-verify",
+          "action": "fresh client의 remote identity와 새 service worker를 확인한다."
+        },
+        { "id": "withdrawal-unpublish-if-required", "action": "필요하면 공개를 중단한다." },
+        {
+          "id": "withdrawal-keep-open",
+          "action": "열린 client와 비활성 client 잔여 cache 및 재게시 승인 미완료를 기록한다."
+        }
+      ],
+      "operatorGates": ["OG-08"]
+    },
+    {
+      "id": "incident-response",
+      "availability": "operator-gated",
+      "responsibility": {
+        "decisionOwner": "incident-commander",
+        "executor": "assigned-owner",
+        "verifier": "independent-reviewer"
+      },
+      "documentPath": "docs/operation/withdrawal-incident.md",
+      "sectionId": "ops-incident-response",
+      "actionEntrypoint": { "kind": "operator-record", "value": "private incident record" },
+      "verificationCommands": [
+        "npm run check:release:automated",
+        "npm run check:operations",
+        "npm run test:pages:remote"
+      ],
+      "requiredEnvironment": [
+        "PLAYWRIGHT_PAGES_BASE_URL",
+        "SOOMBOOK_EXPECTED_RELEASE_SHA",
+        "SOOMBOOK_EXPECTED_ARTIFACT_DIGEST",
+        "SOOMBOOK_EXPECTED_BOOK_PACK_DIGEST",
+        "SOOMBOOK_EXPECTED_PACK_CONTENT_DIGEST"
+      ],
+      "inputs": [
+        "incident-id",
+        "severity",
+        "affected-identities",
+        "discovery-time",
+        "last-known-good-main-sha"
+      ],
+      "evidence": [
+        "incident-log",
+        "owner",
+        "command-results",
+        "release-receipt",
+        "remote-smoke",
+        "remaining-risk",
+        "review-condition"
+      ],
+      "failureModes": [
+        {
+          "code": "OPS_INCIDENT_OWNER_MISSING",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["incident-assign-owner"]
+        },
+        {
+          "code": "OPS_INCIDENT_REMOTE_UNVERIFIED",
+          "blocksCompletion": true,
+          "recoveryStepIds": ["incident-keep-open"]
+        }
+      ],
+      "sequence": [
+        { "id": "incident-freeze", "action": "신규 release를 동결한다." },
+        { "id": "incident-identify", "action": "영향 identity와 scope를 식별한다." },
+        {
+          "id": "incident-separate-sensitive",
+          "action": "민감 증거를 public channel에서 분리한다."
+        },
+        { "id": "incident-assign-owner", "action": "결정, 실행과 검증 owner를 배정한다." },
+        { "id": "incident-choose-recovery", "action": "안전 대체 또는 rollback을 선택한다." },
+        { "id": "incident-run-gates", "action": "필수 gate를 실행한다." },
+        { "id": "incident-operator-approve", "action": "운영자 승인을 받는다." },
+        { "id": "incident-remote-verify", "action": "remote를 검증한다." },
+        {
+          "id": "incident-keep-open",
+          "action": "owner 또는 remote 증거가 없으면 unresolved로 유지한다."
+        }
+      ],
+      "operatorGates": ["OG-08"]
+    }
+  ],
+  "nonAuthority": {
+    "legalApproval": false,
+    "supportSlaApproved": false,
+    "deploymentApproved": false,
+    "incidentClosed": false,
+    "remoteClientCacheDeleted": false,
+    "operatorGatesSatisfied": false,
+    "privateSupportChannelsApproved": false
+  }
+}

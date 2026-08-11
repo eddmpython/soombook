@@ -59,6 +59,24 @@ describe('service worker lifecycle', () => {
     });
   });
 
+  it('비어 있거나 안전하지 않은 app scope에서는 아무 항목도 지우지 않는다', async () => {
+    for (const appScope of ['', 'not-a-url', 'https://user@example.test/soombook/']) {
+      const getRegistrations = vi.fn(() => Promise.resolve([]));
+      const keys = vi.fn(() => Promise.resolve([`${SOOMBOOK_CACHE_PREFIX}foreign`]));
+      const remove = vi.fn(() => Promise.resolve(true));
+      await expect(
+        recoverServiceWorkerToOnlineOnly({
+          appScope,
+          serviceWorker: { getRegistrations },
+          cacheStorage: { keys, delete: remove },
+        }),
+      ).rejects.toThrow('app scope');
+      expect(getRegistrations).not.toHaveBeenCalled();
+      expect(keys).not.toHaveBeenCalled();
+      expect(remove).not.toHaveBeenCalled();
+    }
+  });
+
   it('등록 실패를 숨기지 않고 online-only 복구를 실행한다', async () => {
     const own = registration('https://example.test/soombook/');
     const register: RegisterServiceWorker = (options) => {
@@ -83,6 +101,114 @@ describe('service worker lifecycle', () => {
       }),
     );
     expect(own.unregister).toHaveBeenCalledOnce();
+  });
+
+  it('worker 해제 실패를 online-only 성공으로 표시하지 않는다', async () => {
+    const own = registration('https://example.test/soombook/', false);
+    const register: RegisterServiceWorker = (options) => {
+      options.onRegisterError(new Error('synthetic registration failure'));
+      return () => Promise.resolve();
+    };
+    startServiceWorkerLifecycle(register, {
+      appScope: 'https://example.test/soombook/',
+      serviceWorker: {
+        getRegistrations: () => Promise.resolve([own.value]),
+      } as unknown as ServiceWorkerContainer,
+      cacheStorage: {
+        keys: () => Promise.resolve([]),
+        delete: () => Promise.resolve(false),
+      } as unknown as CacheStorage,
+    });
+
+    await vi.waitFor(() =>
+      expect(getServiceWorkerSnapshot()).toEqual({
+        mode: 'recovery-failed',
+        recoveryCode: 'SW_RECOVERY_002',
+      }),
+    );
+  });
+
+  it('cache 삭제 실패를 online-only 성공으로 표시하지 않는다', async () => {
+    const ownCache = `${SOOMBOOK_CACHE_PREFIX}precache-v1-https://example.test/soombook/`;
+    const register: RegisterServiceWorker = (options) => {
+      options.onRegisterError(new Error('synthetic registration failure'));
+      return () => Promise.resolve();
+    };
+    startServiceWorkerLifecycle(register, {
+      appScope: 'https://example.test/soombook/',
+      serviceWorker: {
+        getRegistrations: () => Promise.resolve([]),
+      } as unknown as ServiceWorkerContainer,
+      cacheStorage: {
+        keys: () => Promise.resolve([ownCache]),
+        delete: () => Promise.resolve(false),
+      } as unknown as CacheStorage,
+    });
+
+    await vi.waitFor(() =>
+      expect(getServiceWorkerSnapshot()).toEqual({
+        mode: 'recovery-failed',
+        recoveryCode: 'SW_RECOVERY_002',
+      }),
+    );
+  });
+
+  it('worker 해제 예외를 복구 성공으로 삼지 않는다', async () => {
+    const own = registration('https://example.test/soombook/');
+    own.unregister.mockRejectedValueOnce(new Error('synthetic unregister failure'));
+    await expect(
+      recoverServiceWorkerToOnlineOnly({
+        appScope: 'https://example.test/soombook/',
+        serviceWorker: {
+          getRegistrations: () => Promise.resolve([own.value]),
+        },
+        cacheStorage: {
+          keys: () => Promise.resolve([]),
+          delete: () => Promise.resolve(false),
+        },
+      }),
+    ).rejects.toThrow('정리에 실패');
+  });
+
+  it('cache inventory 예외를 복구 성공으로 삼지 않는다', async () => {
+    await expect(
+      recoverServiceWorkerToOnlineOnly({
+        appScope: 'https://example.test/soombook/',
+        serviceWorker: {
+          getRegistrations: () => Promise.resolve([]),
+        },
+        cacheStorage: {
+          keys: () => Promise.reject(new Error('synthetic keys failure')),
+          delete: () => Promise.resolve(false),
+        },
+      }),
+    ).rejects.toThrow('synthetic keys failure');
+  });
+
+  it('일부 cache 삭제 뒤 예외도 복구 성공으로 삼지 않는다', async () => {
+    const prefix = `${SOOMBOOK_CACHE_PREFIX}precache-v1-`;
+    let calls = 0;
+    await expect(
+      recoverServiceWorkerToOnlineOnly({
+        appScope: 'https://example.test/soombook/',
+        serviceWorker: {
+          getRegistrations: () => Promise.resolve([]),
+        },
+        cacheStorage: {
+          keys: () =>
+            Promise.resolve([
+              `${prefix}https://example.test/soombook/`,
+              `${SOOMBOOK_CACHE_PREFIX}runtime-v1-https://example.test/soombook/`,
+            ]),
+          delete: () => {
+            calls += 1;
+            return calls === 1
+              ? Promise.resolve(true)
+              : Promise.reject(new Error('synthetic partial delete failure'));
+          },
+        },
+      }),
+    ).rejects.toThrow('정리에 실패');
   });
 
   it('지원하지 않는 browser를 online-only 상태로 명시한다', () => {

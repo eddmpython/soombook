@@ -49,6 +49,16 @@ test('읽기, 찾기, 생각, 연결을 거쳐 이야기를 완주한다', async
       '기능 검증용 창작 이야기와 그림을 사용한 공개 기술 체험판입니다. 실제 문화유산 원본이나 출판본이 아니며 교육 효과를 증명하지 않습니다.',
     ),
   ).toBeVisible();
+  const guardianGuide = page.locator('#guardian-guide');
+  const guardianSummary = guardianGuide.locator('summary');
+  await guardianSummary.click();
+  const supportLink = page.getByRole('link', { name: '기술 문의 경로 보기' });
+  await expect(supportLink).toBeVisible();
+  await expect(supportLink).toHaveAttribute(
+    'href',
+    'https://github.com/eddmpython/soombook/issues',
+  );
+  await guardianSummary.click();
   await reachReasoning(page);
 
   await page.getByRole('button', { name: '작은 새 발자국이 있는 연못 길, 목이 말라서' }).click();

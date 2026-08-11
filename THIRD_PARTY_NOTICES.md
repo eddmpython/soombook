@@ -23,6 +23,7 @@ Soombook의 당사자 software는 Apache-2.0을 따른다. 설치 의존성은 �
 | eslint-plugin-react | 7.37.5 | MIT |
 | eslint-plugin-react-hooks | 7.1.1 | MIT |
 | globals | 16.4.0 | MIT |
+| parse5 | 8.0.1 | MIT |
 | prettier | 3.9.6 | MIT |
 | typescript | 6.0.3 | Apache-2.0 |
 | typescript-eslint | 8.66.0 | MIT |

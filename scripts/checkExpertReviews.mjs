@@ -6,8 +6,13 @@ import process from 'node:process';
 import { format } from 'prettier';
 
 import { DEVICE_MATRIX_SCOPE_PATHS } from './checkDeviceMatrix.mjs';
+import { OPERATIONS_DOCUMENTATION_SCOPE_PATHS } from './checkOperationsDocumentation.mjs';
 import { PRODUCT_BASELINE_SCOPE_PATHS } from './checkProductBaseline.mjs';
 import { PUBLIC_RELEASE_SCOPE_PATHS } from './checkPublicReleaseEvidence.mjs';
+import {
+  OPERATIONS_REVIEW_OWNERSHIP,
+  OPERATIONS_TECHNICAL_SCOPE,
+} from './operationsDocumentation.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const REGISTRY_PATH = path.join(ROOT, 'tests/audit/expert-reviews.json');
@@ -58,6 +63,17 @@ const TOPIC_KEYS = {
     'productBaselineDigest',
     'candidateDigest',
     'artifactDigest',
+  ],
+  'operations-documentation': [
+    'id',
+    'kind',
+    'status',
+    'requiredReviewerRoles',
+    'scope',
+    'technicalScope',
+    'operationsScopeDigest',
+    'operationsDigest',
+    'documentInventoryDigest',
   ],
 };
 const REVIEW_KEYS = {
@@ -126,6 +142,20 @@ const REVIEW_KEYS = {
     'ownedBoundaryIds',
     'commands',
   ],
+  'operations-documentation': [
+    'id',
+    'topicId',
+    'reviewerRole',
+    'reviewerRef',
+    'reviewedAt',
+    'status',
+    'scopeDigest',
+    'operationsScopeDigest',
+    'operationsDigest',
+    'documentInventoryDigest',
+    'ownedProcedureIds',
+    'commands',
+  ],
 };
 const DEVICE_REVIEW_OWNERSHIP = {
   'engine-compatibility': ['device-chromium', 'device-firefox', 'device-webkit'],
@@ -168,6 +198,23 @@ const PRODUCT_BASELINE_REVIEW_COMMANDS = {
     'npm run check:project',
   ],
 };
+const OPERATIONS_REVIEW_COMMANDS = {
+  'licensing-support-boundary': [
+    'npm run check:operations',
+    'npm run check:source',
+    'npm run check:assets',
+  ],
+  'local-data-cache-lifecycle': [
+    'npm run check:operations',
+    'npm exec vitest run apps/reader-web/src/runtimeStore.test.ts apps/reader-web/src/serviceWorkerLifecycle.test.ts',
+    'npm run test:pwa-update',
+  ],
+  'withdrawal-incident-boundary': [
+    'npm run check:operations',
+    'npm run check:project',
+    'npm run check:public-release-evidence -- --current-pages',
+  ],
+};
 
 function sha256(bytes) {
   return `sha256-${createHash('sha256').update(bytes).digest('hex')}`;
@@ -200,12 +247,14 @@ export async function inspectExpertReviewRegistry(
   currentDeviceMatrix = null,
   currentPublicRelease = null,
   currentProductBaseline = null,
+  currentOperations = null,
 ) {
   const errors = [];
   const normalizedCandidateReviews = [];
   const normalizedDeviceReviews = [];
   const normalizedReleaseReviews = [];
   const normalizedProductBaselineReviews = [];
+  const normalizedOperationsReviews = [];
   const invalidRoot =
     registry?.schemaVersion !== 2 ||
     registry?.authority !==
@@ -220,6 +269,7 @@ export async function inspectExpertReviewRegistry(
       normalizedDeviceReviews,
       normalizedReleaseReviews,
       normalizedProductBaselineReviews,
+      normalizedOperationsReviews,
     };
   }
   const topics = registry.topics.filter((topic) => {
@@ -291,6 +341,14 @@ export async function inspectExpertReviewRegistry(
           JSON.stringify([...PRODUCT_BASELINE_SCOPE_PATHS].sort()))
     )
       errors.push(`product baseline 전문 검수 role 또는 scope 계약 오류: ${topic.id}`);
+    if (
+      topic.kind === 'operations-documentation' &&
+      (JSON.stringify([...topic.requiredReviewerRoles].sort()) !==
+        JSON.stringify(Object.keys(OPERATIONS_REVIEW_OWNERSHIP).sort()) ||
+        JSON.stringify([...topic.scope].sort()) !==
+          JSON.stringify([...OPERATIONS_DOCUMENTATION_SCOPE_PATHS].sort()))
+    )
+      errors.push(`operations documentation 전문 검수 role 또는 scope 계약 오류: ${topic.id}`);
     let scopeDigest = null;
     try {
       scopeDigest = await createExpertReviewScopeDigest(topic.scope);
@@ -377,6 +435,19 @@ export async function inspectExpertReviewRegistry(
           requiredCommands.some((command) => !review.commands.includes(command))
         )
           errors.push(`product baseline 전문 검수 결박 오류: ${review.id}`);
+      } else if (topic.kind === 'operations-documentation') {
+        const expectedOwnedProcedures = OPERATIONS_REVIEW_OWNERSHIP[review.reviewerRole];
+        const requiredCommands = OPERATIONS_REVIEW_COMMANDS[review.reviewerRole];
+        if (
+          !expectedOwnedProcedures ||
+          !requiredCommands ||
+          JSON.stringify(review.ownedProcedureIds) !== JSON.stringify(expectedOwnedProcedures) ||
+          review.operationsScopeDigest !== topic.operationsScopeDigest ||
+          review.operationsDigest !== topic.operationsDigest ||
+          review.documentInventoryDigest !== topic.documentInventoryDigest ||
+          requiredCommands.some((command) => !review.commands.includes(command))
+        )
+          errors.push(`operations documentation 전문 검수 결박 오류: ${review.id}`);
       }
     }
     if (topic.kind === 'device-matrix') {
@@ -482,6 +553,41 @@ export async function inspectExpertReviewRegistry(
         );
       }
     }
+    if (topic.kind === 'operations-documentation') {
+      const ownedProcedures = topicReviews
+        .flatMap((review) => review.ownedProcedureIds ?? [])
+        .sort();
+      const expectedProcedures = Object.values(OPERATIONS_REVIEW_OWNERSHIP).flat().sort();
+      if (
+        topic.technicalScope !== OPERATIONS_TECHNICAL_SCOPE ||
+        !SHA256_PATTERN.test(topic.operationsScopeDigest) ||
+        !SHA256_PATTERN.test(topic.operationsDigest) ||
+        !SHA256_PATTERN.test(topic.documentInventoryDigest) ||
+        topic.operationsScopeDigest !== scopeDigest ||
+        JSON.stringify(ownedProcedures) !== JSON.stringify(expectedProcedures) ||
+        (currentOperations !== null &&
+          (topic.operationsScopeDigest !== currentOperations.operationsScopeDigest ||
+            topic.operationsDigest !== currentOperations.operationsDigest ||
+            topic.documentInventoryDigest !== currentOperations.documentInventoryDigest ||
+            topic.technicalScope !== currentOperations.technicalScope))
+      )
+        errors.push(`operations documentation topic current evidence 결박 오류: ${topic.id}`);
+      if (errors.length === topicErrorStart) {
+        normalizedOperationsReviews.push(
+          ...topicReviews.map((review) => ({
+            reviewerRole: review.reviewerRole,
+            reviewerRef: review.reviewerRef,
+            status: review.status,
+            scopeDigest: review.scopeDigest,
+            operationsScopeDigest: review.operationsScopeDigest,
+            operationsDigest: review.operationsDigest,
+            documentInventoryDigest: review.documentInventoryDigest,
+            ownedProcedureIds: review.ownedProcedureIds,
+            commands: review.commands,
+          })),
+        );
+      }
+    }
     if (process.argv.includes('--print')) console.log(`${topic.id} ${scopeDigest}`);
   }
   for (const review of reviews) {
@@ -511,12 +617,22 @@ export async function inspectExpertReviewRegistry(
       normalizedProductBaselineReviews.length = 0;
     }
   }
+  if (currentOperations !== null) {
+    const operationsTopicCount = topics.filter(
+      (topic) => topic.kind === 'operations-documentation',
+    ).length;
+    if (operationsTopicCount !== 1 || normalizedOperationsReviews.length !== 3) {
+      errors.push('current operations documentation 전문 검수 quorum이 exact 계약과 다릅니다.');
+      normalizedOperationsReviews.length = 0;
+    }
+  }
   return {
     errors,
     normalizedCandidateReviews,
     normalizedDeviceReviews,
     normalizedReleaseReviews,
     normalizedProductBaselineReviews,
+    normalizedOperationsReviews,
   };
 }
 
@@ -531,6 +647,7 @@ if (path.resolve(process.argv[1] ?? '') === path.resolve(import.meta.filename)) 
   let currentDeviceMatrix = null;
   let currentPublicRelease = null;
   let currentProductBaseline = null;
+  let currentOperations = null;
   if (process.argv.includes('--device-matrix')) {
     const { createCurrentDeviceMatrixAggregate } = await import('./checkDeviceMatrix.mjs');
     const aggregate = await createCurrentDeviceMatrixAggregate();
@@ -563,12 +680,24 @@ if (path.resolve(process.argv[1] ?? '') === path.resolve(import.meta.filename)) 
       artifactDigest: receipt.identity.artifactDigest,
     };
   }
+  if (process.argv.includes('--operations-documentation')) {
+    const { createCurrentOperationsDocumentationReceipt } =
+      await import('./checkOperationsDocumentation.mjs');
+    const receipt = await createCurrentOperationsDocumentationReceipt();
+    currentOperations = {
+      technicalScope: receipt.technicalScope,
+      operationsScopeDigest: receipt.scopeDigest,
+      operationsDigest: receipt.operationsDigest,
+      documentInventoryDigest: receipt.documentInventoryDigest,
+    };
+  }
   const { errors } = await inspectExpertReviewRegistry(
     registry,
     null,
     currentDeviceMatrix,
     currentPublicRelease,
     currentProductBaseline,
+    currentOperations,
   );
   if (!bytes.equals(canonicalBytes))
     errors.push('전문 검수 registry JSON이 canonical 형식이 아닙니다.');

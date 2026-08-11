@@ -28,11 +28,21 @@ jobs:
       - run: npm run check:docs
       - run: npm run check:text
       - run: npm run check:source
+      - run: npm run check:operations
+      - run: npm run check:expert-reviews:operations
       - run: npm run check:project
       - run: npm run check:expert-reviews
       - run: npm run format:check
       - run: npm run typecheck
       - run: npm run lint
+      - name: operations documentation 영수증 보존
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: soombook-operations-documentation-${{ github.sha }}
+          path: ../soombook.out/operations-documentation
+          if-no-files-found: error
+          retention-days: 30
 
   contracts:
     runs-on: ubuntu-latest

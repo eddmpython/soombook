@@ -236,6 +236,17 @@ function median(values: number[]) {
   return sorted[Math.floor(sorted.length / 2)]!;
 }
 
+function describeLongTasks(performanceRuns: ReturnType<typeof summarizeJourney>[]) {
+  return performanceRuns
+    .flatMap((run, runIndex) =>
+      run.longTasksOver200Ms.map(
+        (task) =>
+          `run ${runIndex + 1} start ${task.startTime.toFixed(1)}ms duration ${task.duration.toFixed(1)}ms`,
+      ),
+    )
+    .join(', ');
+}
+
 async function createReceipt(
   layout: 'desktop' | 'mobile',
   browserVersion: string,
@@ -494,7 +505,9 @@ test('production mobile lab 예산과 반복 완주 heap을 영수증으로 남�
     breaches.push(`CLS 중앙값 ${cls.toFixed(4)}가 0.1을 넘습니다.`);
   }
   if (longTasksOver200Ms > 0) {
-    breaches.push(`200ms 초과 long task 중앙값이 ${longTasksOver200Ms}개입니다.`);
+    breaches.push(
+      `200ms 초과 long task 중앙값이 ${longTasksOver200Ms}개입니다: ${describeLongTasks(performanceRuns)}`,
+    );
   }
   if (heapGrowthBytes > FIVE_MEBIBYTES) {
     breaches.push(`GC 뒤 heap 증가 ${heapGrowthBytes}B가 5MiB를 넘습니다.`);
@@ -586,7 +599,9 @@ test('production desktop 양면과 가장자리 gesture 예산을 영수증으�
     breaches.push(`desktop CLS 중앙값 ${cls.toFixed(4)}가 0.1을 넘습니다.`);
   }
   if (longTasksOver200Ms > 0) {
-    breaches.push(`desktop 200ms 초과 long task 중앙값이 ${longTasksOver200Ms}개입니다.`);
+    breaches.push(
+      `desktop 200ms 초과 long task 중앙값이 ${longTasksOver200Ms}개입니다: ${describeLongTasks(performanceRuns)}`,
+    );
   }
   if (pointerMoveMaxEventMs > 50) {
     breaches.push(

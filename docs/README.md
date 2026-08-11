@@ -14,5 +14,11 @@
 - [운영자 검수와 release 증거](operation/operator-review.md)
 - [권리 검수와 승인 자산 intake](operation/rights-review.md)
 - [10장면 대표작 기술 검수와 promotion](operation/representative-review.md)
+- [지원 경계](operation/support.md)
+- [로컬 데이터와 cache lifecycle](operation/data-lifecycle.md)
+- [철회와 사고 대응](operation/withdrawal-incident.md)
+- [아동 연구 금지와 승인 경계](operation/child-study.md)
 
-예정 기능, 사람 승인, 미래 아키텍처, 아직 측정하지 않은 목표 수치는 `mainPlan/**`에 둔다.
+현재 V1 구현은 코드, 테스트와 위 계약에 승격됐다. 실제 문화자산, 문화·교육 검수, 실기기 검수, 아동
+연구와 공개 배포는 구현 결손이 아니라 [운영자 승인](operation/operator-review.md)이 필요한 미실시
+상태로 구분한다.

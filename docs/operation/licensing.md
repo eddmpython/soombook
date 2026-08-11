@@ -33,6 +33,22 @@ license와 NOTICE 보존, 변경 파일 표시 의무를 따른다. license는 `
 
 ## Third-party content
 
+<a id="ops-license-inventory"></a>
+### OPS-LICENSE-INVENTORY
+
+책임 역할은 `license-maintainer`다. 입력은 `LICENSE`, `NOTICE`, `THIRD_PARTY_NOTICES.md`, lockfile과 모든
+BookPack rights ledger다. 검증 명령은 `npm run check:source`, `npm run check:assets`와
+`npm run check:operations`다. 증거에는 dependency 이름·version·license, 자산별 source와 license URL,
+rights lifecycle과 검토자가 포함된다.
+
+결정 책임자는 `license-maintainer`, 실행자는 `repository-maintainer`, 검증자는 `license-reviewer`다. 절차
+단계 ID는 `license-freeze`, `license-repair`, `license-remove-unapproved`, `license-recheck` 순서다. 이
+절차는 `OG-01`, `OG-02` 상태를 대신 승인하지 않는다.
+
+`OPS_LICENSE_INVENTORY_DRIFT` 또는 `OPS_LICENSE_AUTHORITY_ESCALATION`이면 신규 release를 동결하고
+미확인 자산을 제외한 뒤 inventory와 rights gate를 다시 실행한다. OG-01과 OG-02 승인 전에는 상표나 외부
+자산 권위를 확대하지 않는다. 자동 검수 PASS는 법률 의견이나 권리 승인이 아니다.
+
 제3자 문화자산, font, audio, image, 3D와 library는 각 원 라이선스를 유지한다. 이 저장소의 LICENSE는 이를
 Apache-2.0으로 재허여하지 않는다.
 
@@ -48,6 +64,9 @@ Apache-2.0으로 재허여하지 않는다.
 - 승인, 중단, 철회 상태
 
 실제 dependency와 포함 자산 목록은 [Third-Party Notices](../../THIRD_PARTY_NOTICES.md)에 둔다.
+
+`tests/audit/binary-assets.json`의 9개 당사자 binary는 파일 저작권 조건을 Apache-2.0으로 고정한다. 이
+분류는 `Soombook`, `숨책`과 mark의 상표 사용을 허여하지 않으며 production content 승인도 아니다.
 
 ## Brand and institutions
 

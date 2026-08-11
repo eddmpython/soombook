@@ -6,7 +6,8 @@
 ## 시작 전
 
 1. `git status --short --branch`로 브랜치와 기존 변경을 확인한다.
-2. `README.md`, `docs/README.md`, 변경 대상과 관련된 `mainPlan/**/README.md`를 읽는다.
+2. `README.md`, `docs/README.md`, 변경 대상의 현재 계약을 읽는다. 활성 initiative가 있으면 해당
+   계획의 `README.md`도 읽는다.
 3. 기존 변경이 요청 범위와 겹치는지 확인하고 관련 없는 변경은 보존한다.
 4. 만들려는 파일, 심볼, 개념이 이미 있는지 이름과 의미로 검색한다.
 5. 사용자가 지목한 외부 문서나 참조 저장소가 있으면 원문을 먼저 읽는다.
@@ -85,6 +86,13 @@ mock, 숨은 fallback, 미검수 자산, 계획 문서만 있는 기능을 완�
 | 예정 | 제품 설계, 구현 순서, 미해결 결정, 진행 원장 | `mainPlan/**` |
 
 - `mainPlan`은 예정 문서이며 현재 동작을 증명하지 않는다.
+- 착수할 때 initiative 하나를 큰 작업 카테고리로 고정하고, 그 initiative의 구현과 종료 조건을
+  끝내기 전에는 다른 initiative로 이동하지 않는다.
+- 계획에는 코드, 테스트, probe, 합성 자산, 로컬 측정, 허용된 도구와 계정, 공개 API 등 자력으로
+  수행할 수 있는 모든 경로를 구현 작업과 종료 조건으로 싣고 실제로 소진한다. 남은 자력 경로를
+  외부 의존, 운영자 작업, 후속 initiative로 밀어내지 않는다.
+- 새 권한, 새 자격증명, 제3자 승인, 시간 경과가 반드시 필요할 때만 외부 조건으로 분리하고, 그
+  조건과 독립적인 구현은 같은 initiative 안에서 계속 끝낸다.
 - 구현이 끝나면 실행으로 확인한 사실만 `docs/**`에 반영하고 완료된 initiative 폴더는 삭제한다.
 - 완료된 계획을 `_done`으로 옮기거나 영구 문서에서 `mainPlan`을 근거로 인용하지 않는다.
 - 같은 사실을 여러 문서에 복제하지 않고 소유 문서로 링크한다.
@@ -125,8 +133,6 @@ mock, 숨은 fallback, 미검수 자산, 계획 문서만 있는 기능을 완�
 - `docs/operation/quality.md`: 차단 게이트와 UI 감수.
 - `docs/operation/contribution-workflow.md`: Git과 공통 기억 승격.
 - `docs/operation/github-pages.md`: 공개 체험판 base, 배포, 보안 예외와 rollback.
-- `mainPlan/README.md`: 활성 initiative 목록.
-- `mainPlan/soombook-v1/README.md`: PRD 세트 입구와 읽기 순서.
 - `scripts/check_project_docs.py`: 문서 구조, 내부 링크, 자리표시자, 금지 문자 게이트.
 - `packages/book-schema`: 콘텐츠 type, schema와 출판 차단 검증.
 - `packages/book-runtime`: 직렬화 가능한 상태와 command 전이.

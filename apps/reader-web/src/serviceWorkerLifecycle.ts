@@ -1,11 +1,17 @@
 export const SOOMBOOK_CACHE_PREFIX = 'soombook-reader-';
 
 export type ServiceWorkerMode =
-  'registering' | 'ready' | 'offline-ready' | 'update-ready' | 'online-only' | 'unsupported';
+  | 'registering'
+  | 'ready'
+  | 'offline-ready'
+  | 'update-ready'
+  | 'online-only'
+  | 'recovery-failed'
+  | 'unsupported';
 
 export interface ServiceWorkerSnapshot {
   mode: ServiceWorkerMode;
-  recoveryCode: 'SW_REGISTER_001' | null;
+  recoveryCode: 'SW_REGISTER_001' | 'SW_RECOVERY_002' | null;
 }
 
 interface RegisterServiceWorkerOptions {
@@ -47,11 +53,33 @@ export function subscribeServiceWorker(listener: () => void): () => void {
 export async function recoverServiceWorkerToOnlineOnly(
   environment: ServiceWorkerRecoveryEnvironment,
 ): Promise<{ deletedCaches: number; unregisteredWorkers: number }> {
+  let parsedScope: URL;
+  try {
+    parsedScope = new URL(environment.appScope);
+  } catch {
+    throw new Error('현재 app scope가 유효한 URL이 아닙니다.');
+  }
+  if (
+    !['http:', 'https:'].includes(parsedScope.protocol) ||
+    parsedScope.href !== environment.appScope ||
+    !parsedScope.pathname.endsWith('/') ||
+    parsedScope.username !== '' ||
+    parsedScope.password !== '' ||
+    parsedScope.search !== '' ||
+    parsedScope.hash !== ''
+  )
+    throw new Error('현재 app scope가 안전한 HTTP(S) scope가 아닙니다.');
   const registrations = await environment.serviceWorker.getRegistrations();
   let unregisteredWorkers = 0;
+  let cleanupFailed = false;
   for (const registration of registrations) {
     if (registration.scope !== environment.appScope) continue;
-    if (await registration.unregister()) unregisteredWorkers += 1;
+    try {
+      if (await registration.unregister()) unregisteredWorkers += 1;
+      else cleanupFailed = true;
+    } catch {
+      cleanupFailed = true;
+    }
   }
 
   const cacheNames = await environment.cacheStorage.keys();
@@ -59,8 +87,15 @@ export async function recoverServiceWorkerToOnlineOnly(
   for (const cacheName of cacheNames) {
     if (!cacheName.startsWith(SOOMBOOK_CACHE_PREFIX) || !cacheName.endsWith(environment.appScope))
       continue;
-    if (await environment.cacheStorage.delete(cacheName)) deletedCaches += 1;
+    try {
+      if (await environment.cacheStorage.delete(cacheName)) deletedCaches += 1;
+      else cleanupFailed = true;
+    } catch {
+      cleanupFailed = true;
+    }
   }
+  if (cleanupFailed)
+    throw new Error('현재 app scope의 service worker 또는 cache 정리에 실패했습니다.');
   publish({ mode: 'online-only', recoveryCode: 'SW_REGISTER_001' });
   return { deletedCaches, unregisteredWorkers };
 }
@@ -93,7 +128,7 @@ export function startServiceWorkerLifecycle(
     if (recoveryStarted) return;
     recoveryStarted = true;
     void recoverServiceWorkerToOnlineOnly(environment).catch(() => {
-      publish({ mode: 'online-only', recoveryCode: 'SW_REGISTER_001' });
+      publish({ mode: 'recovery-failed', recoveryCode: 'SW_RECOVERY_002' });
     });
   };
 

@@ -16,7 +16,7 @@
 
 1. 에이전트와 개발자는 `CLAUDE.md`를 읽는다.
 2. 현재 환경은 `docs/operation/workspace.md`에서 확인한다.
-3. 활성 제품 계획은 `mainPlan/soombook-v1/README.md`부터 순서대로 읽는다.
+3. 현재 제품 동작은 `docs/product/reader-contract.md`, 차단 조건은 `docs/operation/quality.md`에서 확인한다.
 4. `npm install` 뒤 `npm run setup:workspace`로 Git 원격과 추적되는 훅을 설정한다.
 5. 개발은 `npm run dev`, 일반 전체 검증은 `npm run check:full`, 공개 후보 검증은
    `npm run check:release:automated`로 실행한다.
@@ -30,9 +30,8 @@
 | 제품 런타임 명령 | `npm run dev`, `npm run build`, `npm run check:full`, `npm run qa:performance` |
 | GitHub Pages | `/soombook/` artifact와 수동 승인 workflow 준비, 공개 배포는 미승인 |
 | 에이전트 작업 환경 | 구성됨 |
-| 원본 기획서 분석 | `mainPlan/soombook-v1/01-source-audit.md` |
 | 현재 제품 계약 | `docs/product/reader-contract.md` |
-| 구현 계획과 남은 승인 | `mainPlan/soombook-v1/README.md` |
+| 품질과 남은 승인 | `docs/operation/quality.md`, `docs/operation/operator-review.md` |
 
 빌드와 브라우저 산출물은 저장소 밖 `../soombook.out`에 생성된다. 현재 화면은 실제 문화유산 자료가 아닌
 창작 픽스처이며, review 후보에도 박물관 원본은 없다. 실제 자산 공개와 아동 연구, 최초 public push와

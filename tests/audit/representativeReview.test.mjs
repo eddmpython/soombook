@@ -124,7 +124,7 @@ function validDecisionInput() {
     changeRefs: [`candidate:${receipt.candidateDigest}`],
     commands: ['npm run check:representative-review'],
     unverifiedItems: ['publication-rights'],
-    nextLossTransition: '다음 mainPlan 꼭지를 시작한다.',
+    nextLossTransition: '다음 initiative를 시작한다.',
     rollbackRef: `candidate:${receipt.candidateDigest}`,
   };
 }

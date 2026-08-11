@@ -30,6 +30,20 @@
       "blocking": true
     },
     {
+      "id": "operations-documentation",
+      "owner": "scripts/checkOperationsDocumentation.mjs",
+      "command": "npm run check:operations",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
+      "id": "operations-documentation-quorum",
+      "owner": "scripts/checkExpertReviews.mjs",
+      "command": "npm run check:expert-reviews:operations",
+      "ciJob": "quick",
+      "blocking": true
+    },
+    {
       "id": "public-source-hygiene",
       "owner": "scripts/checkPublicSource.mjs",
       "command": "npm run check:source",
